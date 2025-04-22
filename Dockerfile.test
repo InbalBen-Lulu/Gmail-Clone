@@ -2,12 +2,21 @@ FROM gcc:latest
 
 WORKDIR /app
 
-COPY . .
+# התקנת CMake ו-GTest
+RUN apt-get update && \
+    apt-get install -y cmake git && \
+    git clone https://github.com/google/googletest.git && \
+    cd googletest && \
+    cmake . && \
+    make && \
+    cp -r googletest/include /usr/local && \
+    cp -r googlemock/gtest/libgtest*.a /usr/local/lib
 
-# Compile all cpp files from src/ and tests/ together
-RUN g++ -std=c++17 -Wall -Wextra -I./src -I./tests \
-    $(find ./src -name '*.cpp') \
-    $(find ./tests -name '*.cpp') \
-    -o tests.out
+# מעתיקים את קבצי הטסטים
+COPY tests/test.cpp .
 
-CMD ["./tests.out"]
+# קימפול של הטסטים + קישור עם GTest
+RUN g++ -std=c++17 -Wall -Wextra -I/usr/local/include -I./tests test.cpp -L/usr/local/lib -lgtest -lgtest_main -pthread -o test.out
+
+# מריצים את קובץ הטסטים
+CMD ["./test.out"]
