@@ -1,11 +1,23 @@
-# קובצי מקור לאפליקציה
-file(GLOB_RECURSE APP_SOURCES src/*.cpp)
-list(REMOVE_ITEM APP_SOURCES ${CMAKE_SOURCE_DIR}/src/app/main.cpp)
+cmake_minimum_required(VERSION 3.10)
 
-# קובצי טסט
-file(GLOB_RECURSE TEST_SOURCES tests/*.cpp)
+project(MyExample)
 
-# בנה את הטסטים בלבד
-add_executable(runTests ${APP_SOURCES} ${TEST_SOURCES})
+set(CMAKE_CXX_STANDARD 11)
 
-target_link_libraries(runTests gtest gtest_main pthread)
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/release-1.11.0.zip
+)
+
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+file(GLOB TEST_SOURCES "tests/*.cpp")
+
+file(GLOB SRC_SOURCES "src/*.cpp")
+
+add_executable(runTests ${SRC_SOURCES} ${TEST_SOURCES})
+
+target_link_libraries(runTests gtest_main)
