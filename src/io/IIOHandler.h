@@ -7,3 +7,4 @@ public:
     virtual void writeLine(const std::string&) = 0;
     virtual ~IIOHandler() = default;
 };
+
