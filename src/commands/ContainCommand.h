@@ -7,9 +7,11 @@
 
 class ContainCommand : public ICommand {
 private:
+    bool lastResult[2]; 
     BloomFilter& bloomFilter;
     BlackList& blackList;
 public:
     ContainCommand(BloomFilter& bloom, BlackList& bl);
     void execute(const Url& url, Hash& hash) override;
+    const bool* getLastResult() const;
 };
