@@ -19,6 +19,24 @@ TEST(ConsoleIOHandlerTest, ReadsLineCorrectly) {
     EXPECT_EQ(second, "second line");
 }
 
+TEST(ConsoleIOHandlerTest, ReadLineFromEmptyInputReturnsEmptyString) {
+    std::istringstream input("");
+    std::ostringstream output;
+    ConsoleIOHandler handler(input, output);
+
+    std::string result = handler.readLine();
+    EXPECT_EQ(result, "");
+}
+
+TEST(ConsoleIOHandlerTest, ReadLineHandlesEmptyLine) {
+    std::istringstream input("\n");
+    std::ostringstream output;
+    ConsoleIOHandler handler(input, output);
+
+    std::string result = handler.readLine();
+    EXPECT_EQ(result, "");  
+}
+
 // ===================== WRITELINE TESTS =====================
 
 TEST(ConsoleIOHandlerTest, WritesLineCorrectly) {
@@ -33,6 +51,24 @@ TEST(ConsoleIOHandlerTest, WritesLineCorrectly) {
 
     // Assert that the output contains the expected lines with newlines
     EXPECT_EQ(output.str(), "output line one\noutput line two\n");
+}
+
+TEST(ConsoleIOHandlerTest, WriteLineHandlesEmptyString) {
+    std::istringstream input("");
+    std::ostringstream output;
+    ConsoleIOHandler handler(input, output);
+
+    handler.writeLine("");
+    EXPECT_EQ(output.str(), "\n");
+}
+
+TEST(ConsoleIOHandlerTest, ReadLinePreservesSpecialCharacters) {
+    std::istringstream input("   hello\tworld  \n");
+    std::ostringstream output;
+    ConsoleIOHandler handler(input, output);
+
+    std::string result = handler.readLine();
+    EXPECT_EQ(result, "   hello\tworld  ");  // חשוב לשמור על spacing
 }
 
 // ===================== COMBINED READ/WRITE TESTS =====================
