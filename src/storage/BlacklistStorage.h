@@ -1,11 +1,11 @@
 #pragma once
 #include <string>
 
-class BlacklistStorage {
+class BlackListStorage {
 private:
     std::string path;
 public:
-    BlacklistStorage(bool newFile);
+    BlackListStorage(bool newFile);
     void add(const std::string&);
     void load();
     void init();
