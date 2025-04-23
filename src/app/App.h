@@ -17,6 +17,5 @@ private:
     std::unique_ptr<Hash>;
 public:
     App();
-    void init();
     void run();
 };

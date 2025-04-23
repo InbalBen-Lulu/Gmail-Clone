@@ -6,6 +6,15 @@
 #include <vector>
 #include "../src/app/App.h"
 
+
+// ===================== APP::CONSTRUCTION TEST =====================
+
+TEST(AppTest, ConstructorInitializesWithoutException) {
+    EXPECT_NO_THROW({
+        App app;
+    });
+}
+
 // ===================== APP::RUN TESTS =====================
 
 TEST(AppTest, ValidInitAndSimpleCommands) {
