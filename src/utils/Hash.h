@@ -12,4 +12,3 @@ public:
     void execute(const std::string&);
     std::vector<size_t> getResults() const;
 };
-

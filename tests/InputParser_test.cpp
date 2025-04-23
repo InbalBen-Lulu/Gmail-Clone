@@ -132,6 +132,36 @@ TEST(InputParserTest, ValidParseInitLine) {
 }
 
 // ===================== INVALID parseInitLine TESTS ===================== 
+TEST(InputParserTest, InitLineWithZeroSize) {
+    std::string input = "0 1 2 3";
+    size_t expectedSize = 0;
+    std::vector<int> expectedVector;
+
+    bool result = InputParser::parseInitLine(input, expectedSize, expectedVector);
+
+    ASSERT_FALSE(result);  // Invalid because size must be positive
+}
+
+TEST(InputParserTest, InitLineWithNegativeHashCount) {
+    std::string input = "4 1 -2 3";
+    size_t expectedSize = 4;
+    std::vector<int> expectedVector;
+
+    bool result = InputParser::parseInitLine(input, expectedSize, expectedVector);
+
+    ASSERT_FALSE(result);  // Invalid because of negative number
+}
+
+TEST(InputParserTest, InitLineWithMixedValidAndNegativeValues) {
+    std::string input = "3 -1 2 -3";
+    size_t expectedSize = 3;
+    std::vector<int> expectedVector;
+
+    bool result = InputParser::parseInitLine(input, expectedSize, expectedVector);
+
+    ASSERT_FALSE(result);  // Still invalid if any number is negative
+}
+
 TEST(InputParserTest, InvalidParseInitLine) {
     std::string input = "five 10 15 20";  // "five" is not a valid number
     size_t expectedSize = 0;

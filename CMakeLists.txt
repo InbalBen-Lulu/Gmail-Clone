@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 3.10)
+
+project(MyExample)
+
+set(CMAKE_CXX_STANDARD 17)
+
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/release-1.11.0.zip
+)
+
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+#run one test
+file(GLOB TEST_SOURCES "tests/InputParser_test.cpp")
+file(GLOB SRC_SOURCES "src/*.cpp")
+add_executable(runTests ${SRC_SOURCES} ${TEST_SOURCES})
+
+target_link_libraries(runTests gtest_main)
