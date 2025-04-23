@@ -1,9 +1,11 @@
 #pragma once
 #include <string>
+
 class Hash;
+class Url;
 
 class ICommand {
 public:
-    virtual void execute(const std::string& url, Hash& hash) = 0;
+    virtual void execute(const Url& url, Hash& hash) = 0;
     virtual ~ICommand() = default;
 };

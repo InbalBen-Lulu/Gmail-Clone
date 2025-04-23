@@ -1,8 +1,7 @@
 #pragma once
 #include <string>
-#include "IStorage.h"
 
-class Params : public IStorage {
+class Params {
 private:
     std::string path;
     bool newFile;
@@ -10,7 +9,7 @@ private:
     int hashCount;
 public:
     Params(int arraySize, int* configArray);
-    void init() override;
-    void load() override;
+    void init();
+    void load();
     bool getNewFile() const;
 };
