@@ -8,7 +8,7 @@ private:
     BloomStorage& storage;
     std::vector<int> bitArray;
 public:
-    BloomFilter(BloomStorage& storage);
+    BloomFilter(BloomStorage& storage, int arraySize);
     bool contain(const std::vector<int>& hashResults) const;
     void add(const std::vector<int>& hashResults);
 };
