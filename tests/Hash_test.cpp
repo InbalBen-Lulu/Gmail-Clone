@@ -8,7 +8,6 @@
 
 // ===================== HASH::EXECUTE TEST =====================
 
-
 TEST(HashTest, ExecuteGeneratesCorrectHashes) {
     // Hash config: two functions — one with 1x std::hash, one with 2x
     auto array = std::make_unique<int[]>(2);
