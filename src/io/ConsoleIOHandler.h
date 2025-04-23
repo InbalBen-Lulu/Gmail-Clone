@@ -3,8 +3,8 @@
 
 class ConsoleIOHandler : public IIOHandler {
 private:
-    int inputFd;
-    int outputFd;
+    std::istream& in;
+    std::ostream& out;
 public:
     ConsoleIOHandler(int inFd, int outFd);
     std::string readLine() override;
