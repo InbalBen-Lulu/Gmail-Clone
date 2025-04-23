@@ -15,11 +15,13 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # run everything in tests
-# file(GLOB TEST_SOURCES "tests/*.cpp")
-# file(GLOB SRC_SOURCES "src/*.cpp")
-# add_executable(runTests ${SRC_SOURCES} ${TEST_SOURCES})
+file(GLOB TEST_SOURCES "tests/*.cpp")
+file(GLOB SRC_SOURCES "src/*.cpp")
+add_executable(runTests ${SRC_SOURCES} ${TEST_SOURCES})
 
 #run one test
-add_executable(runTests add_url_test.cpp)
+# file(GLOB TEST_SOURCES "tests/*.cpp")
+# file(GLOB SRC_SOURCES "src/console_input_test.cpp")
+# add_executable(runTests ${SRC_SOURCES} ${TEST_SOURCES})
 
 target_link_libraries(runTests gtest_main)
