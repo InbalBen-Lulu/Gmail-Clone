@@ -3,13 +3,13 @@
 #include <string>
 #include <memory>
 
+class Url;
+
 class Hash {
 private:
-    std::vector<int> results;
     std::unique_ptr<int[]> hashArray;
 public:
     Hash(std::unique_ptr<int[]> hashArray);
-    void execute(const std::string&);
-    std::vector<size_t> getResults() const;
+    std::vector<int> execute(const Url& url) const;
 };
 

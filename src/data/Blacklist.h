@@ -10,6 +10,6 @@ private:
     std::set<Url> urls;
 public:
     BlackList(BlackListStorage& storage);
-    void add(const std::string&);
-    bool contains(const std::string&);
+    void add(const Url& url);
+    bool contains(const Url& url) const;
 };
