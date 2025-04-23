@@ -10,7 +10,7 @@ private:
     std::unique_ptr<int[]> hashArray;
     int arraySize;
 public:
-    Hash(std::unique_ptr<int[]> hashArrayת int arraySize);
+    Hash(std::unique_ptr<int[]> hashArray, int arraySize);
     std::vector<int> execute(const Url& url) const;
 };
 
