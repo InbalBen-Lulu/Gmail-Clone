@@ -1,17 +1,18 @@
-#include "BlackListStorage.h"
+#include "BlacklistStorage.h"
 #include <fstream>
 #include <filesystem>
+#include "../utils/Url.h"
 
 const std::string BLACKLIST_FILE_PATH = "../data/blacklist.txt";
 
 // --- Constructor ---
 // Receives a flag whether to initialize a new file or not
-BlackListStorage::BlackListStorage(bool newFile)
+BlacklistStorage::BlacklistStorage(bool newFile)
     : path(BLACKLIST_FILE_PATH), newFile(newFile) {}
 
 // --- init ---
 // Creates or clears the file if newFile is true
-void BlackListStorage::init() {
+void BlacklistStorage::init() {
     if (newFile) {
         std::ofstream outFile(path);  // This will truncate the file if it exists
         outFile.close();
@@ -20,7 +21,7 @@ void BlackListStorage::init() {
 
 // --- add ---
 // Appends a URL to the file (one per line)
-void BlackListStorage::add(const Url& url) {
+void BlacklistStorage::add(const Url& url) {
     std::ofstream outFile(path, std::ios::app);  // Open in append mode
     if (outFile.is_open()) {
         outFile << url.getUrlPath() << "\n";
@@ -30,7 +31,7 @@ void BlackListStorage::add(const Url& url) {
 
 // --- load ---
 // Loads all URLs from the file into a set
-std::set<Url> BlackListStorage::load() {
+std::set<Url> BlacklistStorage::load() {
     std::set<Url> result;
     std::ifstream inFile(path);
     std::string line;
@@ -46,6 +47,6 @@ std::set<Url> BlackListStorage::load() {
 }
 
 // --- getNewFile ---
-bool BlackListStorage::getNewFile() const {
+bool BlacklistStorage::getNewFile() const {
     return newFile;
 }

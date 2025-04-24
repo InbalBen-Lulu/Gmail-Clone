@@ -1,14 +1,14 @@
 #pragma once
 #include <string>
 #include <set>
-#include "..\utils\Url.h"
+#include "../utils/Url.h"
 
-class BlackListStorage {
+class BlacklistStorage {
 private:
     std::string path;
     bool newFile;
 public:
-    BlackListStorage(bool newFile);
+    BlacklistStorage(bool newFile);
     void add(const Url& url);
     void init();
     bool getNewFile() const;
