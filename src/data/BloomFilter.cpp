@@ -6,21 +6,21 @@ BloomFilter::BloomFilter(BloomStorage& storage, int arraySize)
 
 // Sets all the specified indices in the bit array to 1,
 // and stores them via the storage layer
-void BloomFilter::add(const std::vector<int>& hashResults) {
-    for (int index : hashResults) {
-        if (index >= 0 && index < static_cast<int>(bitArray.size())) {
-            bitArray[index] = 1;
+void BloomFilter::add(const std::vector<int>& hashBits) {
+    for (size_t i = 0; i < hashBits.size(); ++i) {
+        if (hashBits[i] == 1) {
+            bitArray[i] = 1;
         }
     }
-
-    storage.add(hashResults);
+    storage.update(hashBits);
 }
+
 
 // Returns true if all specified indices in the bit array are 1,
 // otherwise returns false
-bool BloomFilter::contain(const std::vector<int>& hashResults) const {
-    for (int index : hashResults) {
-        if (index < 0 || index >= static_cast<int>(bitArray.size()) || bitArray[index] == 0) {
+bool BloomFilter::contain(const std::vector<int>& hashBits) const {
+    for (size_t i = 0; i < hashBits.size(); ++i) {
+        if (hashBits[i] == 1 && bitArray[i] == 0) {
             return false;
         }
     }

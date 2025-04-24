@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "BloomStorage.h"
+#include "../storage/BloomStorage.h"
 
 class BloomFilter {
 private:
