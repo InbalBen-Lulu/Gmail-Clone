@@ -1,9 +1,9 @@
 #pragma once
 #include "ICommand.h"
-#include "BloomFilter.h"
-#include "BlackList.h"
-#include "Hash.h"
-#include "Url.h"
+#include "..\data\BloomFilter.h"
+#include "..\data\BlackList.h"
+#include "..\utils\Hash"
+#include "..\utils\Url.h"
 
 class AddCommand : public ICommand {
 private:
