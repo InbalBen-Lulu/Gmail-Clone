@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include "BloomFilter.h"
-#include "BloomStorage.h"
+#include "../src/data/BloomFilter.h"
+#include "../src/storage/BloomStorage.h"
 
 using namespace std;
 

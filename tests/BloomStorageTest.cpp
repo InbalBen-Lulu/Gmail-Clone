@@ -1,14 +1,14 @@
 #include <gtest/gtest.h>
 #include <fstream>
 #include <cstdio>
-#include "BloomStorage.h"
+#include "../src/storage/BloomStorage.h"
 
 using namespace std;
 
 // Test: update() should write the bit array correctly,
 // and load() should return the same array
 TEST(BloomStorageTest, UpdateAndLoadBitArray) {
-    remove("bloom.txt");
+    remove("../data/bloom.txt");
 
     BloomStorage storage(true);
     vector<int> expectedBits = {1, 0, 1, 1, 0, 0, 1, 1};
@@ -18,14 +18,15 @@ TEST(BloomStorageTest, UpdateAndLoadBitArray) {
     EXPECT_EQ(loadedBits, expectedBits);
 }
 
+
 TEST(BloomStorageTest, UpdateWritesBitArrayToFile) {
-    remove("bloom.txt");
+    remove("../data/bloom.txt");
 
     BloomStorage storage(true);
     vector<int> bitArray = {1, 0, 1, 1, 0, 0, 1, 1};
     storage.update(bitArray);
 
-    ifstream file("bloom.txt");
+    ifstream file("../data/bloom.txt");
     ASSERT_TRUE(file.is_open());
 
     string line;
@@ -37,7 +38,7 @@ TEST(BloomStorageTest, UpdateWritesBitArrayToFile) {
 }
 
 TEST(BloomStorageTest, DataIsPersistentAcrossInstances) {
-    remove("bloom.txt");
+    remove("../data/bloom.txt");
 
     // Create first instance and write data
     vector<int> originalBits = {1, 0, 1, 1, 0, 1, 0, 0};
