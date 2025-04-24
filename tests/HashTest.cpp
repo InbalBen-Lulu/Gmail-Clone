@@ -5,83 +5,72 @@
 #include "../src/utils/Hash.h"
 #include "../src/utils/Url.h"
 
-
-// ===================== HASH::EXECUTE TEST =====================
-
-TEST(HashTest, ExecuteGeneratesCorrectHashes) {
-    // Hash config: two functions — one with 1x std::hash, one with 2x
-    auto array = std::make_unique<int[]>(2);
-    array[0] = 1;  // first function: 1 hash
-    array[1] = 2;  // second function: 2 hashes
-
+TEST(HashTest, ExecuteGeneratesCorrectBitVector) {
+    std::vector<int> config = {1, 2};  
     int arraySize = 8;
-    Hash hash(std::move(array), arraySize);
+
+    Hash hash(config, arraySize);
     Url url("www.example.com0");
 
-    std::vector<int> results = hash.execute(url);
+    std::vector<int> result = hash.execute(url);
 
-    // Should return 2 hash values
-    ASSERT_EQ(results.size(), 2);
+    ASSERT_EQ(result.size(), arraySize);
 
     std::hash<std::string> hasher;
     size_t h1 = hasher(url.getUrlPath());
     size_t h2 = hasher(std::to_string(h1));
 
-    int expected1 = static_cast<int>(h1 % arraySize);
-    int expected2 = static_cast<int>(h2 % arraySize);
+    int idx1 = static_cast<int>(h1 % arraySize);
+    int idx2 = static_cast<int>(h2 % arraySize);
 
-    EXPECT_EQ(results[0], expected1);
-    EXPECT_EQ(results[1], expected2);
+    // ensure both indices are marked with 1
+    EXPECT_EQ(result[idx1], 1);
+    EXPECT_EQ(result[idx2], 1);
+
+    // all other indices must be 0 (unless idx1 == idx2)
+    for (int i = 0; i < arraySize; ++i) {
+        if (i != idx1 && i != idx2)
+            EXPECT_EQ(result[i], 0);
+    }
 }
 
-TEST(HashTest, OneHashFunctionTwiceShouldReturnOneResult) {
-    auto array = std::make_unique<int[]>(2);
-    array[0] = 1;
-    array[1] = 1;
-
+TEST(HashTest, OneHashFunctionTwiceShouldMarkSameIndex) {
+    std::vector<int> config = {1, 1};
     int arraySize = 8;
-    Hash hash(std::move(array), arraySize);
+
+    Hash hash(config, arraySize);
     Url url("www.example.com");
 
-    std::vector<int> results = hash.execute(url);
-
-    // Two hash functions that each hash once — expect two values
-    ASSERT_EQ(results.size(), 2);
+    std::vector<int> result = hash.execute(url);
+    ASSERT_EQ(result.size(), arraySize);
 
     std::hash<std::string> hasher;
     size_t h1 = hasher(url.getUrlPath());
-    size_t h2 = hasher(url.getUrlPath());
+    int idx = static_cast<int>(h1 % arraySize);
 
-    int expected1 = static_cast<int>(h1 % arraySize);
-    int expected2 = static_cast<int>(h2 % arraySize);
+    EXPECT_EQ(result[idx], 1);
 
-    EXPECT_EQ(results[0], expected1);
-    EXPECT_EQ(results[1], expected2);
+    for (int i = 0; i < arraySize; ++i) {
+        if (i != idx)
+            EXPECT_EQ(result[i], 0);
+    }
 }
 
-TEST(HashTest, MoreThanTwoHashFunctionsReturnsCorrectCount) {
-    auto array = std::make_unique<int[]>(5);
-    array[0] = 1; 
-    array[1] = 2;  
-    array[2] = 1;  
-    array[3] = 3; 
-    array[4] = 1;  
-
+TEST(HashTest, RepeatedIdenticalHashFunctionsOnlySetSingleBit) {
+    std::vector<int> config = {1, 1, 1}; // 3 times same hash function
     int arraySize = 16;
-    Hash hash(std::move(array), arraySize);
+
+    Hash hash(config, arraySize);
     Url url("test.com");
 
-    std::vector<int> results = hash.execute(url);
+    std::vector<int> result = hash.execute(url);
+    ASSERT_EQ(result.size(), arraySize);
 
-    // We should still get 5 results, even if some values are duplicates
-    ASSERT_EQ(results.size(), 5);
-
-    for (int val : results) {
-        EXPECT_GE(val, 0);
-        EXPECT_LT(val, arraySize);
+    int countOnes = 0;
+    for (int bit : result) {
+        if (bit == 1) ++countOnes;
+        else EXPECT_EQ(bit, 0);
     }
 
-    // Optional: check if repeated hashes return same value
-    EXPECT_EQ(results[0], results[2]);
-    EXPECT_EQ(results[0], results[4]);
+    EXPECT_EQ(countOnes, 1); // All 3 functions return same index
 }
