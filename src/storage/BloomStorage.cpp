@@ -4,7 +4,7 @@
 #include <vector>
 #include <iostream>
 
-const std::string BLOOM_FILE_PATH = "../data/bloomfilter.txt";
+const std::string BLOOM_FILE_PATH = "../data/bloom.txt";
 
 // --- Constructor ---
 BloomStorage::BloomStorage(bool newFile)
