@@ -1,19 +1,19 @@
 #include <gtest/gtest.h>
 #include <fstream>
 #include <cstdio>
-#include "BlackListStorage.h"
-#include "Url.h"
+#include "../src/storage/BlackListStorage.h"
+#include "../src/utils/Url.h"
 
 using namespace std;
 
 TEST(BlackListStorageTest, AddUrlAppendsToFile) {
-    remove("blacklist.txt"); // start clean
+    remove("../data/blacklist.txt"); // start clean
 
     BlackListStorage storage(true);
     Url url("www.blacklisted.com");
     storage.add(url);
 
-    ifstream file("blacklist.txt");
+    ifstream file("../data/blacklist.txt");
     ASSERT_TRUE(file.is_open());
 
     string line;
@@ -29,7 +29,7 @@ TEST(BlackListStorageTest, AddUrlAppendsToFile) {
 }
 
 TEST(BlackListStorageTest, LoadReturnsAllUrls) {
-    remove("blacklist.txt");
+    remove("../data/blacklist.txt");
 
     BlackListStorage storage(true);
     Url url1("www.a.com"), url2("www.b.com");
@@ -43,7 +43,7 @@ TEST(BlackListStorageTest, LoadReturnsAllUrls) {
 
 
 TEST(BlackListStorageTest, DataIsPersistentAcrossInstances) {
-    remove("blacklist.txt");
+    remove("../data/blacklist.txt");
 
     Url url1("www.persist-a.com");
     Url url2("www.persist-b.com");
@@ -66,7 +66,7 @@ TEST(BlackListStorageTest, DataIsPersistentAcrossInstances) {
 }
 
 TEST(BlackListStorageTest, LoadEmptyFileReturnsEmptySet) {
-    ofstream("blacklist.txt", ios::trunc).close(); // create empty file
+    ofstream("../data/blacklist.txt", ios::trunc).close(); // create empty file
 
     BlackListStorage storage(false);
     set<Url> urls = storage.load();

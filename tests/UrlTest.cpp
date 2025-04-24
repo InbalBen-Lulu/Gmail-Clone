@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "Url.h"
+#include "../src/utils/Url.h"
 
 TEST(UrlTest, ValidUrlReturnsTrue) {
     Url url("www.example.com");
