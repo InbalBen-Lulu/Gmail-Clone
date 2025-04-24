@@ -26,5 +26,5 @@ std::vector<int> Hash::execute(const Url& url) const {
         results[index] = 1;
     }
 
-    return result;
+    return results;
 }
