@@ -15,6 +15,6 @@ private:
     bool fileExists() const;
 
 public:
-    Params(int arraySize, const std::vector<int>& hashArray, const std::string& path = "../data/params.txt");
+    Params(int arraySize, const std::vector<int>& hashArray);
     bool getNewFile() const;
 };

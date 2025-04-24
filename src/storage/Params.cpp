@@ -8,8 +8,8 @@
 const std::string PARAMS_FILE_PATH = "../data/params.txt";
 
 // --- Constructor ---
-Params::Params(int arraySize, const std::vector<int>& hashArray, const std::string& path)
-    : path(path), arraySize(arraySize), hashArray(hashArray) {
+Params::Params(int arraySize, const std::vector<int>& hashArray)
+    : path(PARAMS_FILE_PATH), arraySize(arraySize), hashArray(hashArray) {
 
     std::string currentContent = buildParamLine();
 
