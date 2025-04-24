@@ -6,10 +6,14 @@ private:
     std::string path;
     bool newFile;
     int arraySize;
-    int hashCount;
+    int* hashArray;
+
+    std::string buildParamLine() const;
+    std::string readFile() const;
+    void writeFile(const std::string& content) const;
+    bool fileExists() const;
+
 public:
-    Params(int arraySize, int* configArray);
-    void init();
-    void load();
+    Params(int arraySize, int* hashArray);
     bool getNewFile() const;
 };
