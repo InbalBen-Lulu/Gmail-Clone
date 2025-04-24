@@ -2,14 +2,14 @@
 #include <set>
 #include <string>
 #include "../utils/Url.h"
-#include "../storage/BlacklistStorage.h"
+#include "../storage/BlackListStorage.h"
 
-class Blacklist {
+class BlackList {
 private:
-    BlacklistStorage& storage;
+    BlackListStorage& storage;
     std::set<Url> urls;
 public:
-    Blacklist(BlacklistStorage& storage);
+    BlackList(BlackListStorage& storage);
     void add(const Url& url);
     bool contains(const Url& url) const;
 };
