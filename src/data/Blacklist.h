@@ -1,15 +1,15 @@
 #pragma once
 #include <set>
 #include <string>
-#include "Url.h"
-#include "BlackListStorage.h"
+#include "../utils/Url.h"
+#include "../storage/BlacklistStorage.h"
 
-class BlackList {
+class Blacklist {
 private:
-    BlackListStorage& storage;
+    BlacklistStorage& storage;
     std::set<Url> urls;
 public:
-    BlackList(BlackListStorage& storage);
+    Blacklist(BlacklistStorage& storage);
     void add(const Url& url);
     bool contains(const Url& url) const;
 };
