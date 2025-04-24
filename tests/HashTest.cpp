@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
-#include "Url.h"
 #include <memory>
 #include <vector>
 #include <string>
 #include "../src/utils/Hash.h"
+#include "../src/utils/Url.h"
 
 
 // ===================== HASH::EXECUTE TEST =====================

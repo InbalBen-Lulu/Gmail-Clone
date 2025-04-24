@@ -1,16 +1,14 @@
 #pragma once
 #include <vector>
 #include <string>
-#include <memory>
-
-class Url;
+#include "Url.h"
 
 class Hash {
 private:
-    std::unique_ptr<int[]> hashArray;
-    int arraySize;
+    std::vector<int> hashArray;
+    int bitArraySize;
 public:
-    Hash(std::unique_ptr<int[]> hashArrayת int arraySize);
+    Hash(const std::vector<int>& hashArray, int bitArraySize);
     std::vector<int> execute(const Url& url) const;
 };
 

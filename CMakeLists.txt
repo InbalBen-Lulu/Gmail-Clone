@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(MyExample)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -20,6 +20,16 @@ FetchContent_MakeAvailable(googletest)
 # add_executable(runTests ${SRC_SOURCES} ${TEST_SOURCES})
 
 #run one test
-add_executable(runTests add_url_test.cpp)
+# add_executable(runTests add_url_test.cpp)
 
-target_link_libraries(runTests gtest_main)
+add_executable(runTests
+    tests/main.cpp
+    tests/HashTest.cpp
+    src/utils/Hash.cpp 
+    src/utils/Url.cpp
+)
+
+target_link_libraries(runTests
+    gtest_main
+    pthread
+)
