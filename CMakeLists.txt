@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(MyExample)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -20,6 +20,6 @@ FetchContent_MakeAvailable(googletest)
 # add_executable(runTests ${SRC_SOURCES} ${TEST_SOURCES})
 
 #run one test
-add_executable(runTests src/utils/Url.cpp tests/UrlTest.cpp)
+add_executable(runTests src/storage/Params.cpp tests/ParamsTest.cpp)
 
 target_link_libraries(runTests gtest_main)
