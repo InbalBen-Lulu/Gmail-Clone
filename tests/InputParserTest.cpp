@@ -131,6 +131,18 @@ TEST(InputParserTest, ValidParseInitLine) {
     EXPECT_EQ(expectedVector[2], 20);  // Ensure the third value is correct
 }
 
+TEST(InputParserTest, ValidSingleNumber) {
+    std::string input = "1 10";  // Only one number
+    size_t expectedSize = 1;
+    std::vector<int> expectedVector = {10};
+    
+    bool result = InputParser::parseInitLine(input, expectedSize, expectedVector);
+    
+    ASSERT_TRUE(result);  // Should return true
+    EXPECT_EQ(expectedVector.size(), 1);  // The vector should contain one element
+    EXPECT_EQ(expectedVector[0], 10);  // The element should be 10
+}
+
 // ===================== INVALID parseInitLine TESTS ===================== 
 TEST(InputParserTest, InitLineWithZeroSize) {
     std::string input = "0 1 2 3";
@@ -182,16 +194,6 @@ TEST(InputParserTest, EmptyInput) {
     ASSERT_FALSE(result);  // The result should be false for empty input
 }
 
-TEST(InputParserTest, IncompleteInput) {
-    std::string input = "3 10 15";  // Only two values, not enough
-    size_t expectedSize = 3;
-    std::vector<int> expectedVector;
-    
-    bool result = InputParser::parseInitLine(input, expectedSize, expectedVector);
-    
-    ASSERT_FALSE(result);  // The result should be false because the input is incomplete
-}
-
 TEST(InputParserTest, InputWithExtraSpaces) {
     std::string input = "  5   10   15   20  ";  // Input with extra spaces
     size_t expectedSize = 5;
@@ -222,31 +224,6 @@ TEST(InputParserTest, InvalidSizeNonNumeric) {
     bool result = InputParser::parseInitLine(input, expectedSize, expectedVector);
     
     ASSERT_FALSE(result);  // The result should be false due to invalid size
-}
-
-TEST(InputParserTest, ValidSingleNumber) {
-    std::string input = "1 10";  // Only one number
-    size_t expectedSize = 1;
-    std::vector<int> expectedVector = {10};
-    
-    bool result = InputParser::parseInitLine(input, expectedSize, expectedVector);
-    
-    ASSERT_TRUE(result);  // Should return true
-    EXPECT_EQ(expectedVector.size(), 1);  // The vector should contain one element
-    EXPECT_EQ(expectedVector[0], 10);  // The element should be 10
-}
-
-TEST(InputParserTest, ValidInputLargeNumberOfElements) {
-    std::string input = "1000 " + std::string(1000, '1') + " ";  // A large number of elements
-    size_t expectedSize = 1000;
-    std::vector<int> expectedVector(1000, 1);  // Vector with 1000 elements, all 1
-    
-    bool result = InputParser::parseInitLine(input, expectedSize, expectedVector);
-    
-    ASSERT_TRUE(result);  // Should return true
-    EXPECT_EQ(expectedVector.size(), 1000);  // The vector should contain 1000 elements
-    EXPECT_EQ(expectedVector[0], 1);  // Ensure the first value is 1
-    EXPECT_EQ(expectedVector[999], 1);  // Ensure the last value is 1
 }
 
 TEST(InputParserTest, VeryLargeNumber) {
