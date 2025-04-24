@@ -1,12 +1,13 @@
 #include <gtest/gtest.h>
 #include <memory>
-#include "ContainCommand.h"
-#include "BloomFilter.h"
-#include "BlackList.h"
-#include "BloomStorage.h"
-#include "BlackListStorage.h"
-#include "Hash.h"
-#include "Url.h"
+#include <vector>
+#include "../src/logic/ContainCommand.h"
+#include "../src/storage/BloomFilter.h"
+#include "../src/storage/BloomStorage.h"
+#include "../src/storage/BlackList.h"
+#include "../src/storage/BlackListStorage.h"
+#include "../src/utils/Hash.h"
+#include "../src/utils/Url.h"
 
 using namespace std;
 
@@ -19,9 +20,8 @@ TEST(ContainCommandTest, NotInBloomReturnsFalseFalse) {
     ContainCommand contain(bloomFilter, blackList);
 
     Url url("www.unknown.com");
-    unique_ptr<int[]> hashArray(new int[2]{1, 2});
-    Hash hash(move(hashArray));
-
+    std::vector<int> config = {1, 2};
+    Hash hash(config, 8);
     contain.execute(url, hash);
 
     const bool* result = contain.getLastResult();
@@ -37,8 +37,8 @@ TEST(ContainCommandTest, InBloomButNotInBlackListReturnsTrueFalse) {
     BlackList blackList(blStorage);
 
     Url url("www.false-positive.com");
-    unique_ptr<int[]> hashArray(new int[2]{1, 2});
-    Hash hash(move(hashArray));
+    std::vector<int> config = {1, 2};
+    Hash hash(config, 8);
 
     bloomFilter.add(hash.execute(url));
 
@@ -58,8 +58,8 @@ TEST(ContainCommandTest, InBothReturnsTrueTrue) {
     BlackList blackList(blStorage);
 
     Url url("www.true-true.com");
-    unique_ptr<int[]> hashArray(new int[2]{1, 2});
-    Hash hash(move(hashArray));
+    std::vector<int> config = {1, 2};
+    Hash hash(config, 8);
 
     bloomFilter.add(hash.execute(url));
     blackList.add(url);

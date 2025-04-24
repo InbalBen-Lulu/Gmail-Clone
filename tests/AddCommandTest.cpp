@@ -1,13 +1,15 @@
 #include <gtest/gtest.h>
 #include <memory>
 #include <cstdio>
-#include "AddCommand.h"
-#include "BloomFilter.h"
-#include "BlackList.h"
-#include "BloomStorage.h"
-#include "BlackListStorage.h"
-#include "Hash.h"
-#include "Url.h"
+#include <vector>
+#include <algorithm>
+#include "../src/logic/AddCommand.h"
+#include "../src/storage/BloomFilter.h"
+#include "../src/storage/BloomStorage.h"
+#include "../src/storage/BlackList.h"
+#include "../src/storage/BlackListStorage.h"
+#include "../src/utils/Hash.h"
+#include "../src/utils/Url.h"
 
 using namespace std;
 
@@ -22,8 +24,8 @@ TEST(AddCommandTest, ExecuteAddsToBlackListAndBloomFilter) {
     AddCommand addCommand(bloomFilter, blackList);
 
     Url url("www.check.com");
-    unique_ptr<int[]> hashArray(new int[2]{1, 2});
-    Hash hash(move(hashArray));
+    vector<int> config = {1, 2};
+    Hash hash(config, 8);
 
     addCommand.execute(url, hash);
 
@@ -42,13 +44,13 @@ TEST(AddCommandTest, ExecuteAddsToBloomFilter) {
     AddCommand addCommand(bloomFilter, blackList);
 
     Url url("www.check.com");
-    unique_ptr<int[]> hashArray(new int[2]{1, 2});
-    Hash hash(move(hashArray));
+    vector<int> config = {1, 2};
+    Hash hash(config, 8);
 
     addCommand.execute(url, hash);
 
     // Check if corresponding bits are set in BloomFilter
-    EXPECT_TRUE(bloomFilter.contain(hash.getResults(url)));
+    EXPECT_TRUE(bloomFilter.contain(hash.execute(url)));
 }
 
 TEST(AddCommandTest, BloomFilterSetsOnlyHashResultBits) {
@@ -61,8 +63,8 @@ TEST(AddCommandTest, BloomFilterSetsOnlyHashResultBits) {
     AddCommand addCommand(bloomFilter, blackList);
 
     Url url("www.precise.com");
-    unique_ptr<int[]> hashArray(new int[2]{1, 2});
-    Hash hash(move(hashArray));
+    vector<int> config = {1, 2};
+    Hash hash(config, 8);
 
     // Get the actual indices that should be set
     vector<int> expectedIndices = hash.execute(url);
