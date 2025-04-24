@@ -1,12 +1,13 @@
 #pragma once
 #include <string>
+#include <vector>
 
 class Params {
 private:
     std::string path;
     bool newFile;
     int arraySize;
-    int* hashArray;
+    std::vector<int> hashArray;
 
     std::string buildParamLine() const;
     std::string readFile() const;
@@ -14,6 +15,6 @@ private:
     bool fileExists() const;
 
 public:
-    Params(int arraySize, int* hashArray);
+    Params(int arraySize, const std::vector<int>& hashArray, const std::string& path = "../data/params.txt");
     bool getNewFile() const;
 };

@@ -1,15 +1,16 @@
 #include <fstream>
 #include <sstream>
 #include <filesystem>
+#include <iostream>
+#include <vector>
 #include "Params.h"
 
-// Path to the parameters file
-const std::string PARAMS_FILE_PATH = "../../data/params.txt";
+const std::string PARAMS_FILE_PATH = "../data/params.txt";
 
 // --- Constructor ---
-Params::Params(int arraySize, int* hashArray)
-    : path(PARAMS_FILE_PATH), arraySize(arraySize), hashArray(hashArray) {
-    
+Params::Params(int arraySize, const std::vector<int>& hashArray, const std::string& path)
+    : path(path), arraySize(arraySize), hashArray(hashArray) {
+
     std::string currentContent = buildParamLine();
 
     if (fileExists()) {
@@ -25,17 +26,16 @@ Params::Params(int arraySize, int* hashArray)
     newFile = true;
 }
 
-// Creates a single-line string representing the parameters
+// --- buildParamLine ---
 std::string Params::buildParamLine() const {
     std::ostringstream line;
     line << arraySize;
-    for (int i = 0; i < arraySize; ++i) {
-        line << " " << hashArray[i];
+    for (int value : hashArray) {
+        line << " " << value;
     }
     return line.str();
 }
 
-// Reads the first line from the parameters file
 std::string Params::readFile() const {
     std::ifstream inFile(path);
     std::string line;
@@ -43,18 +43,15 @@ std::string Params::readFile() const {
     return line;
 }
 
-// Overwrites the parameters file with the given content
 void Params::writeFile(const std::string& content) const {
     std::ofstream outFile(path);
     outFile << content;
 }
 
-// Checks if the parameters file already exists
 bool Params::fileExists() const {
     return std::filesystem::exists(path);
 }
 
-// Indicates whether the file was newly written
 bool Params::getNewFile() const {
     return newFile;
 }
