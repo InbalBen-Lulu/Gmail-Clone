@@ -20,6 +20,6 @@ FetchContent_MakeAvailable(googletest)
 # add_executable(runTests ${SRC_SOURCES} ${TEST_SOURCES})
 
 #run one test
-add_executable(runTests add_url_test.cpp)
+add_executable(runTests src/utils/Url.cpp tests/UrlTest.cpp)
 
 target_link_libraries(runTests gtest_main)
