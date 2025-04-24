@@ -6,7 +6,7 @@ private:
     std::istream& in;
     std::ostream& out;
 public:
-    ConsoleIOHandler(int inFd, int outFd);
+    ConsoleIOHandler(std::istream& in, std::ostream& out);
     std::string readLine() override;
     void writeLine(const std::string&) override;
 };
