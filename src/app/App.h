@@ -2,11 +2,13 @@
 #include <memory>
 #include <map>
 #include <string>
-#include "IIOHandler.h"
-#include "BloomFilter.h"
-#include "BlackList.h"
-#include "ICommand.h"
-#include "Hash.h"
+#include "../io/IIOHandler.h"
+#include "../data/BloomFilter.h"
+#include "../storage/BloomStorage.h"
+#include "../data/BlackList.h"
+#include "../storage/BlackListStorage.h"
+#include "../commands/ICommand.h"
+#include "../utils/Hash.h"
 
 class App {
 private:
@@ -14,7 +16,10 @@ private:
     std::unique_ptr<BloomFilter> bloomFilter;
     std::unique_ptr<BlackList> blackList;
     std::map<int, std::unique_ptr<ICommand>> commands;
-    std::unique_ptr<Hash>;
+    std::shared_ptr<Hash> hash;
+    std::unique_ptr<BlackListStorage> blackListStorage;
+    std::unique_ptr<BloomStorage> bloomStorage;
+    void initSystem(int arraySize, const std::vector<int>& hashArray);
 public:
     App();
     void run();

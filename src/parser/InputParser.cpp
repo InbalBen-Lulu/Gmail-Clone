@@ -1,3 +1,4 @@
+
 #include "InputParser.h"
 #include <sstream>
 #include <cctype>
@@ -19,14 +20,14 @@ std::string InputParser::clean(const std::string& input) {
     return oss.str();
 }
 
-bool InputParser::parseInitLine(const std::string& line, size_t& arraySize, std::vector<int>& hashConfig) {
+bool InputParser::parseInitLine(const std::string& line, int& arraySize, std::vector<int>& hashConfig) {
     std::istringstream iss(clean(line));
     int size;
     if (!(iss >> size) || size <= 0) {
         return false;
     }
 
-    arraySize = static_cast<size_t>(size);
+    arraySize = size;
     hashConfig.clear();
 
     int val;
@@ -71,5 +72,5 @@ std::optional<CommandInput> InputParser::parseCommandLine(const std::string& inp
         return std::nullopt;
     }
 
-    return CommandInput{commandId, url};
+    return CommandInput{commandId, Url(url)};
 }
