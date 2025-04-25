@@ -20,10 +20,14 @@ FetchContent_MakeAvailable(googletest)
 # add_executable(runTests ${SRC_SOURCES} ${TEST_SOURCES})
 
 #run one test
-# add_executable(runTests src/utils/Url.cpp src/utils/FileUtils.h src/storage/BlackListStorage.cpp tests/BlackListStorageTest.cpp)
-# add_executable(runTests src/utils/FileUtils.h src/storage/BloomStorage.cpp tests/BloomStorageTest.cpp)
-# add_executable(runTests src/utils/FileUtils.h src/storage/Params.cpp tests/ParamsTest.cpp)
-# add_executable(runTests src/utils/Url.cpp src/utils/FileUtils.h src/storage/BlackListStorage.cpp src/data/BlackList.cpp tests/BlackListTest.cpp)
-# add_executable(runTests src/utils/Url.cpp src/utils/FileUtils.h src/storage/BloomStorage.cpp src/data/BloomFilter.cpp tests/BloomFilterTest.cpp)
+add_executable(runTests
+    tests/main.cpp
+    tests/HashTest.cpp
+    src/utils/Hash.cpp 
+    src/utils/Url.cpp
+)
 
-target_link_libraries(runTests gtest_main)
+target_link_libraries(runTests
+    gtest_main
+    pthread
+)

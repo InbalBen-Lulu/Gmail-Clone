@@ -12,9 +12,11 @@ bool Url::isValid() const {
 }
 
 std::string Url::getUrlPath() const {
-    return urlPath;
+    // return urlPath;
+    return "";
 }
 
 bool Url::operator<(const Url& other) const {
-    return urlPath < other.urlPath;
+    //return urlPath < other.urlPath;
+    return false;
 }
