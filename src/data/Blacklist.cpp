@@ -1,8 +1,15 @@
 #include "BlackList.h"
 
-// Initializes the BlackList with an empty set and links it to the given storage
+// Initializes the BlackList with a set loaded from storage or as empty
 BlackList::BlackList(BlackListStorage& storage)
-    : storage(storage), urls() {}
+    : storage(storage) {
+    if (storage.getNewFile()) {
+        storage.init();
+        urls = {};
+    } else {
+        urls = storage.load();
+    }
+}
 
 // Adds a URL to the in-memory set and updates the persistent storage
 void BlackList::add(const Url& url) {
