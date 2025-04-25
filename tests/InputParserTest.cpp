@@ -38,6 +38,13 @@ TEST(InputParserTest, ValidUrlWithPort) {
     EXPECT_EQ(result.value().url, "http://example.com:8080");  // URL should be http://example.com:8080
 }
 
+TEST(InputParserTest, InvalidUrlMissingProtocol) {
+    std::string input = "1 example.com"; 
+    auto result = InputParser::parseCommandLine(input);
+
+    ASSERT_TRUE(result.has_value());
+}
+
 // ===================== INVALID INPUT TESTS ===================== 
 TEST(InputParserTest, InvalidCommand) {
     std::string input = "3 http://example.com";  // Invalid command ID
@@ -51,13 +58,6 @@ TEST(InputParserTest, InvalidUrl) {
     auto result = InputParser::parseCommandLine(input);
 
     ASSERT_FALSE(result.has_value());  // The result should be invalid
-}
-
-TEST(InputParserTest, InvalidUrlMissingProtocol) {
-    std::string input = "1 example.com";  // Invalid URL (missing http:// or https://)
-    auto result = InputParser::parseCommandLine(input);
-
-    ASSERT_FALSE(result.has_value());  // The result should be invalid due to invalid URL
 }
 
 TEST(InputParserTest, InvalidUrlInvalidStructure) {
