@@ -40,7 +40,6 @@ std::set<Url> BlacklistStorage::load() {
         Url url(line);
         result.insert(url);
     }
-
     return result;
 }
 
