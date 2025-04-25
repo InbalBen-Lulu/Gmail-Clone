@@ -1,10 +1,8 @@
-
 #include "App.h"
 #include <iostream>
 #include "../io/ConsoleIOHandler.h"
 #include "../commands/AddCommand.h"
 #include "../commands/ContainCommand.h"
-#include "../parser/CommandInput.h"
 #include "../parser/InputParser.h"
 #include "../storage/Params.h"
 
@@ -34,7 +32,7 @@ void App::run() {
         }
         CommandInput cmd = maybeCommand.value();
 
-        commands[cmd.commandId]->execute(cmd.url, *hash);
+        commands[cmd.commandId]->execute(cmd.url, *hash,*io);
     }
 }
 
@@ -49,6 +47,6 @@ void App::initSystem(int arraySize, const std::vector<int>& hashArray) {
     blackList = std::make_unique<BlackList>(*blackListStorage);
     hash = std::make_shared<Hash>(hashArray, arraySize);
 
-    commands[1] = std::make_unique<AddCommand>(*bloomFilter, *blackList);
-    commands[2] = std::make_unique<ContainCommand>(*bloomFilter, *blackList);
+    commands[1] = std::make_unique<AddCommand>(*bloomFilter, *blackList, *io);
+    commands[2] = std::make_unique<ContainCommand>(*bloomFilter, *blackList, *io);    
 }
