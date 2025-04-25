@@ -1,11 +1,14 @@
 #include "Url.h"
+#include <regex>
 
 Url::Url(const std::string& url) : urlPath(url) {}
 
 bool Url::isValid() const {
-    // TODO: Add URL validation logic
-    //return !urlPath.empty();
-    return false;
+    static const std::regex urlRegex(
+        R"(^((https?:\/\/)?(www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z0-9]{2,})(\/\S*)?$)",
+        std::regex::icase
+    );
+    return std::regex_match(urlPath, urlRegex);
 }
 
 std::string Url::getUrlPath() const {
