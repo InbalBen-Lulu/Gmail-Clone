@@ -1,6 +1,6 @@
 #include "ContainCommand.h"
 
-ContainCommand::ContainCommand(BloomFilter& bloom, BlackList& bl)
+ContainCommand::ContainCommand(BloomFilter& bloom, BlackList& bl, IIOHandler& io)
     : bloomFilter(bloom), blackList(bl), lastResult(2, false) {}
 
 void ContainCommand::execute(const Url& url, Hash& hash) {
@@ -18,6 +18,7 @@ void ContainCommand::execute(const Url& url, Hash& hash) {
 
     // If all bits are set, check actual presence in the blacklist
     lastResult[1] = blackList.contains(url);
+
 }
 
 const std::vector<bool>& ContainCommand::getLastResult() const {

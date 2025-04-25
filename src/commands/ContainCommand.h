@@ -12,6 +12,6 @@ private:
     BlackList& blackList;
 public:
     ContainCommand(BloomFilter& bloom, BlackList& bl);
-    void execute(const Url& url, Hash& hash) override;
+    void execute(const Url& url, Hash& hash, IIOHandler& io) override;
     const bool* getLastResult() const;
 };
