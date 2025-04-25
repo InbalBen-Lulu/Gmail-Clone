@@ -11,5 +11,5 @@ private:
     BlackList& blackList;
 public:
     AddCommand(BloomFilter& bloom, BlackList& bl);
-    void execute(const Url& url, Hash& hash) override;
+    void execute(const Url& url, Hash& hash, IIOHandler& io) override;
 };

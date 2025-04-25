@@ -1,8 +1,7 @@
 #pragma once
 #include <string>
 
-class Hash;
-class Url;
+
 
 class ICommand {
 public:
