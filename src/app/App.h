@@ -19,7 +19,7 @@ private:
     std::shared_ptr<Hash> hash;
     std::unique_ptr<BlackListStorage> blackListStorage;
     std::unique_ptr<BloomStorage> bloomStorage;
-    void initSystem(int arraySize, const std::vector<int>& hashArray);
+    void initSystem(int arraySize, std::vector<int>& hashArray);
 public:
     App();
     void run();

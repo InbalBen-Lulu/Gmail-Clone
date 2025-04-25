@@ -43,7 +43,7 @@ void App::run() {
 }
 
 // Initialize system components (storage, filter, commands)
-void App::initSystem(int arraySize, const std::vector<int>& hashArray) {
+void App::initSystem(int arraySize, std::vector<int>& hashArray) {
     Params params(arraySize, hashArray);
     bool isNewFile = params.getNewFile();
 
