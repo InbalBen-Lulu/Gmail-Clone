@@ -12,6 +12,9 @@ BloomStorage::BloomStorage(bool newFile)
     if (newFile) {
         init();
     }
+    else {
+        load();
+    }
 }
 
 // --- init ---
