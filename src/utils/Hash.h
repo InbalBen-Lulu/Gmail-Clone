@@ -7,8 +7,9 @@ class Hash {
 private:
     std::vector<int> hashArray;
     int bitArraySize;
+    std::hash<std::string> hasher;
 public:
-    Hash(const std::vector<int>& hashArray, int bitArraySize);
+    Hash(std::vector<int>& hashArray, int bitArraySize);
     std::vector<int> execute(const Url& url) const;
 };
 
