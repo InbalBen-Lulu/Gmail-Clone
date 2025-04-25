@@ -13,6 +13,13 @@
 
 using namespace std;
 
+// Mock IO handler (minimal stub)
+class DummyIOHandler : public IIOHandler {
+    public:
+        string readLine() override { return ""; }
+        void writeLine(const string& line) override {}
+};
+
 TEST(AddCommandTest, ExecuteAddsToBlackListAndBloomFilter) {
     remove("bloom.txt"); // start with clean file
 
@@ -20,6 +27,7 @@ TEST(AddCommandTest, ExecuteAddsToBlackListAndBloomFilter) {
     BloomFilter bloomFilter(bloomStorage, 8);
     BlackListStorage blackListStorage(true);
     BlackList blackList(blackListStorage);
+    DummyIOHandler io;
 
     AddCommand addCommand(bloomFilter, blackList);
 
@@ -27,7 +35,7 @@ TEST(AddCommandTest, ExecuteAddsToBlackListAndBloomFilter) {
     vector<int> config = {1, 2};
     Hash hash(config, 8);
 
-    addCommand.execute(url, hash);
+    addCommand.execute(url, hash, io);
 
     // Check if URL is in the blacklist
     EXPECT_TRUE(blackList.contains(url));
@@ -42,12 +50,13 @@ TEST(AddCommandTest, ExecuteAddsToBloomFilter) {
     BlackListStorage blackListStorage(true);
     BlackList blackList(blackListStorage);
     AddCommand addCommand(bloomFilter, blackList);
+    DummyIOHandler io;
 
     Url url("www.check.com");
     vector<int> config = {1, 2};
     Hash hash(config, 8);
 
-    addCommand.execute(url, hash);
+    addCommand.execute(url, hash, io);
 
     // Check if corresponding bits are set in BloomFilter
     EXPECT_TRUE(bloomFilter.contain(hash.execute(url)));
@@ -61,6 +70,7 @@ TEST(AddCommandTest, BloomFilterSetsOnlyHashResultBits) {
     BlackListStorage blackListStorage(true);
     BlackList blackList(blackListStorage);
     AddCommand addCommand(bloomFilter, blackList);
+    DummyIOHandler io;
 
     Url url("www.precise.com");
     vector<int> config = {1, 2};
@@ -69,7 +79,7 @@ TEST(AddCommandTest, BloomFilterSetsOnlyHashResultBits) {
     // Get the actual indices that should be set
     vector<int> expectedIndices = hash.execute(url);
 
-    addCommand.execute(url, hash);
+    addCommand.execute(url, hash, io);
 
     // Load the BloomFilter state from file
     vector<int> bits = bloomStorage.load();
