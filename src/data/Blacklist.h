@@ -1,8 +1,8 @@
 #pragma once
 #include <set>
 #include <string>
-#include "Url.h"
-#include "BlackListStorage.h"
+#include "../utils/Url.h"
+#include "../storage/BlackListStorage.h"
 
 class BlackList {
 private:

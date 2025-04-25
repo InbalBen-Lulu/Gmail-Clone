@@ -1,14 +1,14 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "BloomStorage.h"
+#include "../storage/BloomStorage.h"
 
 class BloomFilter {
 private:
     BloomStorage& storage;
     std::vector<int> bitArray;
 public:
-    BloomFilter(BloomStorage& storage);
+    BloomFilter(BloomStorage& storage, int arraySize);
     bool contain(const std::vector<int>& hashResults) const;
     void add(const std::vector<int>& hashResults);
 };
