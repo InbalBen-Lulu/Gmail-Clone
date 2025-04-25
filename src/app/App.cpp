@@ -6,15 +6,18 @@
 #include "../parser/InputParser.h"
 #include "../storage/Params.h"
 
+// Initialize console I/O handler
 App::App() {
     io = std::make_unique<ConsoleIOHandler>(std::cin, std::cout);
 }
 
+// Main application loop
 void App::run() {
     std::string line;
     int arraySize;
     std::vector<int> hashArray;
 
+    // Loop until a valid initialization line is provided
     while (true) {
         line = io->readLine();
         if (InputParser::parseInitLine(line, arraySize, hashArray)) {
@@ -22,20 +25,24 @@ void App::run() {
         }
     }
 
+    // Initialize system components based on parsed parameters
     initSystem(arraySize, hashArray);
 
+    // Command execution loop
     while (true) {
         std::string commandLine = io->readLine();
         std::optional<CommandInput> maybeCommand = InputParser::parseCommandLine(commandLine);
         if (!maybeCommand.has_value()) {
-            continue; 
+            continue;   // Invalid input, read next line
         }
         CommandInput cmd = maybeCommand.value();
 
+        // Execute command (1 = add, 2 = contain)
         commands[cmd.commandId]->execute(cmd.url, *hash,*io);
     }
 }
 
+// Initialize system components (storage, filter, commands)
 void App::initSystem(int arraySize, const std::vector<int>& hashArray) {
     Params params(arraySize, hashArray);
     bool isNewFile = params.getNewFile();
@@ -47,6 +54,7 @@ void App::initSystem(int arraySize, const std::vector<int>& hashArray) {
     blackList = std::make_unique<BlackList>(*blackListStorage);
     hash = std::make_shared<Hash>(hashArray, arraySize);
 
-    commands[1] = std::make_unique<AddCommand>(*bloomFilter, *blackList, *io);
-    commands[2] = std::make_unique<ContainCommand>(*bloomFilter, *blackList, *io);    
+    // Register commands by ID
+    commands[1] = std::make_unique<AddCommand>(*bloomFilter, *blackList);
+    commands[2] = std::make_unique<ContainCommand>(*bloomFilter, *blackList);    
 }

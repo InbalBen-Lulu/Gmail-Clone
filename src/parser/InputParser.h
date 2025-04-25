@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <optional>
+#include "../utils/Url.h"
 
 struct CommandInput {
     int commandId;
