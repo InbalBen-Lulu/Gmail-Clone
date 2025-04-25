@@ -2,6 +2,7 @@
 #include <sstream>
 #include <cctype>
 #include <algorithm>
+#include <regex>
 
 std::string InputParser::clean(const std::string& input) {
     std::istringstream iss(input);
@@ -35,9 +36,17 @@ bool InputParser::parseInitLine(const std::string& line, size_t& arraySize, std:
         }
         hashConfig.push_back(val);
     }
-    
+
     // Require at least one hash function after the array size
     return !hashConfig.empty();
+}
+
+bool InputParser::isValidUrl(const std::string& url) {
+    static const std::regex urlRegex(
+        R"(^(https?:\/\/)?([\w\-]+(\.[\w\-]+)+)(:[0-9]+)?(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$)",
+        std::regex::icase
+    );
+    return std::regex_match(url, urlRegex);
 }
 
 std::optional<CommandInput> InputParser::parseCommandLine(const std::string& input) {
@@ -51,10 +60,14 @@ std::optional<CommandInput> InputParser::parseCommandLine(const std::string& inp
 
     std::string extra;
     if (iss >> extra) {
-        return std::nullopt;  
+        return std::nullopt;  // too many parts
     }
 
     if (commandId != 1 && commandId != 2) {
+        return std::nullopt;
+    }
+
+    if (!isValidUrl(url)) {
         return std::nullopt;
     }
 
