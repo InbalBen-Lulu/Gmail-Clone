@@ -38,9 +38,7 @@ std::set<Url> BlacklistStorage::load() {
 
     while (std::getline(inFile, line)) {
         Url url(line);
-        if (url.isValid()) {
-            result.insert(url);
-        }
+        result.insert(url);
     }
 
     return result;
