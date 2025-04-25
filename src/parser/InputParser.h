@@ -2,7 +2,11 @@
 #include <string>
 #include <vector>
 #include <optional>
-#include "CommandInput.h"
+
+struct CommandInput {
+    int commandId;
+    Url url;
+};
 
 class InputParser {
 public:
