@@ -3,13 +3,14 @@
 #include <cstdio>
 #include <vector>
 #include <algorithm>
-#include "../src/logic/AddCommand.h"
-#include "../src/storage/BloomFilter.h"
+#include "../src/commands/AddCommand.h"
+#include "../src/data/BloomFilter.h"
 #include "../src/storage/BloomStorage.h"
-#include "../src/storage/BlackList.h"
+#include "../src/data/BlackList.h"
 #include "../src/storage/BlackListStorage.h"
 #include "../src/utils/Hash.h"
 #include "../src/utils/Url.h"
+#include "../src/io/IIOHandler.h"
 
 using namespace std;
 
@@ -62,11 +63,11 @@ TEST(AddCommandTest, ExecuteAddsToBloomFilter) {
     EXPECT_TRUE(bloomFilter.contain(hash.execute(url)));
 }
 
-TEST(AddCommandTest, BloomFilterSetsOnlyHashResultBits) {
+TEST(AddCommandTest, BloomFilterSetsCorrectBits) {
     remove("bloom.txt"); // Start with clean BloomFilter file
 
     BloomStorage bloomStorage(true);
-    BloomFilter bloomFilter(bloomStorage, 8); // Assume 8-bit filter
+    BloomFilter bloomFilter(bloomStorage, 8); // 8-bit Bloom filter
     BlackListStorage blackListStorage(true);
     BlackList blackList(blackListStorage);
     AddCommand addCommand(bloomFilter, blackList);
@@ -76,17 +77,19 @@ TEST(AddCommandTest, BloomFilterSetsOnlyHashResultBits) {
     vector<int> config = {1, 2};
     Hash hash(config, 8);
 
-    // Get the actual indices that should be set
-    vector<int> expectedIndices = hash.execute(url);
+    // Get the expected bit vector from the hash function
+    vector<int> expectedBits = hash.execute(url);
 
+    // Execute the add command
     addCommand.execute(url, hash, io);
 
-    // Load the BloomFilter state from file
-    vector<int> bits = bloomStorage.load();
+    // Load the BloomFilter state after insertion
+    vector<int> actualBits = bloomStorage.load();
 
-    // Check that only the expected indices are set to 1
-    for (int i = 0; i < bits.size(); ++i) {
-        bool shouldBeSet = std::find(expectedIndices.begin(), expectedIndices.end(), i) != expectedIndices.end();
-        EXPECT_EQ(bits[i], shouldBeSet ? 1 : 0) << "Bit mismatch at index " << i;
+    // Compare expected and actual bit vectors
+    EXPECT_EQ(actualBits.size(), expectedBits.size()) << "BloomFilter size mismatch";
+
+    for (int i = 0; i < actualBits.size(); ++i) {
+        EXPECT_EQ(actualBits[i], expectedBits[i]) << "Mismatch at bit " << i;
     }
 }

@@ -1,15 +1,16 @@
 #include <gtest/gtest.h>
 #include <memory>
+#include <cstdio>
 #include <vector>
-#include <sstream> 
-#include "../src/logic/ContainCommand.h"
-#include "../src/storage/BloomFilter.h"
+#include <algorithm>
+#include "../src/commands/AddCommand.h"
+#include "../src/data/BloomFilter.h"
 #include "../src/storage/BloomStorage.h"
-#include "../src/storage/BlackList.h"
+#include "../src/data/BlackList.h"
 #include "../src/storage/BlackListStorage.h"
 #include "../src/utils/Hash.h"
 #include "../src/utils/Url.h"
-#include "../src/io/ConsoleIOHandler.h"
+#include "../src/io/IIOHandler.h"
 
 using namespace std;
 
