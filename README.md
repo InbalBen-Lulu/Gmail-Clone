@@ -40,7 +40,7 @@ The corresponding bits are set to `1` to indicate that the key has been "inserte
 
 ---
 
-## 📷 URL Check Logic Flowchart
+### 2. URL Check Logic Flowchart
 
 <p align="center">
   <img src="images/url_check_flowchart.png" alt="URL Check Flowchart" height="350"/>
@@ -68,7 +68,7 @@ After building the project, execute:
 ```
 docker run --rm -i -t project-app
 ```
-
+---
 ### 🏗️ Build the Project Tests
 From the project root directory, open a terminal and run:
 
