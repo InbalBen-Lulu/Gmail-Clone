@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <vector>
 #include <algorithm>
-#include "../src/commands/AddCommand.h"
+#include "../src/commands/ContainCommand.h"
 #include "../src/data/BloomFilter.h"
 #include "../src/storage/BloomStorage.h"
 #include "../src/data/BlackList.h"
