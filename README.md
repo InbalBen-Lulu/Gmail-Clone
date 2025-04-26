@@ -25,7 +25,7 @@ It allows for false positives but guarantees no false negatives, making it ideal
 
 ---
 
-## 📷 Screenshots and Explanations
+## 🧩 Diagrams and Process Flows
 
 ### 1. Bloom Filter Structure
 
@@ -39,17 +39,16 @@ The corresponding bits are set to `1` to indicate that the key has been "inserte
 
 ---
 
-### 2. URL Check Logic
-Diagram illustrating the steps to check if a URL is blacklisted using the Bloom Filter and verifying with the real blacklist if needed.
+## 📷 URL Check Logic Flowchart
 
-![URL Check Logic](images/url_check_logic.png)
+<p align="center">
+  <img src="images/url_check_flowchart.png" alt="URL Check Flowchart" height="350"/>
+</p>
 
----
-
-### 3. Application Flow
-Flowchart showing how the application processes commands: add/check URL, update files, handle false positives.
-
-![Application Flow](images/application_flow.png)
+**Description:**  
+This flowchart illustrates the process of checking whether a URL is blacklisted:  
+First, the hash is computed and checked in the Bloom Filter.  
+If the Bloom Filter indicates a possible match, the real blacklist is checked for confirmation.
 
 ---
 
