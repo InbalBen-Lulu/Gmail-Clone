@@ -10,6 +10,11 @@
 #include "../commands/ICommand.h"
 #include "../utils/Hash.h"
 
+/*
+ * App class:
+ * Main application controller that manages input/output, system initialization,
+ * and execution of user commands.
+ */
 class App {
 private:
     std::unique_ptr<IIOHandler> io;
@@ -19,8 +24,13 @@ private:
     std::shared_ptr<Hash> hash;
     std::unique_ptr<BlackListStorage> blackListStorage;
     std::unique_ptr<BloomStorage> bloomStorage;
-    void initSystem(int arraySize, std::vector<int>& hashArray);
+
+     // Initializes all system components based on the initial input parameters
+    void initSystem(size_t arraySize, std::vector<int>& hashArray);
 public:
+    // Constructor: sets up the App with a console-based IO handler
     App();
+
+    // Main loop: reads user commands and executes them
     void run();
 };
