@@ -1,4 +1,4 @@
-# 🚀 Bloom Filter Application
+# 🚀 URL Blacklist Filter Application
 
 ## 📖 About the Project
 This project implements a URL filtering system based on a Bloom Filter.  
@@ -22,6 +22,7 @@ It allows for false positives but guarantees no false negatives, making it ideal
 - C++17
 - CMake
 - GoogleTest (GTest) for unit testing
+- Docker
 
 ---
 
