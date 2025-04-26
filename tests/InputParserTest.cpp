@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "../src/parser/InputParser.h"
+#include "../src/parser/InputParser.h"
 
 // ===================== VALID INPUT TESTS ===================== 
 TEST(InputParserTest, ValidInputWithCommand1) {
@@ -8,7 +9,7 @@ TEST(InputParserTest, ValidInputWithCommand1) {
 
     ASSERT_TRUE(result.has_value());  // Check if the result is valid
     EXPECT_EQ(result.value().commandId, 1);  // Validate the command ID
-    EXPECT_EQ(result.value().url, "http://example.com");  // Validate the URL
+    EXPECT_EQ(result.value().url.getUrlPath(), "http://example.com");  // Validate the URL
 }
 
 TEST(InputParserTest, ValidInputWithCommand2) {
@@ -17,7 +18,7 @@ TEST(InputParserTest, ValidInputWithCommand2) {
 
     ASSERT_TRUE(result.has_value());  // Check if the result is valid
     EXPECT_EQ(result.value().commandId, 2);  // Validate the command ID
-    EXPECT_EQ(result.value().url, "https://example.com");  // Validate the URL
+    EXPECT_EQ(result.value().url.getUrlPath(), "https://example.com");  // Validate the URL
 }
 
 TEST(InputParserTest, ValidUrlWithSpecialCharacters) {
@@ -26,7 +27,7 @@ TEST(InputParserTest, ValidUrlWithSpecialCharacters) {
 
     ASSERT_TRUE(result.has_value());  // Ensure the result is valid
     EXPECT_EQ(result.value().commandId, 1);  // Command ID should be 1
-    EXPECT_EQ(result.value().url, "https://example.com/path?query=123&other=456");  // Ensure URL is as expected
+    EXPECT_EQ(result.value().url.getUrlPath(), "https://example.com/path?query=123&other=456");  // Ensure URL is as expected
 }
 
 TEST(InputParserTest, ValidUrlWithPort) {
@@ -35,7 +36,7 @@ TEST(InputParserTest, ValidUrlWithPort) {
 
     ASSERT_TRUE(result.has_value());  // Ensure the result is valid
     EXPECT_EQ(result.value().commandId, 2);  // Command ID should be 2
-    EXPECT_EQ(result.value().url, "http://example.com:8080");  // URL should be http://example.com:8080
+    EXPECT_EQ(result.value().url.getUrlPath(), "http://example.com:8080");  // URL should be http://example.com:8080
 }
 
 TEST(InputParserTest, InvalidUrlMissingProtocol) {
@@ -74,6 +75,7 @@ TEST(InputParserTest, ExtraSpacesBeforeCommand) {
 
     ASSERT_TRUE(result.has_value());  // Should pass since spaces before the command are allowed
     EXPECT_EQ(result.value().commandId, 1);  
+    EXPECT_EQ(result.value().url.getUrlPath(), "http://example.com");
 }
 
 TEST(InputParserTest, ExtraSpacesAfterUrl) {
@@ -81,7 +83,7 @@ TEST(InputParserTest, ExtraSpacesAfterUrl) {
     auto result = InputParser::parseCommandLine(input);
 
     ASSERT_TRUE(result.has_value());  // Should pass since spaces after the URL are allowed
-    EXPECT_EQ(result.value().url, "http://example.com"); 
+    EXPECT_EQ(result.value().url.getUrlPath(), "http://example.com"); 
 }
 
 TEST(InputParserTest, CommandWithMultipleSpaces) {
@@ -90,7 +92,7 @@ TEST(InputParserTest, CommandWithMultipleSpaces) {
 
     ASSERT_TRUE(result.has_value());  // The result should be valid after cleaning spaces
     EXPECT_EQ(result.value().commandId, 2);  // Command ID should be 2
-    EXPECT_EQ(result.value().url, "https://multiple-spaces.com");  // URL should be cleaned
+    EXPECT_EQ(result.value().url.getUrlPath(), "https://multiple-spaces.com");  // URL should be cleaned
 }
 
 // ===================== MISSING OR INVALID URL TESTS ===================== 
