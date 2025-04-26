@@ -6,7 +6,7 @@ class Params {
 private:
     std::string path;
     bool newFile;
-    int arraySize;
+    size_t arraySize;
     std::vector<int> hashArray;
 
     std::string buildParamLine() const;
@@ -15,6 +15,6 @@ private:
     bool fileExists() const;
 
 public:
-    Params(int arraySize, const std::vector<int>& hashArray);
+    Params(size_t arraySize, const std::vector<int>& hashArray);
     bool getNewFile() const;
 };

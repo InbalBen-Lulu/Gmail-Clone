@@ -6,10 +6,10 @@
 class Hash {
 private:
     std::vector<int> hashArray;
-    int bitArraySize;
+    size_t bitArraySize;
     std::hash<std::string> hasher;
 public:
-    Hash(std::vector<int>& hashArray, int bitArraySize);
+    Hash(std::vector<int>& hashArray, size_t bitArraySize);
     std::vector<int> execute(const Url& url) const;
 };
 
