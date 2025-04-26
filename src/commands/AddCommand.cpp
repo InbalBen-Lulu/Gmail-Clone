@@ -5,6 +5,6 @@ AddCommand::AddCommand(BloomFilter& bloom, BlackList& bl)
 
 void AddCommand::execute(const Url& url, Hash& hash, IIOHandler& io) {
     std::vector<int> hashResult = hash.execute(url);
-    bloomFilter.update(hashResult);
+    bloomFilter.add(hashResult);
     blackList.add(url);
 }
