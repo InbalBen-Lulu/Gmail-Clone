@@ -25,12 +25,31 @@ It allows for false positives but guarantees no false negatives, making it ideal
 
 ---
 
-## 📷 Screenshots
-Example screenshots from the application:
+## 📷 Screenshots and Explanations
 
-![Application Screenshot](images/app_screenshot.png)
+### 1. Bloom Filter Structure
 
-> Make sure to place your images inside an `images/` directory next to this README file.
+<p align="center">
+  <img src="images/bloom_filter_structure.png" alt="Bloom Filter Structure" width="350"/>
+</p>
+
+**Description:**  
+This diagram illustrates how a key (such as a URL) is processed by multiple hash functions, each mapping to an index in the bit array.  
+The corresponding bits are set to `1` to indicate that the key has been "inserted" into the Bloom Filter.
+
+---
+
+### 2. URL Check Logic
+Diagram illustrating the steps to check if a URL is blacklisted using the Bloom Filter and verifying with the real blacklist if needed.
+
+![URL Check Logic](images/url_check_logic.png)
+
+---
+
+### 3. Application Flow
+Flowchart showing how the application processes commands: add/check URL, update files, handle false positives.
+
+![Application Flow](images/application_flow.png)
 
 ---
 
@@ -169,11 +188,10 @@ true false
 
 ## 📝 Notes
 - Both the Bloom Filter and the blacklist are saved to disk after every update.
-- On startup, the program automatically loads the previously saved Bloom Filter and blacklist.
+- On startup, the program automatically loads the previously saved Bloom Filter and blacklist, **only if** the parameters specified in the first input line match the previous configuration.
 - Invalid input lines are ignored.
 - The program automatically handles false positives by checking the real blacklist when needed.
 - False positives may occur, but false negatives are not possible.
-- The program is designed following SOLID principles to allow future extensions.
 
 ---
 
