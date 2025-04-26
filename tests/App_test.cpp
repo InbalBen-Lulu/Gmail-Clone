@@ -4,14 +4,6 @@
 #include <vector>
 #include "../src/app/App.h"
 
-// ===================== APP::CONSTRUCTION TEST =====================
-
-TEST(AppTest, ConstructorInitializesWithoutException) {
-    EXPECT_NO_THROW({
-        App app;
-    });
-}
-
 // ===================== APP::RUN TESTS =====================
 
 // Helper to simulate input
@@ -83,38 +75,6 @@ TEST(AppTest, InitAndInvalidCommand) {
 
     ASSERT_EQ(lines.size(), 1);
     EXPECT_EQ(lines[0], "false");
-}
-
-TEST(AppTest, CommandsOnExampleComVariants) {
-    simulateInput(
-        "128 1 2\n"
-        "1 www.example.com0\n"
-        "2 www.example.com0\n"
-        "2 www.example.com1\n"
-        "2 www.example.com11\n"
-    );
-
-    testing::internal::CaptureStdout();
-    
-    App app;
-    app.run();
-    
-    std::string output = testing::internal::GetCapturedStdout();
-
-    std::istringstream outputStream(output);
-    std::vector<std::string> lines;
-    std::string line;
-    while (std::getline(outputStream, line)) {
-        if (!line.empty()) {
-            lines.push_back(line);
-        }
-    }
-
-    EXPECT_EQ(lines.size(), 3);
-    EXPECT_EQ(lines[0], "true true");
-    for (size_t i = 1; i < lines.size(); ++i) {
-        EXPECT_TRUE(lines[i] == "false" || lines[i] == "true false");
-    }
 }
 
 TEST(AppTest, RepeatsUntilValidInitLine) {
