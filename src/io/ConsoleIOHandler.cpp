@@ -6,6 +6,7 @@
 ConsoleIOHandler::ConsoleIOHandler(std::istream& inStream, std::ostream& outStream)
     : in(inStream), out(outStream) {}
 
+// Read a line from input stream
 std::string ConsoleIOHandler::readLine() {
     std::string line;
     if (std::getline(in, line)) {
@@ -14,6 +15,7 @@ std::string ConsoleIOHandler::readLine() {
     return "";
 }
 
+// Write a line to output stream
 void ConsoleIOHandler::writeLine(const std::string& line) {
     out << line << '\n';
 }

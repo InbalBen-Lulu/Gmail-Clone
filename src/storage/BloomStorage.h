@@ -1,15 +1,15 @@
 #pragma once
 #include <string>
+#include <vector>
 
 class BloomStorage {
 private:
     std::string path;
-    int arraySize;
+    bool newFile;
 public:
-    BloomStorage(int arraySize);
-    BloomStorage();
+    BloomStorage(bool newFile);
     void update(const std::vector<int>& bitArray);
     std::vector<int> load();
-    std::vector<int> init();
-    int getArraySize() const;
+    bool getNewFile() const;
+    void init();
 };

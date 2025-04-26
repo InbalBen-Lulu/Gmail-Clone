@@ -1,7 +1,7 @@
-#include <iostream>
+#include "App.h"
 
 int main() {
-    //garbage
-    std::cout << "✅ Hello from Dockerized C++!" << std::endl;
+    App app;
+    app.run();
     return 0;
 }
