@@ -1,10 +1,9 @@
 #pragma once
-#include "..\commands\ICommand.h"
-#include "..\data\BloomFilter.h"
-#include "..\data\BlackList.h"
-#include "..\utils\Hash"
-#include "..\utils\Url.h"
-#include "..\io\IIOHandler.h"
+#include "ICommand.h"
+// #include "../data/BloomFilter.h"
+// #include "../data/BlackList.h"
+// #include "../utils/Hash.h"
+// #include "../utils/Url.h"
 
 class ContainCommand : public ICommand {
 private:

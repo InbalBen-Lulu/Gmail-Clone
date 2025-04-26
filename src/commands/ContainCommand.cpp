@@ -16,7 +16,7 @@ void ContainCommand::execute(const Url& url, Hash& hash, IIOHandler& io) {
     }
 
     // If all bits are set, check actual presence in the blacklist
-    urlInBlackList = blackList.contains(url);
+    bool urlInBlackList = blackList.contains(url);
 
     // If first result is true, print both results
     io.writeLine("true " + std::string(urlInBlackList ? "true" : "false"));
