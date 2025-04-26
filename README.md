@@ -55,29 +55,32 @@ If the Bloom Filter indicates a possible match, the real blacklist is checked fo
 
 ## 🛠️ Build and Run Instructions
 
-### 📦 Build the Project
+### 📦 Build the Project Application
 From the project root directory, open a terminal and run:
 
 ```
-mkdir build
-cd build
-cmake ..
-cmake --build .
+docker build -f Dockerfile -t project-app .
 ```
 
 ### ▶️ Run the Application
 After building the project, execute:
 
 ```
-./app_main
+docker run --rm -i -t project-app
 ```
-> Replace `app_main` with your application executable name if different.
+
+### 🏗️ Build the Project Tests
+From the project root directory, open a terminal and run:
+
+```
+docker build -f Dockerfile.test -t project-tests .
+```
 
 ### 🧪 Run the Unit Tests
 To run the unit tests:
 
 ```
-./runTests
+docker run --rm project-tests
 ```
 
 ---
