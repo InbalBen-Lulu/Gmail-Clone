@@ -10,7 +10,9 @@ public:
     // Constructor: initialize with references to Bloom filter and blacklist
     ContainCommand(BloomFilter& bloom, BlackList& bl);
 
-    /* Execute the containment command: 
-     first check the Bloom filter, then verify in the blacklist if necessary  */
+    /*
+    Execute the containment command: 
+    first check the Bloom filter, then verify in the blacklist if necessary  
+    */
     void execute(const Url& url, Hash& hash, IIOHandler& io) override;
 };

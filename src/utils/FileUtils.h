@@ -4,10 +4,12 @@
 #include <string>
 #include <stdexcept>
 
-// Opens a file for writing. Throws if the file cannot be opened.
-// path: Path to the file to open
-// mode: File open mode (default is std::ios::out)
-// Returns: An open std::ofstream object
+/*
+Opens a file for writing. Throws if the file cannot be opened.
+path: Path to the file to open
+mode: File open mode (default is std::ios::out)
+Returns: An open std::ofstream object 
+*/
 inline std::ofstream safeOpenOut(const std::string& path, std::ios::openmode mode = std::ios::out) {
     std::ofstream outFile(path, mode);
     if (!outFile.is_open()) {
@@ -16,9 +18,11 @@ inline std::ofstream safeOpenOut(const std::string& path, std::ios::openmode mod
     return outFile;
 }
 
-// Opens a file for reading. Throws if the file cannot be opened.
-// path: Path to the file to open
-// Returns: An open std::ifstream object
+/*
+Opens a file for reading. Throws if the file cannot be opened.
+path: Path to the file to open
+Returns: An open std::ifstream object
+*/
 inline std::ifstream safeOpenIn(const std::string& path) {
     std::ifstream inFile(path);
     if (!inFile.is_open()) {

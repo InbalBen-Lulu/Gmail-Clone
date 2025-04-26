@@ -40,6 +40,7 @@ std::set<Url> BlackListStorage::load() {
     return result;
 }
 
+// Return whether a new file was initialized
 bool BlackListStorage::getNewFile() const {
     return newFile;
 }
