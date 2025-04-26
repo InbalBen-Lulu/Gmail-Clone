@@ -4,7 +4,10 @@
 #include <algorithm>
 #include <regex>
 
-// Normalize input: remove extra spaces
+/*
+ * Cleans an input string by removing extra spaces between words.
+ * Returns the cleaned string.
+ */
 std::string InputParser::clean(const std::string& input) {
     std::istringstream iss(input);
     std::ostringstream oss;
@@ -20,12 +23,15 @@ std::string InputParser::clean(const std::string& input) {
     return oss.str();
 }
 
-// Parse initialization line: array size + hash config
-bool InputParser::parseInitLine(const std::string& line, int& arraySize, std::vector<int>& hashConfig) {
+/*
+ * Parses the initialization line, extracting the array size and hash configuration.
+ * Returns true if parsing succeeds, false otherwise.
+ */
+bool InputParser::parseInitLine(const std::string& line, size_t& arraySize, std::vector<int>& hashConfig) {
     std::istringstream iss(clean(line));
-    int size;
-    if (!(iss >> size) || size <= 0) {
-        return false;    // invalid array size
+    size_t size;
+    if (!(iss >> size) || size == 0) {
+        return false;   
     }
 
     arraySize = size;
@@ -34,16 +40,19 @@ bool InputParser::parseInitLine(const std::string& line, int& arraySize, std::ve
     int val;
     while (iss >> val) {
         if (val < 0) {
-            return false;    // invalid hash function count
+            return false;    
         }
         hashConfig.push_back(val);
     }
 
-    // Require at least one hash function after the array size
+    // At least one hash function after the array size
     return !hashConfig.empty();
 }
 
-// Validate URL format using regex
+/*
+ * Validates if a given URL string matches a standard URL format.
+ * Returns true if valid, false otherwise.
+ */
 bool InputParser::isValidUrl(const std::string& url) {
     static const std::regex urlRegex(
         R"(^(https?:\/\/)?([\w\-]+(\.[\w\-]+)+)(:[0-9]+)?(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$)",
@@ -52,7 +61,10 @@ bool InputParser::isValidUrl(const std::string& url) {
     return std::regex_match(url, urlRegex);
 }
 
-// Parse a command line into CommandInput (command ID + URL)
+/*
+ * Parses a command line into a CommandInput struct containing a command ID and URL.
+ * Returns std::nullopt if parsing fails.
+ */
 std::optional<CommandInput> InputParser::parseCommandLine(const std::string& input) {
     std::istringstream iss(clean(input));
     int commandId;
