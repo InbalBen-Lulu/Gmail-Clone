@@ -1,4 +1,5 @@
 #include "App.h"
+#include <string>
 #include <iostream>
 #include "../io/ConsoleIOHandler.h"
 #include "../commands/AddCommand.h"
@@ -18,57 +19,30 @@ App::App() {
  * - Continuously reads and executes user commands
  */
 void App::run() {
-    int iter = 0;
     std::string line;
     size_t arraySize;
     std::vector<int> hashArray;
-    bool check = false;
 
     // Loop until a valid initialization line is provided
-    while (!check && iter < 4) {
+    while (true) {
         line = io->readLine();
-        // std::cout << "[DEBUG] Read line: " << line << std::endl;
-        // std::cout.flush();
-
-        iter++;
-        check = InputParser::parseInitLine(line, arraySize, hashArray);
-        if (check) {
-            // std::cout << "[DEBUG] Init line parsed successfully." << std::endl;
-            // std::cout.flush();
-
+        if (InputParser::parseInitLine(line, arraySize, hashArray)) {
             break;
-        } else {
-            // std::cout << "[DEBUG] Init line parsing failed." << std::endl;
-            // std::cout.flush();
-        }   
+        }
     }
-
-    if (!check) {
-        // std::cout << "[DEBUG] Failed to parse a valid init line after 4 reads. Exiting App::run." << std::endl;
-        // std::cout.flush();
-        return;  
-    }    
 
     // Initialize system components based on parsed parameters
     initSystem(arraySize, hashArray);
 
     // Main loop to read and execute user commands
-    while (iter < 4) {
+    while (true) {
         std::string commandLine = io->readLine();
-        // std::cout << "[DEBUG] Read line: " << commandLine << std::endl;
-        // std::cout.flush();
-
-        iter++;
         std::optional<CommandInput> maybeCommand = InputParser::parseCommandLine(commandLine);
         if (!maybeCommand.has_value()) {
-            // std::cout << "[DEBUG] Invalid command line: " << commandLine << std::endl;
-            // std::cout.flush();
-
             continue;    // Skip invalid command lines
         }
+
         CommandInput cmd = maybeCommand.value();
-        // std::cout << "[DEBUG] Executing command ID: " << cmd.commandId << " with URL: " << cmd.url.getUrlPath() << std::endl;
-        // std::cout.flush();
 
         // Execute the parsed command (1 = Add, 2 = Contain)
         commands[cmd.commandId]->execute(cmd.url, *hash,*io);

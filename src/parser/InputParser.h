@@ -10,6 +10,11 @@ struct CommandInput {
     Url url;
 };
 
+/*
+ * InputParser class:
+ * Provides static utility methods to parse and validate user input.
+ * Supports cleaning input, parsing initialization lines, parsing commands, and validating URLs.
+ */
 class InputParser {
 public:
     // Removes extra spaces from the input string
