@@ -1,9 +1,9 @@
 #include "ContainCommand.h"
 
-ContainCommand::ContainCommand(BloomFilter& bloom, BlackList& bl, IIOHandler& io)
+ContainCommand::ContainCommand(BloomFilter& bloom, BlackList& bl)
     : bloomFilter(bloom), blackList(bl) {}
 
-void ContainCommand::execute(const Url& url, Hash& hash) {
+void ContainCommand::execute(const Url& url, Hash& hash, IIOHandler& io) {
     std::vector<int> hashBits = hash.execute(url);  // Bit vector from hash
 
     // Check if all required bits are also set in the Bloom filter
