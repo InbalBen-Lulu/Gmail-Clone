@@ -12,4 +12,3 @@ public:
     Hash(std::vector<int>& hashArray, int bitArraySize);
     std::vector<int> execute(const Url& url) const;
 };
-
