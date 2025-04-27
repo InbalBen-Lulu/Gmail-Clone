@@ -31,8 +31,6 @@ TEST(AppTest, ValidInitAndSimpleCommands) {
     
     std::string output = testing::internal::GetCapturedStdout();
 
-    std::cout << "=== Captured output ===\n" << output << "\n=======================\n";
-
     // Split output into lines
     std::istringstream outputStream(output);
     std::vector<std::string> lines;
@@ -131,4 +129,31 @@ TEST(AppTest, RejectsNegativeOrZeroInInitLine) {
 
     EXPECT_EQ(lines.size(), 1);
     EXPECT_TRUE(lines[0] == "false");
+}
+
+TEST(AppTest, InvalidInitLines) {
+    simulateInput(
+        "0 -1 -2\n"
+        "3 10 -5 20\n"
+        "4 1 2 3\n"
+        "4 1 2 five\n"
+    );
+
+    testing::internal::CaptureStdout();
+    
+    App app;
+    app.run();
+    
+    std::string output = testing::internal::GetCapturedStdout();
+
+    std::istringstream outputStream(output);
+    std::vector<std::string> lines;
+    std::string line;
+    while (std::getline(outputStream, line)) {
+        if (!line.empty()) {
+            lines.push_back(line);
+        }
+    }
+
+    EXPECT_EQ(lines.size(), 0);
 }
