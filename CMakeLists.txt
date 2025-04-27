@@ -17,6 +17,7 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+<<<<<<< HEAD
 # Collect all source files under src/
 file(GLOB_RECURSE SRC_SOURCES 
     "src/*.cpp"

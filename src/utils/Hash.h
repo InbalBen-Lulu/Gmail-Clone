@@ -20,4 +20,3 @@ public:
     // Executes hashing logic on the given URL and returns a bit vector
     std::vector<int> execute(const Url& url) const;
 };
-
