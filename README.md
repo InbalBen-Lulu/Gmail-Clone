@@ -62,7 +62,7 @@ From the project root directory, open a terminal and run:
 docker build -f Dockerfile -t project-app .
 ```
 
-### ▶ Run the Application
+###  Run the Application
 After building the project, execute:
 
 ```

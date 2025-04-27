@@ -9,12 +9,6 @@ public:
     // Constructor: Initializes the Url object with the given URL string.
     Url(const std::string&);
 
-    /*
-     * Checks if the stored URL is valid according to a standard URL pattern.
-     * Returns true if the URL is valid, false otherwise.
-     */
-    bool isValid() const;
-
     // Returns the stored URL path as a string.
     std::string getUrlPath() const;
 
