@@ -1,5 +1,5 @@
 #include "Params.h"
-#include "../utils/FileUtils.h" // שימוש בפונקציות עזר
+#include "../utils/FileUtils.h" 
 
 #include <fstream>
 #include <sstream>

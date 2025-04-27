@@ -66,7 +66,7 @@ docker build -f Dockerfile -t project-app .
 After building the project, execute:
 
 ```
-docker run --rm -i -t project-app
+docker run --rm -i -t -v ${PWD}/data:/usr/src/project/data project-app
 ```
 ---
 ###  Build the Project Tests
