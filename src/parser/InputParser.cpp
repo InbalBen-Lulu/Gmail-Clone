@@ -25,13 +25,28 @@ std::string InputParser::clean(const std::string& input) {
 
 /*
  * Parses the initialization line, extracting the array size and hash configuration.
- * Returns true if parsing succeeds, false otherwise.
+ * Returns true if:
+ * - All characters are digits or spaces
+ * - Array size > 0
+ * - Each hash function ID is a positive integer
+ * - At least one hash function is provided
  */
 bool InputParser::parseInitLine(const std::string& line, size_t& arraySize, std::vector<int>& hashConfig) {
-    std::istringstream iss(clean(line));
+    std::string cleaned = clean(line);
+
+    // Ensure all characters are digits or spaces
+    for (char c : cleaned) {
+        if (!std::isdigit(c) && !std::isspace(c)) {
+            return false;
+        }
+    }
+    
+    // Parse the cleaned line
+    std::istringstream iss(cleaned);
+
     size_t size;
     if (!(iss >> size) || size == 0) {
-        return false;   
+        return false;   // Invalid or zero array size
     }
 
     arraySize = size;
@@ -39,13 +54,13 @@ bool InputParser::parseInitLine(const std::string& line, size_t& arraySize, std:
 
     int val;
     while (iss >> val) {
-        if (val < 0) {
+        if (val <= 0) {
             return false;    
         }
         hashConfig.push_back(val);
     }
 
-    // At least one hash function after the array size
+    // Ensure at least one hash function was provided
     return !hashConfig.empty();
 }
 
