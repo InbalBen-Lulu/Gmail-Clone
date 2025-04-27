@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <iostream>
-ד
+
 int main(int argc, char **argv) {
     std::cout << "[DEBUG] Starting test runner...\n" << std::endl;
     ::testing::InitGoogleTest(&argc, argv);

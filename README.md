@@ -1,6 +1,6 @@
-# 🚀 URL Blacklist Filter Application
+#  URL Blacklist Filter Application
 
-## 📖 About the Project
+##  About the Project
 This project implements a URL filtering system based on a Bloom Filter.  
 The application allows users to add URLs to a blacklist and check if URLs are blacklisted, using a probabilistic, memory-efficient data structure.
 
@@ -12,13 +12,13 @@ Both the Bloom Filter and the blacklist are saved to disk after every update and
 
 ---
 
-### 🧠 What is a Bloom Filter?
+###  What is a Bloom Filter?
 A Bloom Filter is a space-efficient probabilistic data structure used to test whether an element is a member of a set.  
 It allows for false positives but guarantees no false negatives, making it ideal for quick membership checks with limited memory.
 
 ---
 
-## 🛠️ Technologies Used
+##  Technologies Used
 - C++17
 - CMake
 - GoogleTest (GTest) for unit testing
@@ -26,7 +26,7 @@ It allows for false positives but guarantees no false negatives, making it ideal
 
 ---
 
-## 🧩 Diagrams and Process Flows
+##  Diagrams and Process Flows
 
 ### 1. Bloom Filter Structure
 
@@ -53,30 +53,30 @@ If the Bloom Filter indicates a possible match, the real blacklist is checked fo
 
 ---
 
-## 🛠️ Build and Run Instructions
+##  Build and Run Instructions
 
-### 📦 Build the Project Application
+###  Build the Project Application
 From the project root directory, open a terminal and run:
 
 ```
 docker build -f Dockerfile -t project-app .
 ```
 
-### ▶️ Run the Application
+### ▶ Run the Application
 After building the project, execute:
 
 ```
 docker run --rm -i -t project-app
 ```
 ---
-### 🏗️ Build the Project Tests
+###  Build the Project Tests
 From the project root directory, open a terminal and run:
 
 ```
 docker build -f Dockerfile.test -t project-tests .
 ```
 
-### 🧪 Run the Unit Tests
+###  Run the Unit Tests
 To run the unit tests:
 
 ```
@@ -85,7 +85,7 @@ docker run --rm project-tests
 
 ---
 
-## 🧩 Command Guide
+##  Command Guide
 
 | Command Example         | Description                                        |
 |--------------------------|----------------------------------------------------|
@@ -95,7 +95,7 @@ docker run --rm project-tests
 
 ---
 
-## ⚙️ First Line Input Format
+##  First Line Input Format
 The very first line the program reads **must** define the Bloom Filter setup:
 ```
 [array size] [repeat count for hash function 1] [repeat count for hash function 2] ...
@@ -123,7 +123,7 @@ The very first line the program reads **must** define the Bloom Filter setup:
 
 ---
 
-## 📋 Usage Examples
+##  Usage Examples
 
 ### Example 1:
 **Input:**
@@ -189,7 +189,7 @@ true false
 
 ---
 
-## 📝 Notes
+##  Notes
 - Both the Bloom Filter and the blacklist are saved to disk after every update.
 - On startup, the program automatically loads the previously saved Bloom Filter and blacklist, **only if** the parameters specified in the first input line match the previous configuration.
 - Invalid input lines are ignored.
@@ -198,7 +198,7 @@ true false
 
 ---
 
-## 🧠 Development Approach
+##  Development Approach
 - The project was developed using the principles of Test-Driven Development (TDD).
 - The code design follows SOLID principles.
 - The project architecture is based on Object-Oriented Programming (OOP) concepts to ensure modularity, scalability, and ease of maintenance.
