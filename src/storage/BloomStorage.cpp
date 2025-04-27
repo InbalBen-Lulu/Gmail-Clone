@@ -1,6 +1,5 @@
 #include "BloomStorage.h"
-#include "../utils/FileUtils.h" // Import helper functions
-
+#include "../utils/FileUtils.h"
 #include <fstream>
 #include <filesystem>
 #include <vector>

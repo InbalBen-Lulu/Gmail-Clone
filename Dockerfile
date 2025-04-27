@@ -1,10 +1,13 @@
 FROM gcc:latest
 
-WORKDIR /app
+RUN apt-get update && apt-get install -y cmake
 
-COPY . .
+COPY . /usr/src/project
+WORKDIR /usr/src/project
 
-# Compile all .cpp files from src/ recursively
-RUN g++ -std=c++17 -Wall -Wextra -I./src $(find ./src/app -name '*.cpp') -o main
+RUN mkdir build
+WORKDIR /usr/src/project/build
 
-CMD ["./main"]
+RUN cmake .. && make
+
+CMD ["./app"]

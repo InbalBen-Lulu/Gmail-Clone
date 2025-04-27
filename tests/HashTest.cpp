@@ -7,7 +7,7 @@
 
 TEST(HashTest, ExecuteGeneratesCorrectBitVector) {
     std::vector<int> config = {1, 2};  
-    int arraySize = 8;
+    size_t arraySize = 8;
 
     Hash hash(config, arraySize);
     Url url("www.example.com0");
@@ -36,7 +36,7 @@ TEST(HashTest, ExecuteGeneratesCorrectBitVector) {
 
 TEST(HashTest, OneHashFunctionTwiceShouldMarkSameIndex) {
     std::vector<int> config = {1, 1};
-    int arraySize = 8;
+    size_t arraySize = 8;
 
     Hash hash(config, arraySize);
     Url url("www.example.com");
@@ -58,7 +58,7 @@ TEST(HashTest, OneHashFunctionTwiceShouldMarkSameIndex) {
 
 TEST(HashTest, RepeatedIdenticalHashFunctionsOnlySetSingleBit) {
     std::vector<int> config = {1, 1, 1}; // 3 times same hash function
-    int arraySize = 16;
+    size_t arraySize = 16;
 
     Hash hash(config, arraySize);
     Url url("test.com");

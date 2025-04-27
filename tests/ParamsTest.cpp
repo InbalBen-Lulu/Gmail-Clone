@@ -33,5 +33,5 @@ TEST(ParamsTest, InitCreatesFileIfNotExists) {
 
     ifstream file("../data/params.txt");
     EXPECT_TRUE(file.is_open()); // File should now exist
-    file.close();
+    file.close();
 }

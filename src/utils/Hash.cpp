@@ -4,11 +4,16 @@
 #include "Hash.h"
 
 // Constructor: store hash configuration and bit array size
-Hash::Hash(std::vector<int>& hashArray, int bitArraySize)
+Hash::Hash(std::vector<int>& hashArray, size_t bitArraySize)
     : hashArray(std::move(hashArray)), bitArraySize(bitArraySize), hasher(std::hash<std::string>()) {
 }
 
-// Generate hash indices for the given URL
+/*
+ * Generates a list of bit positions to set for the given URL:
+ * - For each configured hash function, applies repeated hashing
+ * - Maps the result into the range [0, bitArraySize)
+ * - Returns a vector where bits corresponding to calculated indices are set to 1
+ */
 std::vector<int> Hash::execute(const Url& url) const {
     std::vector<int> results(bitArraySize, 0);
     std::string base = url.getUrlPath();

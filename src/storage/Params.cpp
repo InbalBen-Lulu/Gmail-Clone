@@ -10,7 +10,7 @@
 const std::string PARAMS_FILE_PATH = "../data/params.txt";
 
 // Constructor: checks if file exists and matches config, else creates new file
-Params::Params(int arraySize, const std::vector<int>& hashArray)
+Params::Params(size_t arraySize, const std::vector<int>& hashArray)
     : path(PARAMS_FILE_PATH), arraySize(arraySize), hashArray(hashArray) {
 
     std::string currentContent = buildParamLine();

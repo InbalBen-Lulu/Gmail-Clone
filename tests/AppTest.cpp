@@ -2,7 +2,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include "../src/app/App.h"
+#include "AppForTests.h"
 
 // ===================== APP::RUN TESTS =====================
 
@@ -26,7 +26,7 @@ TEST(AppTest, ValidInitAndSimpleCommands) {
     // Capture output
     testing::internal::CaptureStdout();
     
-    App app;
+    AppForTests app;
     app.run();
     
     std::string output = testing::internal::GetCapturedStdout();
@@ -57,7 +57,7 @@ TEST(AppTest, InitAndInvalidCommand) {
 
     testing::internal::CaptureStdout();
     
-    App app;
+    AppForTests app;
     app.run();
     
     std::string output = testing::internal::GetCapturedStdout();
@@ -85,7 +85,7 @@ TEST(AppTest, RepeatsUntilValidInitLine) {
 
     testing::internal::CaptureStdout();
     
-    App app;
+    AppForTests app;
     app.run();
     
     std::string output = testing::internal::GetCapturedStdout();
@@ -113,7 +113,7 @@ TEST(AppTest, RejectsNegativeOrZeroInInitLine) {
 
     testing::internal::CaptureStdout();
     
-    App app;
+    AppForTests app;
     app.run();
     
     std::string output = testing::internal::GetCapturedStdout();
@@ -141,7 +141,7 @@ TEST(AppTest, InvalidInitLines) {
 
     testing::internal::CaptureStdout();
     
-    App app;
+    AppForTests app;
     app.run();
     
     std::string output = testing::internal::GetCapturedStdout();
