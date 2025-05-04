@@ -1,9 +1,6 @@
 #include "InputParser.h"
-#include <cstdlib>  
 #include <stdexcept>
 #include <sstream>
-#include <cctype>
-#include <algorithm>
 #include <regex>
 
 /*
