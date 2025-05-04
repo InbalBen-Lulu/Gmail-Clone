@@ -14,5 +14,5 @@ public:
     Execute the add command: 
     add the URL's hash results to the Bloom filter and store the URL in the blacklist
     */ 
-    string execute(const Url& url, Hash& hash) override;
+    std::string execute(const Url& url, Hash& hash) override;
 };

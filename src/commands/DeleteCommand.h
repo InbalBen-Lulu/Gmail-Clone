@@ -7,6 +7,6 @@ private:
     BlackList& blackList;
 public:
     DeleteCommand(BloomFilter& bloom, BlackList& bl);
-    string execute(const Url& url, Hash& hash) override;
+    std::string execute(const Url& url, Hash& hash) override;
 };
     

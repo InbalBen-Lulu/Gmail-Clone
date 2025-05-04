@@ -14,5 +14,5 @@ public:
     Execute the containment command: 
     first check the Bloom filter, then verify in the blacklist if necessary  
     */
-    string execute(const Url& url, Hash& hash) override;
+    std::string execute(const Url& url, Hash& hash) override;
 };

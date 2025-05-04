@@ -9,7 +9,7 @@
 class ICommand {
 public:
     // Execute the command with the given URL, hash function, and I/O handler
-    virtual string execute(const Url& url, Hash& hash) = 0;
+    virtual std::string execute(const Url& url, Hash& hash) = 0;
     
      // Virtual destructor to ensure proper cleanup in derived classes
     virtual ~ICommand() = default;
