@@ -2,7 +2,7 @@
 #include "ICommand.h"
 
 // Command that checks if a given URL exists in the Bloom filter and the blacklist
-class ContainCommand : public ICommand {
+class GetCommand : public ICommand {
 private:
     BloomFilter& bloomFilter;
     BlackList& blackList;
@@ -14,5 +14,5 @@ public:
     Execute the containment command: 
     first check the Bloom filter, then verify in the blacklist if necessary  
     */
-    void execute(const Url& url, Hash& hash, IIOHandler& io) override;
+    std::string execute(const Url& url, Hash& hash) override;
 };
