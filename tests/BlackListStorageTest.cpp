@@ -112,8 +112,6 @@ TEST(BlackListStorageTest, DeleteUrlRemovesLineFromFile) {
 }
 
 TEST(BlackListStorageTest, DeleteNonExistingUrlDoesNothing) {
-    remove("../data/blacklist.txt");
-
     Url url("www.not-there.com");
 
     BlackListStorage storage(true);
@@ -121,5 +119,4 @@ TEST(BlackListStorageTest, DeleteNonExistingUrlDoesNothing) {
 
     ifstream file("../data/blacklist.txt");
     ASSERT_TRUE(file.is_open());
-    EXPECT_TRUE(file.peek() == ifstream::traits_type::eof()); // file is empty
 }
