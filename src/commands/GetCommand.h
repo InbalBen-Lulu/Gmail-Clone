@@ -8,11 +8,15 @@ private:
     BlackList& blackList;
 public:
     // Constructor: initialize with references to Bloom filter and blacklist
-    ContainCommand(BloomFilter& bloom, BlackList& bl);
+    GetCommand(BloomFilter& bloom, BlackList& bl);
 
     /*
-    Execute the containment command: 
-    first check the Bloom filter, then verify in the blacklist if necessary  
-    */
+     * Execute the get command:
+     * - Returns a response in HTTP-like format.
+     * - If the URL is not in the Bloom filter: returns "200 OK\n\nfalse"
+     * - If the URL is in the Bloom filter:
+     *      - returns "200 OK\n\ntrue true" if it is also in the blacklist
+     *      - returns "200 OK\n\ntrue false" if not
+     */
     std::string execute(const Url& url, Hash& hash) override;
 };
