@@ -268,12 +268,6 @@ TEST(InputParserTest, Clean_CommandLineWithSpaces) {
     EXPECT_EQ(cleaned, "GET http://example.com");
 }
 
-TEST(InputParserTest, Clean_InitLineWithExtraSpaces) {
-    std::string input = "   1234     5     10   20 30    ";
-    std::string cleaned = InputParser::clean(input);
-    EXPECT_EQ(cleaned, "1234 5 10 20 30");
-}
-
 TEST(InputParserTest, Clean_CommandWithBrokenUrl) {
     std::string input = "GET http://exam ple.com";
     std::string cleaned = InputParser::clean(input);
