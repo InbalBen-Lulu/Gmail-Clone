@@ -1,4 +1,6 @@
 #include "InputParser.h"
+#include <cstdlib>  
+#include <stdexcept>
 #include <sstream>
 #include <cctype>
 #include <algorithm>
@@ -23,45 +25,55 @@ std::string InputParser::clean(const std::string& input) {
     return oss.str();
 }
 
-/*
- * Parses the initialization line, extracting the array size and hash configuration.
- * Returns true if:
- * - All characters are digits or spaces
- * - Array size > 0
- * - Each hash function ID is a positive integer
- * - At least one hash function is provided
- */
-bool InputParser::parseInitLine(const std::string& line, size_t& arraySize, std::vector<int>& hashConfig) {
-    std::string cleaned = clean(line);
+bool InputParser::parseInitLine(int argc, char* argv[], int& port, size_t& arraySize, std::vector<int>& hashRepeats) {
+    std::vector<std::string> args;
 
-    // Ensure all characters are digits or spaces
-    for (char c : cleaned) {
-        if (!std::isdigit(c) && !std::isspace(c)) {
+    // Skip empty argv entries
+    for (int i = 1; i < argc; ++i) {
+        std::string arg(argv[i]);
+        if (!arg.empty()) {
+            args.push_back(arg);
+        }
+    }
+
+    // Must have at least port + array size + one hash function
+    if (args.size() < 3) {
+        return false;
+    }
+
+    try {
+        // Parse and validate port number
+        port = std::stoi(args[0]);
+        if (port < 1024 || port > 65535) {
+            return false;  // unsafe or invalid port
+        }
+
+        // Parse and validate array size
+        int rawSize = std::stoi(args[1]);
+        if (rawSize <= 0) {
             return false;
         }
-    }
-    
-    // Parse the cleaned line
-    std::istringstream iss(cleaned);
+        arraySize = static_cast<size_t>(rawSize);
 
-    size_t size;
-    if (!(iss >> size) || size == 0) {
-        return false;   // Invalid or zero array size
-    }
-
-    arraySize = size;
-    hashConfig.clear();
-
-    int val;
-    while (iss >> val) {
-        if (val <= 0) {
-            return false;    
+        // Parse hash function repeat counts
+        hashRepeats.clear();
+        for (size_t i = 2; i < args.size(); ++i) {
+            int count = std::stoi(args[i]);
+            if (count < 0) {
+                return false;
+            }
+            hashRepeats.push_back(count);
         }
-        hashConfig.push_back(val);
-    }
 
-    // Ensure at least one hash function was provided
-    return !hashConfig.empty();
+        if (hashRepeats.empty()) {
+            return false; // no hash functions given
+        }
+
+    } catch (const std::exception&) {
+        // Catch parsing errors like invalid stoi input
+        return false;
+    }
+    return true;
 }
 
 /*
@@ -76,31 +88,32 @@ bool InputParser::isValidUrl(const std::string& url) {
     return std::regex_match(url, urlRegex);
 }
 
-/*
- * Parses a command line into a CommandInput struct containing a command ID and URL.
- * Returns std::nullopt if parsing fails.
- */
 std::optional<CommandInput> InputParser::parseCommandLine(const std::string& input) {
     std::istringstream iss(clean(input));
-    int commandId;
-    std::string url;
+    std::string command;
+    std::string urlStr;
 
-    if (!(iss >> commandId) || !(iss >> url)) {
-        return std::nullopt;   // missing command or URL
+    // Try to extract command and URL
+    if (!(iss >> command) || !(iss >> urlStr)) {
+        return std::nullopt; // missing command or URL
     }
 
+    // Make sure there's no extra input
     std::string extra;
     if (iss >> extra) {
-        return std::nullopt;  // extra tokens detected
+        return std::nullopt; // too many arguments
     }
 
-    if (commandId != 1 && commandId != 2) {
-        return std::nullopt;    // invalid command ID
+    // Check that the command is one of the allowed types
+    if (command != "POST" && command != "GET" && command != "DELETE") {
+        return std::nullopt; // invalid command
     }
 
-    if (!isValidUrl(url)) {
-        return std::nullopt;   // invalid URL
+    // Validate the URL format
+    if (!isValidUrl(urlStr)) {
+        return std::nullopt; // invalid URL format
     }
 
-    return CommandInput{commandId, Url(url)};
+    // All good — return parsed command
+    return CommandInput{command, Url(urlStr)};
 }
