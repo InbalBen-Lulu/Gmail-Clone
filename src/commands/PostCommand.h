@@ -2,7 +2,7 @@
 #include "ICommand.h"
 
 // Command that adds a given URL to the Bloom filter and the blacklist
-class AddCommand : public ICommand {
+class PostCommand : public ICommand {
 private:
     BloomFilter& bloomFilter;
     BlackList& blackList;
@@ -14,5 +14,5 @@ public:
     Execute the add command: 
     add the URL's hash results to the Bloom filter and store the URL in the blacklist
     */ 
-    void execute(const Url& url, Hash& hash, IIOHandler& io) override;
+    string execute(const Url& url, Hash& hash) override;
 };

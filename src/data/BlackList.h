@@ -18,4 +18,6 @@ public:
 
     // Check if a URL exists in the blacklist
     bool contains(const Url& url) const;
+
+    void deleteUrl(const Url& url);
 };

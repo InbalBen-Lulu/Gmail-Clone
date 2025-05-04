@@ -7,7 +7,7 @@ private:
     std::string urlPath;
 public:
     // Constructor: Initializes the Url object with the given URL string.
-    Url(const std::string&);
+    Url(const std::string& url);
 
     // Returns the stored URL path as a string.
     std::string getUrlPath() const;

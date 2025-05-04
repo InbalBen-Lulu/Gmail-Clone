@@ -23,5 +23,7 @@ public:
 
     // Load all blacklisted URLs from the storage file
     std::set<Url> load();
+
+    void deleteUrl(const Url& url);
 };
 
