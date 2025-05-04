@@ -6,7 +6,7 @@
 
 // Struct representing a parsed command input: command ID and URL
 struct CommandInput {
-    string command;
+    std::string command;
     Url url;
 };
 
