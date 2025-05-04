@@ -9,6 +9,7 @@ class BlackList {
 private:
     BlackListStorage& storage;
     std::set<Url> urls;
+
 public:
     // Constructor: initialize the blacklist with a reference to its storage
     BlackList(BlackListStorage& storage);
@@ -19,5 +20,6 @@ public:
     // Check if a URL exists in the blacklist
     bool contains(const Url& url) const;
 
+    // Remove a URL from the blacklist and update the storage
     void deleteUrl(const Url& url);
 };
