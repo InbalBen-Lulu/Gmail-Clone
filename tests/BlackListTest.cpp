@@ -86,3 +86,33 @@ TEST(BlackListTest, AddDeletePersistsAcrossInstances) {
         EXPECT_TRUE(loaded.find(url) == loaded.end());
     }
 }
+
+TEST(BlackListTest, DeleteUrlRemovesOnlyTargetedUrl) {
+    remove("../data/blacklist.txt");
+
+    BlackListStorage storage(true);
+    BlackList blackList(storage);
+
+    Url url1("www.a.com");
+    Url url2("www.b.com");
+    Url url3("www.c.com");
+
+    blackList.add(url1);
+    blackList.add(url2);
+    blackList.add(url3);
+
+    // Delete url2
+    blackList.deleteUrl(url2);
+
+    // Ensure only url2 was removed
+    EXPECT_TRUE(blackList.contains(url1));
+    EXPECT_FALSE(blackList.contains(url2));
+    EXPECT_TRUE(blackList.contains(url3));
+
+    // Re-load using new instance to confirm persistence
+    BlackListStorage newStorage(false);
+    BlackList reloaded(newStorage);
+    EXPECT_TRUE(reloaded.contains(url1));
+    EXPECT_FALSE(reloaded.contains(url2));
+    EXPECT_TRUE(reloaded.contains(url3));
+}
