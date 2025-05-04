@@ -7,12 +7,14 @@ private:
     BloomFilter& bloomFilter;
     BlackList& blackList;
 public:
-    // Constructor: initialize with references to Bloom filter and blacklist
-    AddCommand(BloomFilter& bloom, BlackList& bl);
+    // Constructor: initializes PostCommand with references to a BloomFilter and a BlackList
+    PostCommand(BloomFilter& bloom, BlackList& bl);
 
     /*
-    Execute the add command: 
-    add the URL's hash results to the Bloom filter and store the URL in the blacklist
-    */ 
+     * Executes the PostCommand:
+     * - Hashes the URL and adds the resulting bits to the Bloom filter
+     * - Adds the URL to the blacklist
+     * - Returns a "201 Created" message indicating success
+     */
     std::string execute(const Url& url, Hash& hash) override;
 };
