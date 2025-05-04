@@ -1,6 +1,7 @@
 #include <fstream>
 #include <filesystem>
 #include <set>
+#include <vector>
 #include "BlackListStorage.h"
 #include "../utils/Url.h"
 #include "../utils/FileUtils.h"
@@ -9,7 +10,8 @@ const std::string BlackList_FILE_PATH = "../data/blacklist.txt";
 
 // Receives a flag whether to initialize a new file or not
 BlackListStorage::BlackListStorage(bool newFile)
-    : path(BlackList_FILE_PATH), newFile(newFile) {}
+    : path(BlackList_FILE_PATH), newFile(newFile) {
+}
 
 // Creates or clears the file if newFile is true
 void BlackListStorage::init() {
@@ -43,4 +45,25 @@ std::set<Url> BlackListStorage::load() {
 // Return whether a new file was initialized
 bool BlackListStorage::getNewFile() const {
     return newFile;
+}
+
+// Deletes all occurrences of the given URL from the file
+void BlackListStorage::deleteUrl(const Url& url) {
+    std::ifstream inFile = safeOpenIn(path);
+    std::vector<std::string> remaining;
+
+    std::string line;
+    while (std::getline(inFile, line)) {
+        if (line != url.getUrlPath()) {
+            remaining.push_back(line); // keep lines not matching the URL
+        }
+    }
+    inFile.close();
+
+    // Rewrite the file with remaining lines (excluding all occurrences of the URL)
+    std::ofstream outFile = safeOpenOut(path, std::ios::trunc);
+    for (const auto& entry : remaining) {
+        outFile << entry << "\n";
+    }
+    outFile.close();
 }
