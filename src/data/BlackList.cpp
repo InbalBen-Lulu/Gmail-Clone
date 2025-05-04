@@ -23,12 +23,10 @@ bool BlackList::contains(const Url& url) const {
 }
 
 /*
- * Removes the given URL from the blacklist if it exists.
+ * Removes the given URL from the blacklist.
  * This updates both the in-memory set and the persistent storage.
  */
 void BlackList::deleteUrl(const Url& url) {
-    if (urls.erase(url) > 0) {
-        // If the URL was present and removed, also remove it from storage
-        storage.deleteUrl(url);
-    }
+    urls.erase(url);
+    storage.deleteUrl(url);
 }
