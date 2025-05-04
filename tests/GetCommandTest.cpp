@@ -27,7 +27,7 @@ TEST(GetCommandTest, NotInBloomReturnsFalse) {
 
     string result = get.execute(url, hash);
 
-    EXPECT_EQ(result, "200 Ok\n\nfalse\n");
+    EXPECT_EQ(result, "200 Ok\n\nfalse");
 }
 
 TEST(GetCommandTest, InBloomButNotInBlackListReturnsTrueFalse) {
@@ -45,7 +45,7 @@ TEST(GetCommandTest, InBloomButNotInBlackListReturnsTrueFalse) {
     GetCommand get(bloomFilter, blackList);
     string result = get.execute(url, hash);
 
-    EXPECT_EQ(result, "200 Ok\n\ntrue false\n");
+    EXPECT_EQ(result, "200 Ok\n\ntrue false");
 }
 
 TEST(GetCommandTest, InBothReturnsTrueTrue) {
@@ -64,5 +64,5 @@ TEST(GetCommandTest, InBothReturnsTrueTrue) {
     GetCommand get(bloomFilter, blackList);
     string result = get.execute(url, hash);
 
-    EXPECT_EQ(result, "200 Ok\n\ntrue true\n");
+    EXPECT_EQ(result, "200 Ok\n\ntrue true");
 }
