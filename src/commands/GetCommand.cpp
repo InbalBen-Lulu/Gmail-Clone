@@ -1,31 +1,30 @@
-#include "ContainCommand.h"
+#include "GetCommand.h"
 
-// Constructor: initializes ContainCommand with references to a BloomFilter and a BlackList
-ContainCommand::ContainCommand(BloomFilter& bloom, BlackList& bl)
+// Constructor: initializes GetCommand with references to BloomFilter and BlackList
+GetCommand::GetCommand(BloomFilter& bloom, BlackList& bl)
     : bloomFilter(bloom), blackList(bl) {}
 
 /*
- * Executes the ContainCommand:
+ * Executes the GetCommand:
  * - Hashes the given URL
  * - Checks if all required bits are set in the BloomFilter
- * - If not all bits are set, immediately returns "false"
- * - If all bits are set, checks if the URL is actually in the BlackList
- * - Writes the result to the output (true/false combination)
+ * - If not all bits are set, returns "200 OK\n\nfalse"
+ * - If all bits are set:
+ *      - Checks if the URL is in the BlackList
+ *      - Returns "200 OK\n\ntrue true" or "200 OK\n\ntrue false" accordingly
  */
-void ContainCommand::execute(const Url& url, Hash& hash, IIOHandler& io) {
+std::string GetCommand::execute(const Url& url, Hash& hash) {
+    std::string response = "200 Ok\n\n";
+    
     std::vector<int> hashBits = hash.execute(url); 
     bool allBitsOn = bloomFilter.contain(hashBits);
 
     if (!allBitsOn) {
-        // If not all bits are set, no need to check the blacklist
-        io.writeLine("false");
-        return;
+        response += "false";
+    } else {
+        bool urlInBlackList = blackList.contains(url);
+        response += "true " + std::string(urlInBlackList ? "true" : "false");
     }
 
-    // If all bits are set, check actual presence in the blacklist
-    bool urlInBlackList = blackList.contains(url);
-
-    // If first result is true, print both results
-    io.writeLine("true " + std::string(urlInBlackList ? "true" : "false"));
+    return response;
 }
-
