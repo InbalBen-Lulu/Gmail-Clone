@@ -73,3 +73,40 @@ TEST(BlackListStorageTest, LoadEmptyFileReturnsEmptySet) {
 
     EXPECT_TRUE(urls.empty());
 }
+
+TEST(BlackListStorageTest, DeleteUrlRemovesLineFromFile) {
+    remove("../data/blacklist.txt");
+
+    Url url1("www.to-keep.com");
+    Url url2("www.to-delete.com");
+
+    // Add two URLs
+    {
+        BlackListStorage storage(true);
+        storage.add(url1);
+        storage.add(url2);
+    }
+
+    // Delete url2
+    {
+        BlackListStorage storage(false);
+        storage.deleteUrl(url2);
+    }
+
+    // Check file contents
+    ifstream file("../data/blacklist.txt");
+    ASSERT_TRUE(file.is_open());
+
+    string line;
+    bool foundDeleted = false;
+    bool foundKept = false;
+
+    while (getline(file, line)) {
+        if (line == url2.getUrlPath()) foundDeleted = true;
+        if (line == url1.getUrlPath()) foundKept = true;
+    }
+
+    file.close();
+    EXPECT_FALSE(foundDeleted);
+    EXPECT_TRUE(foundKept);
+}
