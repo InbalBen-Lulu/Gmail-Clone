@@ -1,14 +1,19 @@
 #  URL Blacklist Filter Application
 
 ##  About the Project
-This project implements a URL filtering system based on a Bloom Filter.  
-The application allows users to add URLs to a blacklist and check if URLs are blacklisted, using a probabilistic, memory-efficient data structure.
+This project implements a URL filtering system using a Bloom Filter and TCP socket communication.
+The application allows users to add URLs to a blacklist, check if URLs are blacklisted, or remove URLs from the blacklist by sending string-based commands via a TCP client.
 
-The program continuously reads commands from the user:
-- Add a URL to the blacklist.
-- Check if a URL is blacklisted.
+The server continuously listens for commands over TCP sockets:
 
-Both the Bloom Filter and the blacklist are saved to disk after every update and automatically loaded on program startup.
+
+- **POST**: Add a URL to the blacklist.
+
+- **GET**: Check if a URL is blacklisted.
+
+- **DELETE**: Remove a URL from the blacklist.
+
+Both the Bloom Filter and the blacklist are persistently saved to disk after every update and automatically loaded upon server startup.
 
 ---
 
@@ -23,6 +28,7 @@ It allows for false positives but guarantees no false negatives, making it ideal
 - CMake
 - GoogleTest (GTest) for unit testing
 - Docker
+- TCP/IP socket programming
 
 ---
 
@@ -54,138 +60,96 @@ If the Bloom Filter indicates a possible match, the real blacklist is checked fo
 ---
 
 ##  Build and Run Instructions
-
-###  Build the Project Application
+All components (server, client, and tests) are managed using Docker Compose.
 From the project root directory, open a terminal and run:
 
-```
-docker build -f Dockerfile -t project-app .
-```
-
-###  Run the Application
-After building the project, execute:
+### Build All Services
 
 ```
-docker run --rm -i -t -v ${PWD}/data:/usr/src/project/data project-app
+docker-compose build
 ```
----
-###  Build the Project Tests
-From the project root directory, open a terminal and run:
+This command builds all services: server, client, and tests.
+
+### Run the Server
+_See the section "Server Command-Line Arguments" below for a full explanation of the arguments._
 
 ```
-docker build -f Dockerfile.test -t project-tests .
+docker-compose run server [PORT] [ARRAY_SIZE] [repeat count for hash function 1] [repeat count for hash function 2] ...
 ```
 
-###  Run the Unit Tests
-To run the unit tests:
+### Run the Client
+_See the section "Client Command-Line Arguments" below for a full explanation of the arguments._
 
 ```
-docker run --rm project-tests
+docker-compose run client [SERVER_IP] [PORT]
 ```
 
----
+### Run the Tests
+
+```
+docker-compose run --rm tests
+```
 
 ##  Command Guide
 
-| Command Example         | Description                                        |
-|--------------------------|----------------------------------------------------|
-| `1 www.example.com0`      | Add URL `www.example.com0` to the blacklist        |
-| `2 www.example.com0`      | Check if URL `www.example.com0` is blacklisted     |
-| Invalid input            | Will be ignored and skipped automatically         |
+| Client Command               | Server Response                  | Description                                                              |
+|-----------------------------|----------------------------------|--------------------------------------------------------------------------|
+| `POST www.url1.com`         | `201 Created`                    | Adds a new URL to the blacklist                                          |
+| `GET www.url1.com`          | `200 Ok`<br><br>`true true`           | URL is in both Bloom Filter and blacklist (definite match)              |
+| `GET www.url2.com`          | `200 Ok`<br><br>`false`          | URL is neither in Bloom Filter nor in blacklist                         |
+| `GET www.falsepositive.com` | `200 Ok`<br><br>`true false`           | False positive: in Bloom Filter but not in blacklist                    |
+| `DELETE www.falsepositive.com` | `404 Not Found`              | Cannot delete a URL that was never added to the blacklist               |
+| `DELETE www.url1.com`       | `204 No Content`                 | Successfully removed the URL from the blacklist                         |
+| `BADCOMMAND something`      | `400 Bad Request`                | Invalid command syntax                                                   |
 
 ---
 
-##  First Line Input Format
-The very first line the program reads **must** define the Bloom Filter setup:
-```
-[array size] [repeat count for hash function 1] [repeat count for hash function 2] ...
-```
-- **First number**: Size of the Bloom Filter's bit array (in bits).
-- **Following numbers**: How many times to apply each corresponding hash function.
-- Each number after the first represents one hash function configuration.
-- The total number of following numbers determines how many different hash functions are used.
+## Server Command-Line Arguments
 
-**Example 1:**
+When running the server container, the following arguments must be provided:
 ```
-100 1
+[PORT] [ARRAY_SIZE] [HASH_CONFIG...]
 ```
-- Array size: 100 bits
-- 1 hash function, applied once.
+- **PORT**: The TCP port the server listens on.
+- **ARRAY_SIZE**: The size of the Bloom Filter's bit array (in bits).
+- **HASH_CONFIG**: A list of integers specifying how many times each hash function is applied.
 
-**Example 2:**
-```
-256 2 1
-```
-- Array size: 256 bits
-- Two hash functions:
-  - The first function applied twice.
-  - The second function applied once.
+The number of values in HASH_CONFIG determines how many hash functions are used.
 
----
+### Example 1
+```
+8080 100 1
+```
+- Port: 8080  
+- Bloom Filter size: 100 bits  
+- One hash function, applied once
 
-##  Usage Examples
+### Example 2
+```
+8080 256 2 1
+```
+- Port: 8080  
+- Bloom Filter size: 256 bits  
+- Two hash functions:  
+  - First applied twice  
+  - Second applied once
 
-### Example 1:
-**Input:**
+
+## Client Command-Line Arguments
+
+When running the client container, the following arguments must be provided:
 ```
-8 1 2
-2 www.example.com0
-```
-**Output:**
-```
-false
+[SERVER_IP] [PORT]
 ```
 
-**Input:**
-```
-1 www.example.com0
-2 www.example.com0
-```
-**Output:**
-```
-true true
-```
+- **SERVER_IP**: The IP address of the server to connect to (e.g., `127.0.0.1` for localhost).
+- **PORT**: The TCP port number the server is listening on.
 
-**Input:**
+### Example
 ```
-2 www.example.com1
+127.0.0.1 8080
 ```
-**Output:**
-```
-false
-```
-
----
-
-### Example 2:
-**Input:**
-```
-8 1
-1 www.example.com0
-2 www.example.com0
-2 www.example.com1
-```
-**Output:**
-```
-true true
-true false
-```
-
----
-
-### Example 3:
-**Input:**
-```
-8 2
-1 www.example.com0
-2 www.example.com0
-2 www.example.com4
-```
-**Output:**
-```
-true true
-true false
-```
+- Connects the client to the server at IP `127.0.0.1` and port `8080`.
 
 ---
 
