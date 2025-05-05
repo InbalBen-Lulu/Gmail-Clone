@@ -15,7 +15,7 @@ private:
     std::hash<std::string> hasher;  // Standard C++ string hasher
 public:
     // Constructor: initializes the hash configuration and bit array size
-    Hash(std::vector<int>& hashArray, size_t bitArraySize);
+    Hash(const std::vector<int>& hashArray, size_t bitArraySize);
 
     // Executes hashing logic on the given URL and returns a bit vector
     std::vector<int> execute(const Url& url) const;

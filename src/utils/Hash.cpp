@@ -4,7 +4,7 @@
 #include "Hash.h"
 
 // Constructor: store hash configuration and bit array size
-Hash::Hash(std::vector<int>& hashArray, size_t bitArraySize)
+Hash::Hash(const std::vector<int>& hashArray, size_t bitArraySize)
     : hashArray(std::move(hashArray)), bitArraySize(bitArraySize), hasher(std::hash<std::string>()) {
 }
 

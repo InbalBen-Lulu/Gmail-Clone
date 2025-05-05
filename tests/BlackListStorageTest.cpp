@@ -7,13 +7,13 @@
 using namespace std;
 
 TEST(BlackListStorageTest, AddUrlAppendsToFile) {
-    remove("../data/blacklist.txt"); // start clean
+    remove("data/blacklist.txt"); // start clean
 
     BlackListStorage storage(true);
     Url url("www.blacklisted.com");
     storage.add(url);
 
-    ifstream file("../data/blacklist.txt");
+    ifstream file("data/blacklist.txt");
     ASSERT_TRUE(file.is_open());
 
     string line;
@@ -29,7 +29,7 @@ TEST(BlackListStorageTest, AddUrlAppendsToFile) {
 }
 
 TEST(BlackListStorageTest, LoadReturnsAllUrls) {
-    remove("../data/blacklist.txt");
+    remove("data/blacklist.txt");
 
     BlackListStorage storage(true);
     Url url1("www.a.com"), url2("www.b.com");
@@ -43,7 +43,7 @@ TEST(BlackListStorageTest, LoadReturnsAllUrls) {
 
 
 TEST(BlackListStorageTest, DataIsPersistentAcrossInstances) {
-    remove("../data/blacklist.txt");
+    remove("data/blacklist.txt");
 
     Url url1("www.persist-a.com");
     Url url2("www.persist-b.com");
@@ -66,7 +66,7 @@ TEST(BlackListStorageTest, DataIsPersistentAcrossInstances) {
 }
 
 TEST(BlackListStorageTest, LoadEmptyFileReturnsEmptySet) {
-    ofstream("../data/blacklist.txt", ios::trunc).close(); // create empty file
+    ofstream("data/blacklist.txt", ios::trunc).close(); // create empty file
 
     BlackListStorage storage(false);
     set<Url> urls = storage.load();
@@ -75,7 +75,7 @@ TEST(BlackListStorageTest, LoadEmptyFileReturnsEmptySet) {
 }
 
 TEST(BlackListStorageTest, DeleteUrlRemovesLineFromFile) {
-    remove("../data/blacklist.txt");
+    remove("data/blacklist.txt");
 
     Url url1("www.to-keep.com");
     Url url2("www.to-delete.com");
@@ -94,7 +94,7 @@ TEST(BlackListStorageTest, DeleteUrlRemovesLineFromFile) {
     }
 
     // Check file contents
-    ifstream file("../data/blacklist.txt");
+    ifstream file("data/blacklist.txt");
     ASSERT_TRUE(file.is_open());
 
     string line;
@@ -117,6 +117,6 @@ TEST(BlackListStorageTest, DeleteNonExistingUrlDoesNothing) {
     BlackListStorage storage(true);
     EXPECT_NO_THROW(storage.deleteUrl(url));
 
-    ifstream file("../data/blacklist.txt");
+    ifstream file("data/blacklist.txt");
     ASSERT_TRUE(file.is_open());
 }
