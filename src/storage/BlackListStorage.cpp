@@ -6,7 +6,7 @@
 #include "../utils/Url.h"
 #include "../utils/FileUtils.h"
 
-const std::string BlackList_FILE_PATH = "../data/blacklist.txt";
+const std::string BlackList_FILE_PATH = "data/blacklist.txt";
 
 // Receives a flag whether to initialize a new file or not
 BlackListStorage::BlackListStorage(bool newFile)

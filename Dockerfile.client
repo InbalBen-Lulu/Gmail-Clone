@@ -1,0 +1,11 @@
+# Use a minimal Python 3.10-based image as the base
+FROM python:3.10-slim
+
+# Set the working directory inside the container
+WORKDIR /usr/src/client
+
+# Copy the client Python script from the host into the container
+COPY src/client/client.py .
+
+# Define the default command to run the client when the container starts
+ENTRYPOINT ["python3", "client.py"]

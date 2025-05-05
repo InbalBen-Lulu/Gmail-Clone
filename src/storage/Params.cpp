@@ -7,7 +7,7 @@
 #include <iostream>
 #include <vector>
 
-const std::string PARAMS_FILE_PATH = "../data/params.txt";
+const std::string PARAMS_FILE_PATH = "data/params.txt";
 
 // Constructor: checks if file exists and matches config, else creates new file
 Params::Params(size_t arraySize, const std::vector<int>& hashArray)

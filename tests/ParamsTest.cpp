@@ -6,7 +6,7 @@
 using namespace std;
 
 TEST(ParamsTest, NoExistingFile_NewFileShouldBeTrue) {
-    remove("../data/params.txt"); 
+    remove("data/params.txt"); 
 
     std::vector<int> array = {8, 2};
     Params params(8, array);
@@ -26,12 +26,12 @@ TEST(ParamsTest, FileExists_NewFileShouldBeFalse) {
 }
 
 TEST(ParamsTest, InitCreatesFileIfNotExists) {
-    remove("../data/params.txt"); // Delete if exists
+    remove("data/params.txt"); // Delete if exists
 
     std::vector<int> configArray = {8, 2};
     Params params(8, configArray);
 
-    ifstream file("../data/params.txt");
+    ifstream file("data/params.txt");
     EXPECT_TRUE(file.is_open()); // File should now exist
     file.close();
 }

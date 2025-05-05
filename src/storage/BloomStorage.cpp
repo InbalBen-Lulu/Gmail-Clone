@@ -5,7 +5,7 @@
 #include <vector>
 #include <iostream>
 
-const std::string BLOOM_FILE_PATH = "../data/bloom.txt";
+const std::string BLOOM_FILE_PATH = "data/bloom.txt";
 
 // Constructor: initializes path and either calls init or loads existing data
 BloomStorage::BloomStorage(bool newFile)

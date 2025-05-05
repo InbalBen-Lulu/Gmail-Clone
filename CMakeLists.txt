@@ -22,8 +22,8 @@ file(GLOB_RECURSE SRC_SOURCES
     "src/*.cpp"
 )
 
-# Exclude the application main.cpp when building tests
-list(FILTER SRC_SOURCES EXCLUDE REGEX ".*/app/main.cpp$")
+# Exclude the server MainServer.cpp when building tests
+list(FILTER SRC_SOURCES EXCLUDE REGEX ".*/server/MainServer.cpp$")
 
 # Collect all test files under tests/
 file(GLOB TEST_SOURCES "tests/*.cpp")
@@ -32,7 +32,7 @@ set(TEST_MAIN_SRC "tests/main.cpp")
 if(BUILD_TESTING)
     message(STATUS "Building tests...")
 
-    # Exclude the tests' main.cpp from normal test files (will add it separately)
+    # Exclude the tests' MainServer.cpp from normal test files (will add it separately)
     list(REMOVE_ITEM TEST_SOURCES ${TEST_MAIN_SRC})
 
     # Create a single executable for all tests
@@ -48,5 +48,5 @@ else()
     message(STATUS "Building main application...")
 
     # Build the main application with the real application main.cpp
-    add_executable(app ${SRC_SOURCES} src/app/main.cpp)
+    add_executable(server ${SRC_SOURCES} src/server/MainServer.cpp)
 endif()

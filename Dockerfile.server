@@ -1,0 +1,26 @@
+# Use the latest official GCC image as the base for C++ compilation
+FROM gcc:latest 
+
+# Update package index and install CMake (required for building the project)
+RUN apt-get update && apt-get install -y cmake
+ 
+# Copy the entire project directory (from the parent folder) into the container
+COPY .. /usr/src/project
+
+# Set the working directory to the project root inside the container
+WORKDIR /usr/src/project
+ 
+# Clean up any existing build artifacts to ensure a fresh build
+RUN rm -rf build CMakeCache.txt CMakeFiles cmake_install.cmake Makefile
+ 
+# Create a new build directory
+RUN mkdir build
+
+# Move into the build directory
+WORKDIR /usr/src/project/build
+ 
+# Run CMake to generate Makefiles (disable tests), then compile the server
+RUN cmake -DENABLE_TESTS=OFF .. && make
+ 
+# Set the default command to run the compiled server binary
+ENTRYPOINT ["./server"]
