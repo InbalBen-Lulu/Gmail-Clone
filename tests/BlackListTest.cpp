@@ -25,7 +25,7 @@ TEST(BlackListTest, UrlNotAddedReturnsFalse) {
 
 TEST(BlackListTest, AddPersistsToStorageFile) {
     // Clear the storage file before running the test
-    ofstream("../data/blacklist.txt", ios::trunc).close();
+    ofstream("data/blacklist.txt", ios::trunc).close();
 
     BlackListStorage storage(true);
     BlackList blackList(storage);
@@ -40,7 +40,7 @@ TEST(BlackListTest, AddPersistsToStorageFile) {
 
 TEST(BlackListTest, DeleteUrlRemovesFromMemoryAndStorage) {
     // Check that deleteUrl removes a URL from internal set and file
-    ofstream("../data/blacklist.txt", ios::trunc).close();
+    ofstream("data/blacklist.txt", ios::trunc).close();
 
     BlackListStorage storage(true);
     BlackList blacklist(storage);
@@ -58,7 +58,7 @@ TEST(BlackListTest, DeleteUrlRemovesFromMemoryAndStorage) {
 
 TEST(BlackListTest, AddDeletePersistsAcrossInstances) {
     // Add a URL, verify it persists, delete it, and verify removal persists too
-    remove("../data/blacklist.txt");
+    remove("data/blacklist.txt");
 
     Url url("www.persistent-url.com");
 
@@ -88,7 +88,7 @@ TEST(BlackListTest, AddDeletePersistsAcrossInstances) {
 }
 
 TEST(BlackListTest, DeleteUrlRemovesOnlyTargetedUrl) {
-    remove("../data/blacklist.txt");
+    remove("data/blacklist.txt");
 
     BlackListStorage storage(true);
     BlackList blackList(storage);

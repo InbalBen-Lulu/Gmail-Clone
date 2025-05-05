@@ -22,56 +22,50 @@ std::string InputParser::clean(const std::string& input) {
     return oss.str();
 }
 
+/**
+ * Parses server initialization arguments: port, array size, and hash repeat counts.
+ * Expected format: ./server <port> <arraySize> <repeat1> <repeat2> ...
+ * return true if all arguments are valid; false otherwise.
+ */
 bool InputParser::parseInitLine(int argc, char* argv[], int& port, size_t& arraySize, std::vector<int>& hashRepeats) {
-    std::vector<std::string> args;
-
-    // Skip empty argv entries
-    for (int i = 1; i < argc; ++i) {
-        std::string arg(argv[i]);
-        if (!arg.empty()) {
-            args.push_back(arg);
-        }
-    }
-
-    // Must have at least port + array size + one hash function
-    if (args.size() < 3) {
+    // Must have at least: program name + port + arraySize + one hash repeat
+    if (argc < 4) {
         return false;
     }
 
     try {
         // Parse and validate port number
-        port = std::stoi(args[0]);
-        if (port < 1024 || port > 65535) {
-            return false;  // unsafe or invalid port
+        port = std::stoi(argv[1]);
+        if (port < 0 || port > 65535) {
+            return false;   // Invalid port range
         }
-
         // Parse and validate array size
-        int rawSize = std::stoi(args[1]);
+        int rawSize = std::stoi(argv[2]);
         if (rawSize <= 0) {
-            return false;
+            return false;   // Array size must be positive
         }
         arraySize = static_cast<size_t>(rawSize);
-
-        // Parse hash function repeat counts
+        // Clear any previous values and parse hash repeat counts
         hashRepeats.clear();
-        for (size_t i = 2; i < args.size(); ++i) {
-            int count = std::stoi(args[i]);
+        for (int i = 3; i < argc; ++i) {
+            int count = std::stoi(argv[i]);
             if (count < 0) {
-                return false;
+                return false;   // Hash repeat count must be non-negative
             }
             hashRepeats.push_back(count);
         }
-
+        // Ensure at least one hash function was provided
         if (hashRepeats.empty()) {
-            return false; // no hash functions given
+            return false;     
         }
 
-    } catch (const std::exception&) {
-        // Catch parsing errors like invalid stoi input
+    } catch (const std::exception& e) {
+        // Catch any conversion errors (invalid number format, etc.)
         return false;
     }
     return true;
 }
+
 
 /*
  * Validates if a given URL string matches a standard URL format.
@@ -85,6 +79,10 @@ bool InputParser::isValidUrl(const std::string& url) {
     return std::regex_match(url, urlRegex);
 }
 
+/**
+ * Parses a command line string into a valid CommandInput object if possible.
+ * Returns std::nullopt on invalid format or unsupported command.
+*/
 std::optional<CommandInput> InputParser::parseCommandLine(const std::string& input) {
     std::istringstream iss(clean(input));
     std::string command;
