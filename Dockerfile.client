@@ -5,7 +5,7 @@ FROM python:3.10-slim
 WORKDIR /usr/src/client
 
 # Copy the client Python script from the host into the container
-COPY src/client/client.py .
+COPY src/client/Client.py .
 
 # Define the default command to run the client when the container starts
-ENTRYPOINT ["python3", "client.py"]
+ENTRYPOINT ["python3", "Client.py"]
