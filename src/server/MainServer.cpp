@@ -13,7 +13,6 @@ int main(int argc, char* argv[]) {
 
     // Parse the command-line arguments and populate port, arraySize, and hashArray
     if (!InputParser::parseInitLine(argc, argv, port, arraySize, hashArray)) {
-        std::cerr << "Usage: ./server <port> <arraySize> <repeat1> <repeat2> ..." << std::endl;
         return 1;
     }
 
