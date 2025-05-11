@@ -37,10 +37,10 @@ def main():
 
     except KeyboardInterrupt:
         # Handle Ctrl+C to exit gracefully
-        print("\nClient terminated.")
+        pass
     except Exception as e:
         # Handle any unexpected error
-        print(f"\nUnexpected error: {e}")
+        pass
     finally:
         # Always close the socket on exit
         s.close()

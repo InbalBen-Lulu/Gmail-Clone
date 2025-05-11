@@ -38,7 +38,6 @@ void Server::registerCommands() {
 void Server::setup() {
     serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (serverSocket < 0) {
-        perror("error creating socket");
         exit(1);
     }
 
@@ -49,12 +48,10 @@ void Server::setup() {
     sin.sin_port = htons(port); // Convert port number to network byte order
 
     if (bind(serverSocket, (struct sockaddr*)&sin, sizeof(sin)) < 0) {
-        perror("error binding socket");
         exit(1);
     }
 
     if (listen(serverSocket, 5) < 0) {
-        perror("error listening to socket");
         exit(1);
     }
 }
@@ -62,19 +59,18 @@ void Server::setup() {
 // Main loop: accepts a client connection, handles it, and then closes sockets
 void Server::run() {
     setup();
+    while (true){
+        struct sockaddr_in client_sin;
+        unsigned int addr_len = sizeof(client_sin);
 
-    struct sockaddr_in client_sin;
-    unsigned int addr_len = sizeof(client_sin);
+        int clientSocket = accept(serverSocket, (struct sockaddr*)&client_sin, &addr_len);
+        if (clientSocket < 0) {
+            exit(1);
+        }
 
-    int clientSocket = accept(serverSocket, (struct sockaddr*)&client_sin, &addr_len);
-    if (clientSocket < 0) {
-        perror("error accepting client");
+        handleClient(clientSocket); // Handle communication with the client
+        close(clientSocket);
     }
-
-    handleClient(clientSocket); // Handle communication with the client
-    close(clientSocket);
-    
-    close(serverSocket);
 }
 
 // Handles requests from the connected client in a loop
@@ -85,12 +81,10 @@ void Server::handleClient(int clientSocket) {
         int bytesRead = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
 
         if (bytesRead == 0) {
-            std::cout << "Client disconnected." << std::endl;
             break;  
         }
         
         if (bytesRead < 0) {
-            perror("recv failed");
             continue; 
         }
 
