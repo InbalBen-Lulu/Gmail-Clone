@@ -59,19 +59,18 @@ void Server::setup() {
 // Main loop: accepts a client connection, handles it, and then closes sockets
 void Server::run() {
     setup();
+    while (true){
+        struct sockaddr_in client_sin;
+        unsigned int addr_len = sizeof(client_sin);
 
-    struct sockaddr_in client_sin;
-    unsigned int addr_len = sizeof(client_sin);
+        int clientSocket = accept(serverSocket, (struct sockaddr*)&client_sin, &addr_len);
+        if (clientSocket < 0) {
+            exit(1);
+        }
 
-    int clientSocket = accept(serverSocket, (struct sockaddr*)&client_sin, &addr_len);
-    if (clientSocket < 0) {
-        exit(1);
+        handleClient(clientSocket); // Handle communication with the client
+        close(clientSocket);
     }
-
-    handleClient(clientSocket); // Handle communication with the client
-    close(clientSocket);
-    
-    close(serverSocket);
 }
 
 // Handles requests from the connected client in a loop
