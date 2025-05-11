@@ -38,7 +38,6 @@ void Server::registerCommands() {
 void Server::setup() {
     serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (serverSocket < 0) {
-        perror("error creating socket");
         exit(1);
     }
 
@@ -49,12 +48,10 @@ void Server::setup() {
     sin.sin_port = htons(port); // Convert port number to network byte order
 
     if (bind(serverSocket, (struct sockaddr*)&sin, sizeof(sin)) < 0) {
-        perror("error binding socket");
         exit(1);
     }
 
     if (listen(serverSocket, 5) < 0) {
-        perror("error listening to socket");
         exit(1);
     }
 }
@@ -68,7 +65,7 @@ void Server::run() {
 
     int clientSocket = accept(serverSocket, (struct sockaddr*)&client_sin, &addr_len);
     if (clientSocket < 0) {
-        perror("error accepting client");
+        exit(1);
     }
 
     handleClient(clientSocket); // Handle communication with the client
@@ -85,12 +82,10 @@ void Server::handleClient(int clientSocket) {
         int bytesRead = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
 
         if (bytesRead == 0) {
-            std::cout << "Client disconnected." << std::endl;
             break;  
         }
         
         if (bytesRead < 0) {
-            perror("recv failed");
             continue; 
         }
 
