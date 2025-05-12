@@ -15,7 +15,7 @@ BlackListStorage::BlackListStorage(bool newFile)
 
 // Creates or clears the file if newFile is true
 void BlackListStorage::init() {
-    if (newFile) {
+    if (newFile || std::filesystem::is_empty(BlackList_FILE_PATH)) {
         std::ofstream outFile = safeOpenOut(path, std::ios::trunc); // use helper for safety
         outFile.close(); // optional but clean
     }
