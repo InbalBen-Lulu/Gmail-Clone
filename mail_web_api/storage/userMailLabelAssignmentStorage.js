@@ -1,4 +1,4 @@
-// Structure: Set<{ userId, mailId, labelId }>
-const userMailLabelAssignments = new Set();
+// Structure: Map<userId, Map<labelId, Set<mailId>>>
+const userMailLabelAssignments = new Map();
 
-module.exports = {userMailLabelAssignments};
+module.exports = { userMailLabelAssignments };

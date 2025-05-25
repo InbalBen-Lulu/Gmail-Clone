@@ -1,4 +1,4 @@
-// Structure: Set<{ userId, labelId }>
-const userLabelOwnerships = new Set();
+// Structure: map<userId, Set<labelId>>
+const userLabelOwnership = new Map();
 
 module.exports = {userLabelOwnerships};
