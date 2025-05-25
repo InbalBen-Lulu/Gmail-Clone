@@ -18,7 +18,7 @@ function createUser({
     // Check for existing email
     for (const user of users.values()) {
         if (user.email === email) {
-        throw new Error("Email already registered");
+            throw new Error("Email already registered");
         }
     }
 

@@ -7,9 +7,9 @@ const {
 } = require('../controllers/userController');
 
 // Create a new user (registration)
-router.post('/users', registerUser);
+router.post('/', registerUser);
 
 // Get user details by ID
-router.get('/users/:id', getUserDetails);
+router.get('/:id', getUserDetails);
 
 module.exports = router;

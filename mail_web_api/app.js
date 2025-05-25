@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
-// const articleRoutes = require('./routes/articles');
+const usersRoutes = require('./routes/userRoute');
 
 app.use(express.json());
-// app.use('/articles', articleRoutes);
+app.use('/api/users', usersRoutes);
 
 app.listen(3000);
