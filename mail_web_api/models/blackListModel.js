@@ -16,24 +16,19 @@ function sendToBlacklistServer(message) {
         const client = new net.Socket();
 
         client.connect(BLACKLIST_SERVER_PORT, BLACKLIST_SERVER_IP, function () {
-            console.log(`✅ Connected to blacklist server at ${BLACKLIST_SERVER_IP}:${BLACKLIST_SERVER_PORT}`);
-            console.log(`📤 Sending message: ${message}`);
             client.write(message + '\n'); // Ensure newline termination
         });
 
         client.on('data', function (data) {
-            console.log(`📥 Received response: ${data.toString().trim()}`);
             resolve(data.toString().trim());
             client.destroy();
         });
 
         client.on('error', function (err) {
-            console.error(`❌ Error connecting to server:`, err);
             reject(err);
         });
 
         client.on('close', function () {
-            console.log(`🔌 Connection to server closed`);
             // Connection closed
         });
     });
@@ -97,7 +92,6 @@ async function checkUrlsAgainstBlacklist(words) {
  */
 async function addToBlacklist(word) {
     const response = await sendToBlacklistServer('POST ' + word);
-    console.log('📤 POST ', word);
     if (response === '201 Created') {
         return { success: true, message: 'URL added to blacklist' };
     }

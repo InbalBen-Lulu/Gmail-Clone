@@ -13,6 +13,7 @@ services:
       - ./blacklist_service/data:/usr/src/project/build/data
     networks:
       - mail_service
+      
   mail_api:
     build:
       context: ./mail_web_api
