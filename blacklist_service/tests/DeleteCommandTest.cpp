@@ -17,8 +17,9 @@ TEST(DeleteCommandTest, DeletesExistingUrlAndReturns204) {
 
     Url url("www.to-delete.com");
     blackList.add(url);
-
-    DeleteCommand delCommand(bloomFilter, blackList);
+    
+    std::mutex mutex;
+    DeleteCommand delCommand(bloomFilter, blackList, mutex);
     vector<int> config = {1, 2};
     Hash hash(config, 8);
 
@@ -38,7 +39,8 @@ TEST(DeleteCommandTest, DeletingNonExistingUrlReturns404) {
     vector<int> config = {1, 2};
     Hash hash(config, 8);
 
-    DeleteCommand delCommand(bloomFilter, blackList);
+    std::mutex mutex;
+    DeleteCommand delCommand(bloomFilter, blackList, mutex);
     string result = delCommand.execute(url, hash);
 
     EXPECT_EQ(result, "404 Not Found");
@@ -53,7 +55,8 @@ TEST(DeleteCommandTest, DeletingTwiceReturns404SecondTime) {
     Url url("www.once-only.com");
     blackList.add(url);
 
-    DeleteCommand delCommand(bloomFilter, blackList);
+    std::mutex mutex;
+    DeleteCommand delCommand(bloomFilter, blackList, mutex);
     vector<int> config = {1, 2};
     Hash hash(config, 8);
 

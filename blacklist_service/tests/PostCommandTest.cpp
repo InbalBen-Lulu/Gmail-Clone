@@ -21,7 +21,8 @@ TEST(PostCommandTest, ExecuteAddsToBlackListAndReturns201) {
     BlackListStorage blackListStorage(true);
     BlackList blackList(blackListStorage);
 
-    PostCommand postCommand(bloomFilter, blackList);
+    std::mutex mutex;
+    PostCommand postCommand(bloomFilter, blackList, mutex);
 
     Url url("www.check.com");
     vector<int> config = {1, 2};
@@ -41,7 +42,8 @@ TEST(PostCommandTest, ExecuteSetsBitsInBloomFilter) {
     BlackListStorage blackListStorage(true);
     BlackList blackList(blackListStorage);
 
-    PostCommand postCommand(bloomFilter, blackList);
+    std::mutex mutex;
+    PostCommand postCommand(bloomFilter, blackList, mutex);
 
     Url url("www.check.com");
     vector<int> config = {1, 2};
@@ -60,7 +62,9 @@ TEST(PostCommandTest, ExecuteAffectsBothStructures) {
     BloomFilter bloomFilter(bloomStorage, 8);
     BlackListStorage blackListStorage(true);
     BlackList blackList(blackListStorage);
-    PostCommand postCommand(bloomFilter, blackList);
+
+    std::mutex mutex;
+    PostCommand postCommand(bloomFilter, blackList, mutex);
 
     Url url("www.fullcheck.com");
     vector<int> config = {1, 2};
