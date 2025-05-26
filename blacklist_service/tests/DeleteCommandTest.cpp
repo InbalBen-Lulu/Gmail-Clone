@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <mutex>
 #include "../src/commands/DeleteCommand.h"
 #include "../src/data/BloomFilter.h"
 #include "../src/storage/BloomStorage.h"

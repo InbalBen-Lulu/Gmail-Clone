@@ -1,8 +1,9 @@
 #include "PostCommand.h"
+#include <mutex>
 
 // Constructor: initializes PostCommand with references to a BloomFilter and a BlackList
-PostCommand::PostCommand(BloomFilter& bloom, BlackList& bl)
-    : bloomFilter(bloom), blackList(bl) {}
+PostCommand::PostCommand(BloomFilter& bloom, BlackList& bl, std::mutex& m)
+    : bloomFilter(bloom), blackList(bl), mutex(m) {}
 
 /*
  * Executes the PostCommand:
@@ -12,6 +13,8 @@ PostCommand::PostCommand(BloomFilter& bloom, BlackList& bl)
  * - Returns "201 Created" upon successful addition
  */
 std::string PostCommand::execute(const Url& url, Hash& hash) {
+    std::lock_guard<std::mutex> lock(mutex);
+
     std::vector<int> hashResult = hash.execute(url); // Generate hash bits for the URL
     bloomFilter.add(hashResult);
     blackList.add(url);

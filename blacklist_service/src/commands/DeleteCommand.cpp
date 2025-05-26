@@ -1,8 +1,9 @@
 #include "DeleteCommand.h"
+#include <mutex>
 
 // Constructor: initializes DeleteCommand with references to BloomFilter and BlackList
-DeleteCommand::DeleteCommand(BloomFilter& bloom, BlackList& bl)
-    : bloomFilter(bloom), blackList(bl) {}
+DeleteCommand::DeleteCommand(BloomFilter& bloom, BlackList& bl, std::mutex& m)
+    : bloomFilter(bloom), blackList(bl), mutex(m) {}
 
 /*
  * Executes the DeleteCommand:
@@ -11,6 +12,8 @@ DeleteCommand::DeleteCommand(BloomFilter& bloom, BlackList& bl)
  * - If it doesn't exist: returns "404 Not Found"
  */
 std::string DeleteCommand::execute(const Url& url, Hash& hash) {
+    std::lock_guard<std::mutex> lock(mutex);
+
     if (blackList.contains(url)) {
         blackList.deleteUrl(url);
         return "204 No Content";
