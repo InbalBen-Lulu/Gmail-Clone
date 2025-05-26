@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <mutex>
 #include "../src/commands/DeleteCommand.h"
 #include "../src/data/BloomFilter.h"
 #include "../src/storage/BloomStorage.h"
@@ -79,8 +80,9 @@ TEST(DeleteCommandTest, DoesNotAffectBloomFilter) {
 
     bloomFilter.add(hash.execute(url));
     blackList.add(url);
-
-    DeleteCommand delCommand(bloomFilter, blackList);
+    
+    std::mutex mutex;
+    DeleteCommand delCommand(bloomFilter, blackList, mutex);
     delCommand.execute(url, hash);
 
     // still should be in bloom filter

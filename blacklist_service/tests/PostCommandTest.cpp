@@ -2,6 +2,7 @@
 #include <memory>
 #include <cstdio>
 #include <vector>
+#include <mutex>
 #include <algorithm>
 #include "../src/commands/PostCommand.h"
 #include "../src/data/BloomFilter.h"
@@ -75,4 +76,3 @@ TEST(PostCommandTest, ExecuteAffectsBothStructures) {
     EXPECT_TRUE(blackList.contains(url));
     EXPECT_TRUE(bloomFilter.contain(hash.execute(url)));
 }
-

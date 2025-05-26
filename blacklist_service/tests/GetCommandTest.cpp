@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <vector>
 #include <algorithm>
+#include <mutex>
 #include "../src/commands/GetCommand.h"
 #include "../src/data/BloomFilter.h"
 #include "../src/storage/BloomStorage.h"
