@@ -1,8 +1,5 @@
 #include <gtest/gtest.h>
-#include <memory>
-#include <cstdio>
 #include <vector>
-#include <algorithm>
 #include <mutex>
 #include "../src/commands/GetCommand.h"
 #include "../src/data/BloomFilter.h"
@@ -20,7 +17,8 @@ TEST(GetCommandTest, NotInBloomReturnsFalse) {
     BlackListStorage blStorage(true);
     BlackList blackList(blStorage);
 
-    GetCommand get(bloomFilter, blackList);
+    std::mutex mutex;
+    GetCommand get(bloomFilter, blackList, mutex);
 
     Url url("www.unknown.com");
     vector<int> config = {1, 2};
@@ -40,10 +38,11 @@ TEST(GetCommandTest, InBloomButNotInBlackListReturnsTrueFalse) {
     Url url("www.false-positive.com");
     vector<int> config = {1, 2};
     Hash hash(config, 8);
-
+    
     bloomFilter.add(hash.execute(url));
 
-    GetCommand get(bloomFilter, blackList);
+    std::mutex mutex;
+    GetCommand get(bloomFilter, blackList, mutex);
     string result = get.execute(url, hash);
 
     EXPECT_EQ(result, "200 Ok\n\ntrue false");
@@ -62,7 +61,8 @@ TEST(GetCommandTest, InBothReturnsTrueTrue) {
     bloomFilter.add(hash.execute(url));
     blackList.add(url);
 
-    GetCommand get(bloomFilter, blackList);
+    std::mutex mutex;
+    GetCommand get(bloomFilter, blackList, mutex);
     string result = get.execute(url, hash);
 
     EXPECT_EQ(result, "200 Ok\n\ntrue true");
