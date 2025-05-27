@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 #include <cstring>
+#include <mutex>
+#include <thread>
 #include "../data/BloomFilter.h"
 #include "../storage/BloomStorage.h"
 #include "../data/BlackList.h"
@@ -12,7 +14,6 @@
 #include "../utils/Hash.h"
 #include "../parser/InputParser.h"
 #include "../storage/Params.h"
-
 
 /**
  * @class Server
@@ -31,6 +32,7 @@ private:
     std::unique_ptr<BlackListStorage> blackListStorage;
     std::unique_ptr<BloomStorage> bloomStorage;
     int port;
+    std::mutex commandMutex;
 
     /**
      * @brief Initializes the server's socket and begins listening for connections.

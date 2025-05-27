@@ -1,4 +1,5 @@
 #pragma once
+#include <mutex>
 #include "ICommand.h"
 
 // Command that deletes a given URL from the blacklist if it exists
@@ -6,9 +7,11 @@ class DeleteCommand : public ICommand {
 private:
     BloomFilter& bloomFilter;
     BlackList& blackList;
+    std::mutex& mutex;
+
 public:
     // Constructor: initialize with references to Bloom filter and blacklist
-    DeleteCommand(BloomFilter& bloom, BlackList& bl);
+    DeleteCommand(BloomFilter& bloom, BlackList& bl, std::mutex& m);
     
     /*
      * Execute the delete command:

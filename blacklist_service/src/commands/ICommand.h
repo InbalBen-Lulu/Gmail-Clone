@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <mutex>
 #include "../data/BloomFilter.h"
 #include "../data/BlackList.h"
 #include "../utils/Hash.h"

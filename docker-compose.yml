@@ -1,0 +1,44 @@
+networks:
+  mail_service:
+    external: true
+
+services:
+  server:
+    build:
+      context: ./blacklist_service
+      dockerfile: Dockerfile.server
+    container_name: server
+    working_dir: /usr/src/project/build
+    volumes:
+      - ./blacklist_service/data:/usr/src/project/build/data
+    networks:
+      - mail_service
+      
+  mail_api:
+    build:
+      context: ./mail_web_api
+      dockerfile: Dockerfile.api
+    container_name: mail_api
+    working_dir: /usr/src/app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./mail_web_api:/usr/src/app
+    environment:
+      - BLACKLIST_SERVER_IP=server
+      - BLACKLIST_SERVER_PORT=8080
+    networks:
+      - mail_service
+
+  tests:
+    build:
+      context: ./blacklist_service
+      dockerfile: Dockerfile.test
+    container_name: app_tests
+    working_dir: /usr/src/project/build
+    volumes:
+      - ./blacklist_service/data:/usr/src/project/build/data
+    command: ./runTests
+    networks:
+      - mail_service
+

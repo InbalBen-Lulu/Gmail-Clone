@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <cstring>
 #include <sstream>
+#include <mutex>
 
 // Constructor: initializes the system and registers available commands
 Server::Server(int port, size_t arraySize, std::vector<int>& hashArray) : port(port) {
@@ -29,9 +30,10 @@ void Server::initSystem(size_t arraySize, const std::vector<int>& hashArray) {
 
 // Registers the supported HTTP-like commands
 void Server::registerCommands() {
-    commands["POST"] = std::make_unique<PostCommand>(*bloomFilter, *blackList);
-    commands["GET"] = std::make_unique<GetCommand>(*bloomFilter, *blackList);
-    commands["DELETE"] = std::make_unique<DeleteCommand>(*bloomFilter, *blackList);
+    // Pass the same mutex instance to all commands to synchronize access to shared resources
+    commands["POST"] = std::make_unique<PostCommand>(*bloomFilter, *blackList, commandMutex);
+    commands["GET"] = std::make_unique<GetCommand>(*bloomFilter, *blackList, commandMutex);
+    commands["DELETE"] = std::make_unique<DeleteCommand>(*bloomFilter, *blackList, commandMutex);
 }
 
 // Prepares the socket, binds it to the port, and starts listening for incoming connections
@@ -67,9 +69,13 @@ void Server::run() {
         if (clientSocket < 0) {
             exit(1);
         }
-
-        handleClient(clientSocket); // Handle communication with the client
-        close(clientSocket);
+        
+        // Each client connection is handled in its own detached thread
+        // This allows multiple clients to be served concurrently
+        std::thread([this, clientSocket]() {
+            this->handleClient(clientSocket);
+            close(clientSocket);
+        }).detach(); 
     }
 }
 
