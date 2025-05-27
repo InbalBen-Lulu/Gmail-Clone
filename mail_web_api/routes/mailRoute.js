@@ -4,7 +4,7 @@ const router = express.Router();
 const mailController = require('../controllers/mailController');
 const validateUserHeader = require('../middleware/validateUser');
 
-// Apply user validation middleware to all label routes
+// Apply user validation middleware to all mails routes
 router.use(validateUserHeader);
 
 // Routes for /api/mails

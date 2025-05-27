@@ -1,5 +1,5 @@
 const mailModel = require('../models/mailModel');
-const { getUserByEmail } = require('./userModel');
+const { getUserByEmail } = require('../models/userModel');
 
 /**
  * POST /api/mails

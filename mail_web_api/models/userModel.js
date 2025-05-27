@@ -45,7 +45,20 @@ function getUserById(userId) {
     return users.get(userId) || null;
 }
 
+/**
+ * Get a user by email or return null if not found.
+ */
+function getUserByEmail(email) {
+    for (const user of users.values()) {
+        if (user.email === email) {
+            return user;
+        }
+    }
+    return null;
+}
+
 module.exports = {
     createUser,
-    getUserById
+    getUserById,
+    getUserByEmail
 };

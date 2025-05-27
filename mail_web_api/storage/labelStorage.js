@@ -1,5 +1,5 @@
 // Structure: Map<userId, Array<{ id, name }>>
 const userLabels = new Map();
 
-module.exports = {labels};
+module.exports = {userLabels};
 
