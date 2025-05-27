@@ -1,8 +1,6 @@
 #include <gtest/gtest.h>
-#include <memory>
-#include <cstdio>
 #include <vector>
-#include <algorithm>
+#include <mutex>
 #include "../src/commands/PostCommand.h"
 #include "../src/data/BloomFilter.h"
 #include "../src/storage/BloomStorage.h"
@@ -21,7 +19,8 @@ TEST(PostCommandTest, ExecuteAddsToBlackListAndReturns201) {
     BlackListStorage blackListStorage(true);
     BlackList blackList(blackListStorage);
 
-    PostCommand postCommand(bloomFilter, blackList);
+    std::mutex mutex;
+    PostCommand postCommand(bloomFilter, blackList, mutex);
 
     Url url("www.check.com");
     vector<int> config = {1, 2};
@@ -41,7 +40,8 @@ TEST(PostCommandTest, ExecuteSetsBitsInBloomFilter) {
     BlackListStorage blackListStorage(true);
     BlackList blackList(blackListStorage);
 
-    PostCommand postCommand(bloomFilter, blackList);
+    std::mutex mutex;
+    PostCommand postCommand(bloomFilter, blackList, mutex);
 
     Url url("www.check.com");
     vector<int> config = {1, 2};
@@ -60,7 +60,9 @@ TEST(PostCommandTest, ExecuteAffectsBothStructures) {
     BloomFilter bloomFilter(bloomStorage, 8);
     BlackListStorage blackListStorage(true);
     BlackList blackList(blackListStorage);
-    PostCommand postCommand(bloomFilter, blackList);
+
+    std::mutex mutex;
+    PostCommand postCommand(bloomFilter, blackList, mutex);
 
     Url url("www.fullcheck.com");
     vector<int> config = {1, 2};
@@ -71,4 +73,3 @@ TEST(PostCommandTest, ExecuteAffectsBothStructures) {
     EXPECT_TRUE(blackList.contains(url));
     EXPECT_TRUE(bloomFilter.contain(hash.execute(url)));
 }
-

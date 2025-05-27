@@ -1,4 +1,5 @@
 #pragma once
+#include <mutex>
 #include "ICommand.h"
 
 // Command that checks if a given URL exists in the Bloom filter and the blacklist
@@ -6,9 +7,11 @@ class GetCommand : public ICommand {
 private:
     BloomFilter& bloomFilter;
     BlackList& blackList;
+    std::mutex& mutex;
+
 public:
     // Constructor: initialize with references to Bloom filter and blacklist
-    GetCommand(BloomFilter& bloom, BlackList& bl);
+    GetCommand(BloomFilter& bloom, BlackList& bl, std::mutex& m);
 
     /*
      * Execute the get command:

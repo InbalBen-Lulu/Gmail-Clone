@@ -1,8 +1,9 @@
 #include "GetCommand.h"
+#include <mutex>
 
 // Constructor: initializes GetCommand with references to BloomFilter and BlackList
-GetCommand::GetCommand(BloomFilter& bloom, BlackList& bl)
-    : bloomFilter(bloom), blackList(bl) {}
+GetCommand::GetCommand(BloomFilter& bloom, BlackList& bl, std::mutex& m)
+    : bloomFilter(bloom), blackList(bl), mutex(m) {}
 
 /*
  * Executes the GetCommand:
@@ -14,6 +15,8 @@ GetCommand::GetCommand(BloomFilter& bloom, BlackList& bl)
  *      - Returns "200 OK\n\ntrue true" or "200 OK\n\ntrue false" accordingly
  */
 std::string GetCommand::execute(const Url& url, Hash& hash) {
+    std::lock_guard<std::mutex> lock(mutex);
+
     std::string response = "200 Ok\n\n";
     
     std::vector<int> hashBits = hash.execute(url); 
