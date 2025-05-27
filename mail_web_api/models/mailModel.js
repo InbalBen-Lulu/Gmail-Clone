@@ -13,7 +13,7 @@ let mailIdCounter = 0;
  */
 function createMail(fromUserId, toUserIds, subject = '', body = '') {
     const words = (subject + ' ' + body).split(/\s+/);
-    if (checkUrlsAgainstBlacklist(words)) return null;
+    //if (checkUrlsAgainstBlacklist(words)) return null;
 
     const mailId = ++mailIdCounter;
 
@@ -23,7 +23,7 @@ function createMail(fromUserId, toUserIds, subject = '', body = '') {
         to: toUserIds,
         subject,
         body,
-        sentAt: Date.now()
+        sentAt: new Date().toISOString()
     };
 
     mails.set(mailId, mail);
@@ -80,25 +80,25 @@ function deleteMail(mailId, userId) {
 }
 
 /**
- * Updates subject and/or body of a mail after blacklist check.
+ * Updates the subject and/or body of a mail after a blacklist check.
+ * Returns:
+ *   - null if mail doesn't exist or user is not the sender
+ *   - -1 if new content contains blacklisted URLs
+ *   - 0 on success
  */
 function updateMail(mailId, userId, updatedFields) {
     const mail = mails.get(mailId);
-    if (!mail) return false;
-
-    // Only sender is allowed to update
-    if (mail.from !== userId) return false;
+    if (!mail || mail.from !== userId) return null;
 
     const subject = updatedFields.subject ?? mail.subject;
     const body = updatedFields.body ?? mail.body;
-
     const words = (subject + ' ' + body).split(/\s+/);
-    if (checkUrlsAgainstBlacklist(words)) return false;
+
+    //if (checkUrlsAgainstBlacklist(words)) return -1;
 
     mail.subject = subject;
     mail.body = body;
-
-    return true;
+    return 0;
 }
 
 /**

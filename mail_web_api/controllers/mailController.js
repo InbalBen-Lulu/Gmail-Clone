@@ -4,6 +4,7 @@ const { getUserByEmail } = require('../models/userModel');
 /**
  * POST /api/mails
  * Creates a new mail and sends it to recipients.
+ * On success, responds with 201 and sets the Location header to the new mail's URL.
  */
 function createMail(req, res) {
     const { to, subject = '', body = '' } = req.body;
@@ -28,7 +29,7 @@ function createMail(req, res) {
         return res.status(400).json({ error: 'Mail contains a blacklisted link' });
     }
 
-    res.status(201).json(result);
+    res.status(201).location(`/api/mails/${result.id}`).end();
 }
 
 /**
@@ -75,41 +76,40 @@ function deleteMail(req, res) {
 
 /**
  * PATCH /api/mails/:id
- * Allows editing subject/body only, with blacklist check.
+ * Updates subject/body of a mail.
+ * Only the sender can update.
+ * Handles blacklist violations.
  */
 function updateMail(req, res) {
     const mailId = parseInt(req.params.id);
-
-    // Always treat non-numeric or missing ID as not found
     const original = mailModel.getMailById(mailId, req.userId);
     if (!original) {
         return res.status(404).json({ error: 'Mail not found' });
     }
 
-    // Do not allow changing sender or recipients
     if ('from' in req.body || 'to' in req.body) {
         return res.status(400).json({ error: 'You cannot modify this field' });
     }
 
-    // Only allow updating subject and body
     const allowedFields = ['subject', 'body'];
     const updates = {};
-
     for (const field of allowedFields) {
         if (field in req.body) {
             updates[field] = req.body[field];
         }
     }
 
-    const success = mailModel.updateMail(mailId, req.userId, updates);
+    const result = mailModel.updateMail(mailId, req.userId, updates);
 
-    if (!success) {
+    if (result === null) {
+        return res.status(404).json({ error: 'Mail not found' });
+    }
+    if (result === -1) {
         return res.status(400).json({ error: 'Mail contains a blacklisted link' });
     }
 
     res.status(204).end();
 }
-
 
 /**
  * GET /api/mails/search/:query

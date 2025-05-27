@@ -6,20 +6,18 @@ const { getUserById } = require('../models/userModel');
  * Otherwise, returns a 400 or 404 error response.
  */
 function validateUserHeader(req, res, next) {
-    const userId = req.header('userId');
+    const rawId = req.header('userId');
+    const userId = Number(rawId);
 
-    // Check that the header exists
-    if (!userId) {
-        return res.status(400).json({ error: 'Missing userId in request headers' });
+    if (!rawId || isNaN(userId)) {
+        return res.status(400).json({ error: 'Invalid or missing userId in request headers' });
     }
 
-    // Use model logic to check if user exists
     const user = getUserById(userId);
     if (!user) {
         return res.status(404).json({ error: 'User not found' });
     }
 
-    // Save the userId for use in routes/controllers
     req.userId = userId;
     next();
 }

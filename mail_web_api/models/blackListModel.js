@@ -60,7 +60,7 @@ async function checkUrlsAgainstBlacklist(words) {
           // If the response indicates the word is blacklisted ("true true")
           if (
             lines[0]?.startsWith('200 Ok') &&
-            lines[2]?.trim() === 'true true'
+            lines[1]?.trim() === 'true true'
           ) {
             found = true;
             return resolve(true); // Exit early — at least one word is blacklisted

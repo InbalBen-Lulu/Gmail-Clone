@@ -9,7 +9,11 @@ let idCounter = 0;
  *   - null if label name already exists for this user
  */
 function createLabel(name, userId) {
-  const labels = userLabels.get(userId);
+  let labels = userLabels.get(userId);
+  if (!labels) {
+    labels = [];
+    userLabels.set(userId, labels);
+  }
   if (labels.some(label => label.name === name)) return null;
 
   const label = { id: ++idCounter, name };
