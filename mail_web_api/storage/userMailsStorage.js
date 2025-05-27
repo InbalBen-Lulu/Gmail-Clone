@@ -1,4 +1,4 @@
 // Map<userId, Set<mailId>>
-const userMailsIds = new Map(); 
+const userMailIds = new Map(); 
 
-module.exports = { userMailsIds };
+module.exports = { userMailIds };
