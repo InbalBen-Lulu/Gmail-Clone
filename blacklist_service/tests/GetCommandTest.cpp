@@ -1,8 +1,5 @@
 #include <gtest/gtest.h>
-#include <memory>
-#include <cstdio>
 #include <vector>
-#include <algorithm>
 #include <mutex>
 #include "../src/commands/GetCommand.h"
 #include "../src/data/BloomFilter.h"

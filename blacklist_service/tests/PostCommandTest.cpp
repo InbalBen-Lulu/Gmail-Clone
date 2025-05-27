@@ -1,9 +1,6 @@
 #include <gtest/gtest.h>
-#include <memory>
-#include <cstdio>
 #include <vector>
 #include <mutex>
-#include <algorithm>
 #include "../src/commands/PostCommand.h"
 #include "../src/data/BloomFilter.h"
 #include "../src/storage/BloomStorage.h"
