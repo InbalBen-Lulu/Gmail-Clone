@@ -40,7 +40,7 @@ docker network create mail_service
 ### Run the C++ blacklist server
 
 ```
-docker rm -f server 2>/dev/null
+docker rm -f server 2>$null
 ```
 ```
 docker run --name server --network mail_service -w /usr/src/project/build -v "${PWD}/blacklist_service/data:/usr/src/project/build/data" project-server 8080 <ARRAY_SIZE> <hash1_repeat> <hash2_repeat> ...
