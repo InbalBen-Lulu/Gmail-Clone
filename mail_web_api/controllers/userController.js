@@ -22,7 +22,6 @@ function registerUser(req, res) {
     const { password: _, ...userSafe } = newUser;
 
     res.status(201).json({
-        message: 'User created successfully',
         user: userSafe
     });
 }
