@@ -13,7 +13,7 @@ async function addUrlToBlacklist(req, res) {
     try {
         const result = await addToBlacklist(url);
         if (result.success) {
-            res.status(201).json({ message: result.message }); // 201 Created
+            res.status(201).end(); // 201 Created
         } else {
             res.status(400).json({ error: result.message }); // Failed to add URL
         }
