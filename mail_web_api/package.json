@@ -16,8 +16,9 @@
     "url": "https://github.com/MoriaPedhazur/project/issues"
   },
   "homepage": "https://github.com/MoriaPedhazur/project#readme",
-  "description": "",
   "dependencies": {
     "express": "^5.1.0"
-  }
+  },
+  "devDependencies": {},
+  "description": ""
 }
