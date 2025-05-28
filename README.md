@@ -64,9 +64,9 @@ docker-compose run --rm tests
 
 | Endpoint          | Method | Description         | Requires Auth | Example curl                                                                                          | Expected Response       |
 |-------------------|--------|---------------------|----------------|--------------------------------------------------------------------------------------------------------|-------------------------|
-| `/api/users`      | POST   | Register new user   | No             | `curl -X POST http://localhost:3000/api/users -H "Content-Type: application/json"`<br>`-d '{"firstName": "...", "lastName": "...", "email": "...", "password": "...", "dateOfBirth": "..."}'` | `201 Created`<br>JSON of user without password<br>`400` if missing/invalid |
-| `/api/users/:id`  | GET    | Get user info       | Yes            | `curl -X GET http://localhost:3000/api/users/<user ID> -H "userId: <user ID>"`                        | `200 OK`<br>user JSON<br>`404` if not found |
-| `/api/tokens`     | POST   | Login user          | No             | `curl -X POST http://localhost:3000/api/tokens -H "Content-Type: application/json"`<br>`-d '{"email": "...", "password": "..."}'` | `200 OK` with user ID<br>`404` if not found |
+| `/api/users`      | POST   | Register new user   | No             | `curl -i -X POST http://localhost:3000/api/users -H "Content-Type: application/json"`<br>`-d '{"firstName": "...", "lastName": "...", "email": "...", "password": "...", "dateOfBirth": "..."}'` | `201 Created`<br>JSON of user without password<br>`400` if missing/invalid |
+| `/api/users/:id`  | GET    | Get user info       | Yes            | `curl -i -X GET http://localhost:3000/api/users/<user ID> -H "userId: <user ID>"`                        | `200 OK`<br>user JSON<br>`404` if not found |
+| `/api/tokens`     | POST   | Login user          | No             | `curl -i -X POST http://localhost:3000/api/tokens -H "Content-Type: application/json"`<br>`-d '{"email": "...", "password": "..."}'` | `200 OK` with user ID<br>`401` if credentials are invalid  |
 
 ---
 
@@ -74,12 +74,12 @@ docker-compose run --rm tests
 
 | Endpoint                    | Method  | Description                       | Requires Auth | Example curl                                                                                                                  | Expected Response         |
 |-----------------------------|---------|-----------------------------------|----------------|------------------------------------------------------------------------------------------------------------------------------|---------------------------|
-| `/api/mails`                | GET     | Get up to 50 mails for user       | Yes            | `curl -X GET http://localhost:3000/api/mails -H "userId: <user ID>"`                                                        | `200 OK` with mail array |
-| `/api/mails`                | POST    | Send new mail                     | Yes            | `curl -X POST http://localhost:3000/api/mails -H "userId: <user ID>" -H "Content-Type: application/json"`<br>`-d '{"to": ["<email>"], "subject": "...", "body": "..."}'` | `201 Created` with Location<br>`400` if blacklist match or no recipients<br>`404` if recipient not found |
-| `/api/mails/:id`            | GET     | Get specific mail                 | Yes            | `curl -X GET http://localhost:3000/api/mails/<id> -H "userId: <user ID>"`                                                   | `200 OK` with mail<br>`404` if not found |
-| `/api/mails/:id`            | PATCH   | Update subject/body (sender only) | Yes            | `curl -X PATCH http://localhost:3000/api/mails/<id> -H "userId: <user ID>" -H "Content-Type: application/json"`<br>`-d '{"subject": "..."}'` | `204 No Content`<br>`400` if blacklist match or forbidden field<br>`404` if not found |
-| `/api/mails/:id`            | DELETE  | Remove mail from user view        | Yes            | `curl -X DELETE http://localhost:3000/api/mails/<id> -H "userId: <user ID>"`                                                 | `204 No Content`<br>`404` if not found |
-| `/api/mails/search/:query` | GET     | Search mails                      | Yes            | `curl -X GET http://localhost:3000/api/mails/search/<query> -H "userId: <user ID>"`                                          | `200 OK` (empty array if none)<br>`400` if query is missing |
+| `/api/mails`                | GET     | Get up to 50 mails for user       | Yes            | `curl -i -X GET http://localhost:3000/api/mails -H "userId: <user ID>"`                                                        | `200 OK` with mail array |
+| `/api/mails`                | POST    | Send new mail                     | Yes            | `curl -i -X POST http://localhost:3000/api/mails -H "userId: <user ID>" -H "Content-Type: application/json"`<br>`-d '{"to": ["<email>"], "subject": "...", "body": "..."}'` | `201 Created` with Location<br>`400` if blacklist match or no recipients<br>`404` if recipient not found |
+| `/api/mails/:id`            | GET     | Get specific mail                 | Yes            | `curl -i -X GET http://localhost:3000/api/mails/<id> -H "userId: <user ID>"`                                                   | `200 OK` with mail<br>`404` if not found |
+| `/api/mails/:id`            | PATCH   | Update subject/body (sender only) | Yes            | `curl -i -X PATCH http://localhost:3000/api/mails/<id> -H "userId: <user ID>" -H "Content-Type: application/json"`<br>`-d '{"subject": "..."}'` | `204 No Content`<br>`400` if blacklist match or forbidden field<br>`404` if not found |
+| `/api/mails/:id`            | DELETE  | Remove mail from user view        | Yes            | `curl -i -X DELETE http://localhost:3000/api/mails/<id> -H "userId: <user ID>"`                                                 | `204 No Content`<br>`404` if not found |
+| `/api/mails/search/:query` | GET     | Search mails                      | Yes            | `curl -i -X GET http://localhost:3000/api/mails/search/<query> -H "userId: <user ID>"`                                          | `200 OK` (empty array if none)<br>`400` if query is missing |
 
 ---
 
@@ -87,11 +87,11 @@ docker-compose run --rm tests
 
 | Endpoint              | Method | Description         | Requires Auth | Example curl                                                                                                            | Expected Response       |
 |-----------------------|--------|---------------------|----------------|------------------------------------------------------------------------------------------------------------------------|-------------------------|
-| `/api/labels`         | GET    | List all labels     | Yes            | `curl -X GET http://localhost:3000/api/labels -H "userId: <user ID>"`                                                 | `200 OK` with array     |
-| `/api/labels`         | POST   | Create new label    | Yes            | `curl -X POST http://localhost:3000/api/labels -H "userId: <user ID>" -H "Content-Type: application/json"`<br>`-d '{"name": "Work"}'` | `201 Created`<br>`400` if name missing or duplicate |
-| `/api/labels/:id`     | GET    | Get label by ID     | Yes            | `curl -X GET http://localhost:3000/api/labels/<id> -H "userId: <user ID>"`                                             | `200 OK`<br>`404` if not found or invalid |
-| `/api/labels/:id`     | PATCH  | Rename label        | Yes            | `curl -X PATCH http://localhost:3000/api/labels/<id> -H "userId: <user ID>" -H "Content-Type: application/json"`<br>`-d '{"name": "NewName"}'` | `204 No Content`<br>`404` if not found<br>`400` if name exists |
-| `/api/labels/:id`     | DELETE | Delete label        | Yes            | `curl -X DELETE http://localhost:3000/api/labels/<id> -H "userId: <user ID>"`                                          | `204 No Content`<br>`404` if not found or invalid |
+| `/api/labels`         | GET    | List all labels     | Yes            | `curl -i -X GET http://localhost:3000/api/labels -H "userId: <user ID>"`                                                 | `200 OK` with array     |
+| `/api/labels`         | POST   | Create new label    | Yes            | `curl -i -X POST http://localhost:3000/api/labels -H "userId: <user ID>" -H "Content-Type: application/json"`<br>`-d '{"name": "Work"}'` | `201 Created`<br>`400` if name missing or duplicate |
+| `/api/labels/:id`     | GET    | Get label by ID     | Yes            | `curl -i -X GET http://localhost:3000/api/labels/<id> -H "userId: <user ID>"`                                             | `200 OK`<br>`404` if not found or invalid |
+| `/api/labels/:id`     | PATCH  | Rename label        | Yes            | `curl -i -X PATCH http://localhost:3000/api/labels/<id> -H "userId: <user ID>" -H "Content-Type: application/json"`<br>`-d '{"name": "NewName"}'` | `204 No Content`<br>`404` if not found<br>`400` if name exists |
+| `/api/labels/:id`     | DELETE | Delete label        | Yes            | `curl -i -X DELETE http://localhost:3000/api/labels/<id> -H "userId: <user ID>"`                                          | `204 No Content`<br>`404` if not found or invalid |
 
 ---
 
@@ -99,8 +99,9 @@ docker-compose run --rm tests
 
 | Endpoint               | Method | Description              | Requires Auth | Example curl                                                                                                                  | Expected Response        |
 |------------------------|--------|--------------------------|----------------|------------------------------------------------------------------------------------------------------------------------------|--------------------------|
-| `/api/blacklist`       | POST   | Add URL to blacklist     | Yes            | `curl -X POST http://localhost:3000/api/blacklist -H "userId: <user ID>" -H "Content-Type: application/json"`<br>`-d '{"url": "<url>"}'` | `201 Created`<br>`400` if missing or invalid<br>`500` on server error |
-| `/api/blacklist/:id`   | DELETE | Remove URL from blacklist| Yes            | `curl -X DELETE http://localhost:3000/api/blacklist/<url> -H "userId: <user ID>"`                                             | `204 No Content`<br>`404` if not found<br>`400` if invalid<br>`500` on error |
+| `/api/blacklist`       | POST   | Add URL to blacklist     | No             | `curl -i -X POST http://localhost:3000/api/blacklist -H "Content-Type: application/json"`<br>`-d '{"url": "<url>"}'`         | `201 Created`<br>`400` if missing or invalid<br>`500` on server error |
+| `/api/blacklist/:id`  | DELETE | Remove URL from blacklist| No             | `curl -i -X DELETE http://localhost:3000/api/blacklist/http%3A%2F%2Fexample.com%2Fmalicious`                                 | `204 No Content`<br>`404` if not found<br>`400` if invalid<br>`500` on error |
+
 
 ---
 
@@ -152,26 +153,26 @@ Expected Response:
 HTTP/1.1 201 Created
 ...
 {
-    "firstName": "Dana",
-    "lastName": "Rosen",
-    "email": "dana@mail.com",
-    "password": "abcd1234",
-    "dateOfBirth": "1998-04-12",
-    "gender": "female",
-    "phoneNumber": "0523456789"
+  "userId": 1,
+  "firstName": "Dana",
+  "lastName": "Rosen",
+  "email": "dana@mail.com",
+  "dateOfBirth": "1998-04-12",
+  "gender": "female",
+  "phoneNumber": "0523456789"
 }
 ```
 
 ### Register user Bob
 
 ```
-curl -X POST http://localhost:3000/api/users \
+curl -i -X POST http://localhost:3000/api/users \
   -H "Content-Type: application/json" \
   -d '{
     "firstName": "Bob",
     "lastName": "Cohen",
     "email": "bob@mail.com",
-    "password": "pass",
+    "password": "pass123",
     "dateOfBirth": "1995-10-10"
   }'
 ```
@@ -194,7 +195,7 @@ HTTP/1.1 201 Created
 ### Login as Dana
 
 ```
-curl -X POST http://localhost:3000/api/tokens \
+curl -i -X POST http://localhost:3000/api/tokens \
   -H "Content-Type: application/json" \
   -d '{
     "email": "dana@mail.com",
@@ -214,7 +215,7 @@ HTTP/1.1 200 OK
 ### Send mail from Dana to Bob
 
 ```
-curl -X POST http://localhost:3000/api/mails \
+curl -i -X POST http://localhost:3000/api/mails \
   -H "userId: 1" \
   -H "Content-Type: application/json" \
   -d '{
@@ -235,7 +236,7 @@ Location: /api/mails/1
 ### Get all mails for Bob
 
 ```
-curl -X GET http://localhost:3000/api/mails \
+curl -i -X GET http://localhost:3000/api/mails \
   -H "userId: 2"
 ```
 
