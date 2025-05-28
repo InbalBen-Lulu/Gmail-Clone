@@ -100,7 +100,9 @@ void Server::handleClient(int clientSocket) {
         // Parse the input into a command structure
         std::optional<CommandInput> maybeCmd = InputParser::parseCommandLine(line);
         if (!maybeCmd.has_value()) {
-            std::string err = "400 Bad Request";
+            // If the command could not be parsed (e.g., not a valid URL or unsupported format),
+            // treat it as a non-blacklisted value and respond with "200 Ok\n\nfalse"
+            std::string err = "200 Ok\n\nfalse";
             send(clientSocket, err.c_str(), err.length(), 0);
             continue;
         }
