@@ -18,7 +18,6 @@ function formatSentAt(date) {
     return `${d}/${m}/${y} ${h}:${min}`;
 }
 
-
 /**
  * Creates a new mail and stores it for all recipients and the sender.
  * Returns:
@@ -54,19 +53,18 @@ async function createMail(fromUserId, toUserIds, subject = '', body = '') {
     return mail;
 }
 
-
 /**
- * Retrieves a mail in full view format, only if the user is a sender or recipient.
+ * Retrieves a mail in full view format, only if the user is a sender or recipient,
+ * and the mail is still visible to the user (not deleted from their inbox).
  * Returns null otherwise.
  */
 function getMailById(mailId, userId) {
     const mail = mails.get(mailId);
-    if (!mail) return null;
+    const mailSet = userMailIds.get(userId);
 
-    const isSender = mail.from === userId;
-    const isRecipient = mail.to.includes(userId);
+    if (!mail || !mailSet || !mailSet.has(mailId)) return null;
 
-    return (isSender || isRecipient) ? formatFullMail(mailId) : null;
+    return formatFullMail(mailId);
 }
 
 /**
