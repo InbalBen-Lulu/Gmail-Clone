@@ -1,3 +1,4 @@
+
 const net = require('net');
 
 // Blacklist server connection details
@@ -56,8 +57,7 @@ async function checkUrlsAgainstBlacklist(words) {
           if (found) return;
 
           const lines = response.split('\n\n');
-          console.log("Raw response:", response);
-          console.log("Split lines:", lines);
+
           // If the response indicates the word is blacklisted ("true true")
           if (
             lines[0]?.startsWith('200 Ok') &&
