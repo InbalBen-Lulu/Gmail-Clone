@@ -1,66 +1,29 @@
-#  URL Blacklist Filter Application
+# Mail Server with Blacklist Filtering
 
-##  About the Project
-This project implements a URL filtering system using a Bloom Filter and TCP socket communication.
-The application allows users to add URLs to a blacklist, check if URLs are blacklisted, or remove URLs from the blacklist by sending string-based commands via a TCP client.
+## About the Project
 
-The server continuously listens for commands over TCP sockets:
+This project implements a full web-based mail system using **Node.js (Express)** for the API and a **C++ server** for URL filtering via a **Bloom Filter**.  
+The system allows users to register, log in, send/receive emails, manage labels, and ensures outgoing mail content is safe by checking all URLs against a blacklist.
 
-
-- **POST**: Add a URL to the blacklist.
-
-- **GET**: Check if a URL is blacklisted.
-
-- **DELETE**: Remove a URL from the blacklist.
-
-Both the Bloom Filter and the blacklist are persistently saved to disk after every update and automatically loaded upon server startup.
+The two components communicate using TCP sockets:
+- Node.js REST API handles users, mails, and labels.
+- The C++ server filters and stores potentially malicious URLs using a probabilistic Bloom Filter and persistent blacklist.
 
 ---
+##  Diagram
 
-###  What is a Bloom Filter?
-A Bloom Filter is a space-efficient probabilistic data structure used to test whether an element is a member of a set.  
-It allows for false positives but guarantees no false negatives, making it ideal for quick membership checks with limited memory.
+![System Architecture](images/architecture-diagram.png)
 
----
-
-##  Technologies Used
-- C++17
-- CMake
-- GoogleTest (GTest) for unit testing
-- Docker
-- TCP/IP socket programming
-
----
-
-##  Diagrams and Process Flows
-
-### 1. Bloom Filter Structure
-
-<p align="center">
-  <img src="images/bloom_filter_structure.png" alt="Bloom Filter Structure" width="350"/>
-</p>
-
-**Description:**  
-This diagram illustrates how a key (such as a URL) is processed by multiple hash functions, each mapping to an index in the bit array.  
-The corresponding bits are set to `1` to indicate that the key has been "inserted" into the Bloom Filter.
-
----
-
-### 2. URL Check Logic Flowchart
-
-<p align="center">
-  <img src="images/url_check_flowchart.png" alt="URL Check Flowchart" height="350"/>
-</p>
-
-**Description:**  
-This flowchart illustrates the process of checking whether a URL is blacklisted:  
-First, the hash is computed and checked in the Bloom Filter.  
-If the Bloom Filter indicates a possible match, the real blacklist is checked for confirmation.
-
+> **Diagram Explanation:**  
+> This diagram illustrates the architecture of the mail system.  
+> The client communicates with the central API Server, which handles user requests.  
+> When a user sends or retrieves an email (e.g., via `POST /api/mails` or `GET /api/mail`),  
+> the API interacts with the Mail Service to store or retrieve messages.  
+> Before sending, the API also queries the Blacklist Service to verify that all URLs in the message content are safe.  
+> All communication between services occurs over HTTP or TCP, depending on the implementation.
 ---
 
 ##  Build and Run Instructions
-All components (server, client, and tests) are managed using Docker Compose.
 From the project root directory, open a terminal and run:
 
 ### Build All Services
@@ -68,20 +31,25 @@ From the project root directory, open a terminal and run:
 ```
 docker-compose build
 ```
-This command builds all services: server, client, and tests.
 
-### Run the Server
-_See the section "Server Command-Line Arguments" below for a full explanation of the arguments._
-
+### Create shared Docker network
 ```
-docker-compose run server [PORT] [ARRAY_SIZE] [repeat count for hash function 1] [repeat count for hash function 2] ...
+docker network create mail_service
 ```
 
-### Run the Client
-_See the section "Client Command-Line Arguments" below for a full explanation of the arguments._
+### Run the C++ blacklist server
 
 ```
-docker-compose run client [SERVER_IP] [PORT]
+docker rm -f server 2>/dev/null
+```
+```
+docker run --name server --network mail_service -w /usr/src/project/build -v "${PWD}/blacklist_service/data:/usr/src/project/build/data" project-server 8080 <ARRAY_SIZE> <hash1_repeat> <hash2_repeat> ...
+
+```
+
+### In a separate terminal, start the Node.js mail API
+```
+docker-compose up mail_api
 ```
 
 ### Run the Tests
@@ -90,81 +58,200 @@ docker-compose run client [SERVER_IP] [PORT]
 docker-compose run --rm tests
 ```
 
-##  Command Guide
+## API Endpoints
 
-| Client Command               | Server Response                  | Description                                                              |
-|-----------------------------|----------------------------------|--------------------------------------------------------------------------|
-| `POST www.url1.com`         | `201 Created`                    | Adds a new URL to the blacklist                                          |
-| `GET www.url1.com`          | `200 Ok`<br><br>`true true`           | URL is in both Bloom Filter and blacklist (definite match)              |
-| `GET www.url2.com`          | `200 Ok`<br><br>`false`          | URL is neither in Bloom Filter nor in blacklist                         |
-| `GET www.falsepositive.com` | `200 Ok`<br><br>`true false`           | False positive: in Bloom Filter but not in blacklist                    |
-| `DELETE www.falsepositive.com` | `404 Not Found`              | Cannot delete a URL that was never added to the blacklist               |
-| `DELETE www.url1.com`       | `204 No Content`                 | Successfully removed the URL from the blacklist                         |
-| `BADCOMMAND something`      | `400 Bad Request`                | Invalid command syntax                                                   |
+### Authentication
+
+| Endpoint          | Method | Description         | Requires Auth | Example curl                                                                                          | Expected Response       |
+|-------------------|--------|---------------------|----------------|--------------------------------------------------------------------------------------------------------|-------------------------|
+| `/api/users`      | POST   | Register new user   | No             | `curl -X POST http://localhost:3000/api/users -H "Content-Type: application/json"`<br>`-d '{"firstName": "...", "lastName": "...", "email": "...", "password": "...", "dateOfBirth": "..."}'` | `201 Created`<br>JSON of user without password<br>`400` if missing/invalid |
+| `/api/users/:id`  | GET    | Get user info       | Yes            | `curl -X GET http://localhost:3000/api/users/<user ID> -H "userId: <user ID>"`                        | `200 OK`<br>user JSON<br>`404` if not found |
+| `/api/tokens`     | POST   | Login user          | No             | `curl -X POST http://localhost:3000/api/tokens -H "Content-Type: application/json"`<br>`-d '{"email": "...", "password": "..."}'` | `200 OK` with user ID<br>`404` if not found |
 
 ---
 
-## Server Command-Line Arguments
+### Mails
 
-When running the server container, the following arguments must be provided:
-```
-[PORT] [ARRAY_SIZE] [HASH_CONFIG...]
-```
-- **PORT**: The TCP port the server listens on.
-- **ARRAY_SIZE**: The size of the Bloom Filter's bit array (in bits).
-- **HASH_CONFIG**: A list of integers specifying how many times each hash function is applied.
-
-The number of values in HASH_CONFIG determines how many hash functions are used.
-
-### Example 1
-```
-8080 100 1
-```
-- Port: 8080  
-- Bloom Filter size: 100 bits  
-- One hash function, applied once
-
-### Example 2
-```
-8080 256 2 1
-```
-- Port: 8080  
-- Bloom Filter size: 256 bits  
-- Two hash functions:  
-  - First applied twice  
-  - Second applied once
-
-
-## Client Command-Line Arguments
-
-When running the client container, the following arguments must be provided:
-```
-[SERVER_IP] [PORT]
-```
-
-- **SERVER_IP**: The IP address of the server to connect to (e.g., `127.0.0.1` for localhost).
-- **PORT**: The TCP port number the server is listening on.
-
-### Example
-```
-127.0.0.1 8080
-```
-- Connects the client to the server at IP `127.0.0.1` and port `8080`.
+| Endpoint                    | Method  | Description                       | Requires Auth | Example curl                                                                                                                  | Expected Response         |
+|-----------------------------|---------|-----------------------------------|----------------|------------------------------------------------------------------------------------------------------------------------------|---------------------------|
+| `/api/mails`                | GET     | Get up to 50 mails for user       | Yes            | `curl -X GET http://localhost:3000/api/mails -H "userId: <user ID>"`                                                        | `200 OK` with mail array |
+| `/api/mails`                | POST    | Send new mail                     | Yes            | `curl -X POST http://localhost:3000/api/mails -H "userId: <user ID>" -H "Content-Type: application/json"`<br>`-d '{"to": ["<email>"], "subject": "...", "body": "..."}'` | `201 Created` with Location<br>`400` if blacklist match or no recipients<br>`404` if recipient not found |
+| `/api/mails/:id`            | GET     | Get specific mail                 | Yes            | `curl -X GET http://localhost:3000/api/mails/<id> -H "userId: <user ID>"`                                                   | `200 OK` with mail<br>`404` if not found |
+| `/api/mails/:id`            | PATCH   | Update subject/body (sender only) | Yes            | `curl -X PATCH http://localhost:3000/api/mails/<id> -H "userId: <user ID>" -H "Content-Type: application/json"`<br>`-d '{"subject": "..."}'` | `204 No Content`<br>`400` if blacklist match or forbidden field<br>`404` if not found |
+| `/api/mails/:id`            | DELETE  | Remove mail from user view        | Yes            | `curl -X DELETE http://localhost:3000/api/mails/<id> -H "userId: <user ID>"`                                                 | `204 No Content`<br>`404` if not found |
+| `/api/mails/search/:query` | GET     | Search mails                      | Yes            | `curl -X GET http://localhost:3000/api/mails/search/<query> -H "userId: <user ID>"`                                          | `200 OK` (empty array if none)<br>`400` if query is missing |
 
 ---
 
-##  Notes
-- Both the Bloom Filter and the blacklist are saved to disk after every update.
-- On startup, the program automatically loads the previously saved Bloom Filter and blacklist, **only if** the parameters specified in the first input line match the previous configuration.
-- Invalid input lines are ignored.
-- The program automatically handles false positives by checking the real blacklist when needed.
-- False positives may occur, but false negatives are not possible.
+### Labels
+
+| Endpoint              | Method | Description         | Requires Auth | Example curl                                                                                                            | Expected Response       |
+|-----------------------|--------|---------------------|----------------|------------------------------------------------------------------------------------------------------------------------|-------------------------|
+| `/api/labels`         | GET    | List all labels     | Yes            | `curl -X GET http://localhost:3000/api/labels -H "userId: <user ID>"`                                                 | `200 OK` with array     |
+| `/api/labels`         | POST   | Create new label    | Yes            | `curl -X POST http://localhost:3000/api/labels -H "userId: <user ID>" -H "Content-Type: application/json"`<br>`-d '{"name": "Work"}'` | `201 Created`<br>`400` if name missing or duplicate |
+| `/api/labels/:id`     | GET    | Get label by ID     | Yes            | `curl -X GET http://localhost:3000/api/labels/<id> -H "userId: <user ID>"`                                             | `200 OK`<br>`404` if not found or invalid |
+| `/api/labels/:id`     | PATCH  | Rename label        | Yes            | `curl -X PATCH http://localhost:3000/api/labels/<id> -H "userId: <user ID>" -H "Content-Type: application/json"`<br>`-d '{"name": "NewName"}'` | `204 No Content`<br>`404` if not found<br>`400` if name exists |
+| `/api/labels/:id`     | DELETE | Delete label        | Yes            | `curl -X DELETE http://localhost:3000/api/labels/<id> -H "userId: <user ID>"`                                          | `204 No Content`<br>`404` if not found or invalid |
 
 ---
 
-##  Development Approach
-- The project was developed using the principles of Test-Driven Development (TDD).
-- The code design follows SOLID principles.
-- The project architecture is based on Object-Oriented Programming (OOP) concepts to ensure modularity, scalability, and ease of maintenance.
+### Blacklist
+
+| Endpoint               | Method | Description              | Requires Auth | Example curl                                                                                                                  | Expected Response        |
+|------------------------|--------|--------------------------|----------------|------------------------------------------------------------------------------------------------------------------------------|--------------------------|
+| `/api/blacklist`       | POST   | Add URL to blacklist     | Yes            | `curl -X POST http://localhost:3000/api/blacklist -H "userId: <user ID>" -H "Content-Type: application/json"`<br>`-d '{"url": "<url>"}'` | `201 Created`<br>`400` if missing or invalid<br>`500` on server error |
+| `/api/blacklist/:id`   | DELETE | Remove URL from blacklist| Yes            | `curl -X DELETE http://localhost:3000/api/blacklist/<url> -H "userId: <user ID>"`                                             | `204 No Content`<br>`404` if not found<br>`400` if invalid<br>`500` on error |
 
 ---
+
+## Data Storage
+
+All data in the Node.js mail API (users, mails, labels) is stored **in-memory**.  
+Restarting the server will erase all current state.  
+Only the C++ blacklist server persists data to disk (via files).
+
+---
+
+## URL Blacklist Server Integration
+
+The mail API integrates with a dedicated C++ **Blacklist Server** over TCP sockets.  
+Every time a mail is sent or updated, the API extracts all URLs from the content and checks them against the blacklist server using line-based commands.  
+If any URL is found to be blacklisted, the request is rejected and not stored.
+
+---
+
+## API Format
+
+All endpoints follow **RESTful** conventions and respond in **JSON** only.  
+There is no HTML rendering or templating involved.
+
+---
+
+## Full Example Execution
+
+This is a full example run showing how to register users, log in, send an email, and retrieve it.
+
+### Register user Dana
+
+```
+curl -i -X POST http://localhost:3000/api/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstName": "Dana",
+    "lastName": "Rosen",
+    "email": "dana@mail.com",
+    "password": "abcd1234",
+    "dateOfBirth": "1998-04-12",
+    "gender": "female",
+    "phoneNumber": "0523456789"
+  }'
+```
+
+Expected Response:
+```
+HTTP/1.1 201 Created
+...
+{
+    "firstName": "Dana",
+    "lastName": "Rosen",
+    "email": "dana@mail.com",
+    "password": "abcd1234",
+    "dateOfBirth": "1998-04-12",
+    "gender": "female",
+    "phoneNumber": "0523456789"
+}
+```
+
+### Register user Bob
+
+```
+curl -X POST http://localhost:3000/api/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstName": "Bob",
+    "lastName": "Cohen",
+    "email": "bob@mail.com",
+    "password": "pass",
+    "dateOfBirth": "1995-10-10"
+  }'
+```
+
+Expected Response:
+```
+HTTP/1.1 201 Created
+...
+{
+  "userId": 2,
+  "firstName": "Bob",
+  "lastName": "Cohen",
+  "email": "bob@mail.com",
+  "dateOfBirth": "1995-10-10",
+  "gender": null,
+  "phoneNumber": null
+}
+```
+
+### Login as Dana
+
+```
+curl -X POST http://localhost:3000/api/tokens \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "dana@mail.com",
+    "password": "abcd1234"
+  }'
+```
+
+Expected Response:
+```
+HTTP/1.1 200 OK
+...
+{
+  "userId": 1
+}
+```
+
+### Send mail from Dana to Bob
+
+```
+curl -X POST http://localhost:3000/api/mails \
+  -H "userId: 1" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "to": ["bob@mail.com"],
+    "subject": "Hi Bob",
+    "body": "This is safe"
+  }'
+```
+
+Expected Response:
+```
+HTTP/1.1 201 Created
+X-Powered-By: Express
+Location: /api/mails/1
+...
+```
+
+### Get all mails for Bob
+
+```
+curl -X GET http://localhost:3000/api/mails \
+  -H "userId: 2"
+```
+
+Expected Response:
+```
+HTTP/1.1 200 OK
+...
+[
+  { 
+    "id": 1,
+    "subject": "Hi Bob",
+    "sentAt": "2025-05-28T12:41:27.331Z",
+    "from": "Dana Rosen",
+    "to": [
+      "Bob Cohen"
+    ]
+  }
+]
+```
