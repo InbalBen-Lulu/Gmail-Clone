@@ -11,9 +11,9 @@ let mailIdCounter = 0;
  *   - the created mail object (raw form)
  *   - null if blacklisted content
  */
-function createMail(fromUserId, toUserIds, subject = '', body = '') {
-    const words = (subject + ' ' + body).split(/\s+/);
-    //if (checkUrlsAgainstBlacklist(words)) return null;
+async function createMail(fromUserId, toUserIds, subject = '', body = '') {
+    const isBlacklisted = await checkUrlsAgainstBlacklist(words);
+    if (isBlacklisted) return null;
 
     const mailId = ++mailIdCounter;
 
@@ -38,6 +38,7 @@ function createMail(fromUserId, toUserIds, subject = '', body = '') {
 
     return mail;
 }
+
 
 /**
  * Retrieves a mail in full view format, only if the user is a sender or recipient.
@@ -86,7 +87,7 @@ function deleteMail(mailId, userId) {
  *   - -1 if new content contains blacklisted URLs
  *   - 0 on success
  */
-function updateMail(mailId, userId, updatedFields) {
+async function updateMail(mailId, userId, updatedFields) {
     const mail = mails.get(mailId);
     if (!mail || mail.from !== userId) return null;
 
@@ -94,7 +95,7 @@ function updateMail(mailId, userId, updatedFields) {
     const body = updatedFields.body ?? mail.body;
     const words = (subject + ' ' + body).split(/\s+/);
 
-    //if (checkUrlsAgainstBlacklist(words)) return -1;
+    if (await checkUrlsAgainstBlacklist(words)) return -1;
 
     mail.subject = subject;
     mail.body = body;

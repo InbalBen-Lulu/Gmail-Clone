@@ -6,7 +6,7 @@ const { getUserByEmail } = require('../models/userModel');
  * Creates a new mail and sends it to recipients.
  * On success, responds with 201 and sets the Location header to the new mail's URL.
  */
-function createMail(req, res) {
+async function createMail(req, res) {
     const { to, subject = '', body = '' } = req.body;
 
     if (!Array.isArray(to) || to.length === 0) {
@@ -23,7 +23,7 @@ function createMail(req, res) {
         resolvedIds.push(user.userId);
     }
 
-    const result = mailModel.createMail(req.userId, resolvedIds, subject, body);
+    const result = await mailModel.createMail(req.userId, resolvedIds, subject, body);
 
     if (result === null) {
         return res.status(400).json({ error: 'Mail contains a blacklisted link' });
@@ -80,7 +80,7 @@ function deleteMail(req, res) {
  * Only the sender can update.
  * Handles blacklist violations.
  */
-function updateMail(req, res) {
+async function updateMail(req, res) {
     const mailId = parseInt(req.params.id);
     const original = mailModel.getMailById(mailId, req.userId);
     if (!original) {
@@ -99,7 +99,7 @@ function updateMail(req, res) {
         }
     }
 
-    const result = mailModel.updateMail(mailId, req.userId, updates);
+    const result = await mailModel.updateMail(mailId, req.userId, updates);
 
     if (result === null) {
         return res.status(404).json({ error: 'Mail not found' });
