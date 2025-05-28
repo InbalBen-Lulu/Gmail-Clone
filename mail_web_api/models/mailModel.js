@@ -6,12 +6,27 @@ const { checkUrlsAgainstBlacklist } = require('./blackListModel');
 let mailIdCounter = 0;
 
 /**
+ * Formats a Date object into a human-readable string: "DD/MM/YYYY HH:mm"
+ * This format avoids ISO standard's "T" and "Z" and is better suited for UI display.
+ */
+function formatSentAt(date) {
+    const d = String(date.getDate()).padStart(2, '0');
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const y = date.getFullYear();
+    const h = String(date.getHours()).padStart(2, '0');
+    const min = String(date.getMinutes()).padStart(2, '0');
+    return `${d}/${m}/${y} ${h}:${min}`;
+}
+
+
+/**
  * Creates a new mail and stores it for all recipients and the sender.
  * Returns:
  *   - the created mail object (raw form)
  *   - null if blacklisted content
  */
 async function createMail(fromUserId, toUserIds, subject = '', body = '') {
+    const words = (subject + ' ' + body).split(/\s+/); 
     const isBlacklisted = await checkUrlsAgainstBlacklist(words);
     if (isBlacklisted) return null;
 
@@ -23,7 +38,7 @@ async function createMail(fromUserId, toUserIds, subject = '', body = '') {
         to: toUserIds,
         subject,
         body,
-        sentAt: new Date().toISOString()
+        sentAt: formatSentAt(new Date())
     };
 
     mails.set(mailId, mail);

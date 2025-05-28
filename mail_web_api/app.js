@@ -1,5 +1,8 @@
 const express = require('express');
 const app = express();
+
+app.set('json spaces', 2);
+
 const usersRoutes = require('./routes/userRoute');
 const tokensRoutes = require('./routes/tokenRoute');
 const blackListRoutes = require('./routes/blackListRoute');
