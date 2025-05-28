@@ -6,19 +6,6 @@ const { checkUrlsAgainstBlacklist } = require('./blackListModel');
 let mailIdCounter = 0;
 
 /**
- * Formats a Date object into a human-readable string: "DD/MM/YYYY HH:mm"
- * This format avoids ISO standard's "T" and "Z" and is better suited for UI display.
- */
-function formatSentAt(date) {
-    const d = String(date.getDate()).padStart(2, '0');
-    const m = String(date.getMonth() + 1).padStart(2, '0');
-    const y = date.getFullYear();
-    const h = String(date.getHours()).padStart(2, '0');
-    const min = String(date.getMinutes()).padStart(2, '0');
-    return `${d}/${m}/${y} ${h}:${min}`;
-}
-
-/**
  * Creates a new mail and stores it for all recipients and the sender.
  * Returns:
  *   - the created mail object (raw form)
@@ -37,7 +24,7 @@ async function createMail(fromUserId, toUserIds, subject = '', body = '') {
         to: toUserIds,
         subject,
         body,
-        sentAt: formatSentAt(new Date())
+        sentAt: new Date().toISOString()
     };
 
     mails.set(mailId, mail);
@@ -75,10 +62,11 @@ function getMailsForUser(userId, limit = 50) {
     if (!mailIds) return [];
 
     return [...mailIds]
-        .filter(id => mails.has(id))
-        .sort((a, b) => mails.get(b).sentAt - mails.get(a).sentAt)
+        .map(id => mails.get(id))
+        .filter(Boolean)
+        .sort((a, b) => new Date(b.sentAt) - new Date(a.sentAt))
         .slice(0, limit)
-        .map(id => formatMailSummary(id))
+        .map(mail => formatMailSummary(mail.id))
         .filter(Boolean);
 }
 
@@ -117,11 +105,10 @@ async function updateMail(mailId, userId, updatedFields) {
 
 /**
  * Searches mails by query for a user. Returns formatted summaries.
+ * Sorted from newest to oldest by sentAt.
  */
 function searchMails(userId, query) {
     const q = String(query).trim().toLowerCase();
-
-    // query is empty string or just spaces
     if (!q) return [];
 
     const mailIds = userMailIds.get(userId);
@@ -135,6 +122,7 @@ function searchMails(userId, query) {
                 typeof val === 'string' && val.toLowerCase().includes(q)
             )
         )
+        .sort((a, b) => new Date(b.sentAt) - new Date(a.sentAt))
         .map(mail => formatMailSummary(mail.id))
         .filter(Boolean);
 }
