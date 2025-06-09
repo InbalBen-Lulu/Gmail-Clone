@@ -2,7 +2,6 @@ const { users } = require('../storage/userStorage');
 const { generateToken } = require('../models/tokenModel');
 
 /**
- * POST /api/tokens
  * Authenticate user and return JWT token.
  */
 function loginUser(req, res) {
@@ -14,9 +13,33 @@ function loginUser(req, res) {
     }
 
     const token = generateToken(user);
-    return res.status(200).json({token});
+
+    res.cookie('token', token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'Strict'
+    });
+
+    return res.status(200).json();
 }
 
-module.exports = {
-    loginUser
+
+/**
+ * Clear the user's authentication cookie.
+ */
+function logoutUser(req, res) {
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'Strict',
+        path: '/'
+    });
+
+    return res.status(200).json({ message: 'Logged out successfully' });
 }
+
+
+module.exports = {
+    loginUser,
+    logoutUser
+};
