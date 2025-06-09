@@ -1,5 +1,5 @@
 const mailModel = require('../models/mailModel');
-const { getUserByEmail } = require('../models/userModel');
+const mailStatusModel = require('../models/mailStatusModel');
 
 /**
  * POST /api/mails
@@ -7,29 +7,19 @@ const { getUserByEmail } = require('../models/userModel');
  * On success, responds with 201 and sets the Location header to the new mail's URL.
  */
 async function createMail(req, res) {
-    const { to, subject = '', body = '' } = req.body;
+    const { to = [], subject = '', body = '', isDraft = false } = req.body;
 
-    if (!Array.isArray(to) || to.length === 0) {
-        return res.status(400).json({ error: 'Recipients are required' });
+    if (!isDraft && (!Array.isArray(to) || to.length === 0)) {
+        return res.status(400).json({ error: 'Recipients are required for sending mails' });
     }
 
-    const resolvedIds = [];
+    const mail = await mailModel.createMail(req.userId, to, subject, body, isDraft);
 
-    for (const email of to) {
-        const user = getUserByEmail(email);
-        if (!user) {
-            return res.status(404).json({ error: `Recipient not found: ${email}` });
-        }
-        resolvedIds.push(user.userId);
+    if (!mail) {
+        return res.status(500).json({ error: 'Failed to create mail' });
     }
 
-    const result = await mailModel.createMail(req.userId, resolvedIds, subject, body);
-
-    if (result === null) {
-        return res.status(400).json({ error: 'Mail contains a blacklisted link' });
-    }
-
-    res.status(201).location(`/api/mails/${result.id}`).end();
+    res.status(201).location(`/api/mails/${mail.id}`).json({ id: mail.id });
 }
 
 /**
@@ -44,16 +34,6 @@ function getMailById(req, res) {
     }
 
     res.status(200).json(mail);
-}
-
-/**
- * GET /api/mails
- * Returns up to `limit` mails for the user.
- */
-function getMailsForUser(req, res) {
-    const limit = parseInt(req.query.limit) || 50;
-    const mails = mailModel.getMailsForUser(req.userId, limit);
-    res.status(200).json(mails);
 }
 
 /**
@@ -116,22 +96,49 @@ async function updateMail(req, res) {
  * Searches mails accessible to the user.
  */
 function searchMails(req, res) {
-    const query = req.params.query;
+    const query = req.params.query?.trim();
 
     // query not sent at all
-    if (query === undefined || query === null) {
-        return res.status(400).json({ error: 'Search query is required' });
+    if (!query) {
+        return res.status(400).json({ error: 'Search query cannot be empty' });
     }
 
     const results = mailModel.searchMails(req.userId, query);
     res.status(200).json(results);
 }
 
+function getInboxMails(req, res) {
+    const { limit = 50, offset = 0 } = req.query;
+    const mails = mailStatusModel.getInboxMails(req.userId, +limit, +offset);
+    res.status(200).json(mails);
+}
+
+function getSentMails(req, res) {
+    const { limit = 50, offset = 0 } = req.query;
+    const mails = mailStatusModel.getSentMails(req.userId, +limit, +offset);
+    res.status(200).json(mails);
+}
+
+function getStarredMails(req, res) {
+    const { limit = 50, offset = 0 } = req.query;
+    const mails = mailStatusModel.getStarredMails(req.userId, +limit, +offset);
+    res.status(200).json(mails);
+}
+
+function getAllMails(req, res) {
+    const { limit = 50, offset = 0 } = req.query;
+    const mails = mailStatusModel.getAllNonSpamMails(req.userId, +limit, +offset);
+    res.status(200).json(mails);
+}
+
 module.exports = {
     createMail,
     getMailById,
-    getMailsForUser,
-    deleteMail,
     updateMail,
-    searchMails
+    deleteMail,
+    searchMails,
+    getInboxMails,
+    getSentMails,
+    getStarredMails,
+    getAllMails
 };

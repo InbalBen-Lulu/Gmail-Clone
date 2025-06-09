@@ -1,20 +1,18 @@
 const { mails } = require('../storage/mailStorage');
-const { userMailIds } = require('../storage/userMailsStorage');
+const { userMailStatus } = require('../storage/mailStatusStorage');
 const { getUserById } = require('./userModel');
 const { checkUrlsAgainstBlacklist } = require('./blackListModel');
+const {
+    initializeSenderStatus,
+    initializeRecipientStatus,
+    getMailStatus
+} = require('./mailStatusModel');
 
 let mailIdCounter = 0;
 
-/**
- * Creates a new mail and stores it for all recipients and the sender.
- * Returns:
- *   - the created mail object (raw form)
- *   - null if blacklisted content
- */
 async function createMail(fromUserId, toUserIds, subject = '', body = '') {
     const words = (subject + ' ' + body).split(/\s+/); 
-    const isBlacklisted = await checkUrlsAgainstBlacklist(words);
-    if (isBlacklisted) return null;
+    const isBlacklisted = !isDraft && await checkUrlsAgainstBlacklist(words);
 
     const mailId = ++mailIdCounter;
 
@@ -28,56 +26,32 @@ async function createMail(fromUserId, toUserIds, subject = '', body = '') {
     };
 
     mails.set(mailId, mail);
+    initializeSenderStatus(mailId, fromUserId, isDraft);
 
-    if (!userMailIds.has(fromUserId)) userMailIds.set(fromUserId, new Set());
-    userMailIds.get(fromUserId).add(mailId);
-
-    for (const userId of toUserIds) {
-        if (!userMailIds.has(userId)) userMailIds.set(userId, new Set());
-        userMailIds.get(userId).add(mailId);
+    if (!isDraft) {
+        const isSpam = isBlacklisted;
+        toUserIds.forEach(id => initializeRecipientStatus(mailId, id, isSpam));
     }
 
     return mail;
 }
 
-/**
- * Retrieves a mail in full view format, only if the user is a sender or recipient,
- * and the mail is still visible to the user (not deleted from their inbox).
- * Returns null otherwise.
- */
 function getMailById(mailId, userId) {
     const mail = mails.get(mailId);
-    const mailSet = userMailIds.get(userId);
-
-    if (!mail || !mailSet || !mailSet.has(mailId)) return null;
-
-    return formatFullMail(mailId);
+    const status = getMailStatus(mailId, userId);
+    if (!mail || !status) return null;
+    return formatFullMail(mail, userId);
 }
 
-/**
- * Returns up to `limit` mails associated with the user, newest first.
- */
-function getMailsForUser(userId, limit = 50) {
-    const mailIds = userMailIds.get(userId);
-    if (!mailIds) return [];
-
-    return [...mailIds]
-        .map(id => mails.get(id))
-        .filter(Boolean)
-        .sort((a, b) => new Date(b.sentAt) - new Date(a.sentAt))
-        .slice(0, limit)
-        .map(mail => formatMailSummary(mail.id))
-        .filter(Boolean);
-}
-
-/**
- * Deletes a mail for a specific user (from their inbox only).
- */
 function deleteMail(mailId, userId) {
-    const mailSet = userMailIds.get(userId);
-    if (!mailSet || !mailSet.has(mailId)) return false;
+    const statusMap = userMailStatus.get(userId);
+    const status = statusMap?.get(mailId);
+    if (!status) return false;
 
-    mailSet.delete(mailId);
+    if (status.isDraft) {
+        mails.delete(mailId);
+    }
+    statusMap.delete(mailId);
     return true;
 }
 
@@ -103,19 +77,15 @@ async function updateMail(mailId, userId, updatedFields) {
     return 0;
 }
 
-/**
- * Searches mails by query for a user. Returns formatted summaries.
- * Sorted from newest to oldest by sentAt.
- */
-function searchMails(userId, query) {
-    const q = String(query).trim().toLowerCase();
+function searchMails(userId, query, limit = 5, offset = 0) {
+    const statusMap = userMailStatus.get(userId);
+    if (!statusMap) return [];
+
+    const q = String(query || '').trim().toLowerCase();
     if (!q) return [];
 
-    const mailIds = userMailIds.get(userId);
-    if (!mailIds) return [];
-
-    return [...mailIds]
-        .map(id => mails.get(id))
+    return [...statusMap.entries()]
+        .map(([id]) => mails.get(id))
         .filter(Boolean)
         .filter(mail =>
             Object.values(mail).some(val =>
@@ -123,62 +93,58 @@ function searchMails(userId, query) {
             )
         )
         .sort((a, b) => new Date(b.sentAt) - new Date(a.sentAt))
-        .map(mail => formatMailSummary(mail.id))
-        .filter(Boolean);
+        .slice(offset, offset + limit)
+        .map(mail => formatMailSummary(mail, userId));
 }
 
-/**
- * Returns the full view of a mail (for use by controller), including sender and recipients.
- * No userId is included, only name + email.
- */
-function formatFullMail(mailId) {
-    const mail = mails.get(mailId);
-    if (!mail) return null;
-
+function formatMailSummary(mail, viewerId) {
     const fromUser = getUserById(mail.from);
     const toUsers = mail.to.map(getUserById).filter(Boolean);
+    const status = getMailStatus(mail.id, viewerId);
+
+    const labelList = userLabels.get(viewerId) || [];
+    const fullLabels = labelList.filter(l => (status?.labels || []).includes(l.id));
 
     return {
         id: mail.id,
         subject: mail.subject,
         body: mail.body,
         sentAt: mail.sentAt,
-        from: {
-            name: `${fromUser.firstName} ${fromUser.lastName}`,
-            email: fromUser.email
-        },
-        to: toUsers.map(u => ({
-            name: `${u.firstName} ${u.lastName}`,
-            email: u.email
-        }))
+        from: fromUser.name,
+        to: toUsers.map(u => u.name),
+        labels: fullLabels,
+        isStar: status?.isStar || false,
+        isDraft: status?.isDraft || false
     };
 }
 
-/**
- * Returns the summarized view of a mail (used for inbox/search).
- * No userId, only names.
- */
-function formatMailSummary(mailId) {
-    const mail = mails.get(mailId);
-    if (!mail) return null;
-
+function formatFullMail(mail, viewerId) {
     const fromUser = getUserById(mail.from);
     const toUsers = mail.to.map(getUserById).filter(Boolean);
+    const status = getMailStatus(mail.id, viewerId);
+
+    const labelList = userLabels.get(viewerId) || [];
+    const fullLabels = labelList.filter(l => (status?.labels || []).includes(l.id));
 
     return {
         id: mail.id,
         subject: mail.subject,
+        body: mail.body,
         sentAt: mail.sentAt,
-        from: `${fromUser.firstName} ${fromUser.lastName}`,
-        to: toUsers.map(u => `${u.firstName} ${u.lastName}`)
+        from: fromUser.name,
+        to: toUsers.map(u => u.name),
+        image: null,
+        labels: fullLabels,
+        isStar: status?.isStar || false
     };
 }
 
 module.exports = {
     createMail,
     getMailById,
-    getMailsForUser,
     deleteMail,
     updateMail,
-    searchMails
+    searchMails,
+    formatMailSummary,
+    formatFullMail
 };
