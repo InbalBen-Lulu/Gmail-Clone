@@ -1,22 +1,22 @@
-    const { validateCredentials } = require('../models/tokenModel');
+const { users } = require('../storage/userStorage');
+const { generateToken } = require('../models/tokenModel');
 
-    /**
-     * POST /api/tokens
-     * Validate login and return userId if credentials are correct.
-     */
-    function loginUser(req, res) {
-    const { email, password } = req.body;
+/**
+ * POST /api/tokens
+ * Authenticate user and return JWT token.
+ */
+function loginUser(req, res) {
+    const { userId, password } = req.body;
 
-    if (!email || !password) {
-        return res.status(400).json({ error: 'Email and password are required' });
+    const user = users.get(userId);
+    if (!user || user.password !== password) {
+        return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    const user = validateCredentials(email, password);
-    if (!user) {
-        return res.status(401).json({ error: 'Invalid email or password' });
-    }
+    const token = generateToken(user);
+    return res.status(200).json({token});
+}
 
-    res.status(200).json({ userId: user.userId });
-    }
-
-    module.exports = { loginUser };
+module.exports = {
+    loginUser
+}

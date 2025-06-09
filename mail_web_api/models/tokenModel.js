@@ -1,59 +1,21 @@
-const { tokenStorage } = require('../storage/tokenStorage');
-const { users } = require('../storage/userStorage');
+const jwt = require('jsonwebtoken');
+
+const SECRET_KEY = process.env.SECRET_KEY;
 
 /**
- * Generates a simple token string.
+ * Generates a signed JWT token for the given user.
  */
-function generateToken(userId) {
-    return `token-${userId}-${Date.now()}`;
-}
+function generateToken(user) {
+    const payload = {
+        userId: user.userId,
+        name: user.name
+    };
 
-/**
- * Stores the token with its associated userId.
- */
-function storeToken(token, userId) {
-    tokenStorage.set(token, userId);
-}
+    const token = jwt.sign(payload, SECRET_KEY);
 
-/**
- * Retrieves userId from token.
- */
-function getUserIdFromToken(token) {
-    return tokenStorage.get(token) || null;
+    return token;
 }
-
-/**
- * Deletes a token (logout).
- */
-function deleteToken(token) {
-    tokenStorage.delete(token);
-}
-
-/**
- * Checks whether a token exists.
- */
-function isValidToken(token) {
-    return tokenStorage.has(token);
-}
-
-/**
- * Validate credentials using email and password.
- */
-function validateCredentials(email, password) {
-    for (const user of users.values()) {
-        if (user.email === email && user.password === password) {
-            return user;
-        }
-    }
-    return null;
-}
-
 
 module.exports = {
-    generateToken,
-    storeToken,
-    getUserIdFromToken,
-    deleteToken,
-    isValidToken,
-    validateCredentials
-};
+    generateToken
+}
