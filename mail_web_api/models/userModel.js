@@ -2,63 +2,63 @@ const { users } = require('../storage/userStorage');
 const { userLabels } = require('../storage/labelStorage');
 const { userMailIds } = require('../storage/userMailsStorage');
 
-let userIdCounter = 0;
+/**
+ * Remove the password field from a user object.
+ */
+function stripPassword(user) {
+    if (!user) return null;
+    const { password: _, ...userWithoutPassword } = user;
+    return userWithoutPassword;
+}
 
 /**
- * Create and add a new user with a numeric ID.
+ * Create and add a new user with a string userId.
  * Also initializes empty labels and mails structures for the user.
  */
 function createUser({
-    firstName,
-    lastName,
-    email,
+    userId,
+    name,
     password,
-    dateOfBirth,
-    gender = null,
-    phoneNumber = null
+    gender,
+    birthDate,
+    profileImage
 }) {
-    // Check for existing email
-    for (const user of users.values()) {
-        if (user.email === email) {
-            throw new Error("Email already registered");
-        }
+    if (users.has(userId)) {
+        throw new Error("UserID already exists");
     }
 
-    const userId = ++userIdCounter;
     const newUser = {
         userId,
-        firstName,
-        lastName,
-        email,
-        password,
-        dateOfBirth,
+        name,
+        password, // stored internally
         gender,
-        phoneNumber
+        birthDate,
+        profileImage
     };
 
     users.set(userId, newUser);
 
-    // Initialize userLabels and userMailIds with empty structures
+    // Initialize userLabels and userMailIds
     userLabels.set(userId, []);
     userMailIds.set(userId, new Set());
 
-    return newUser;
+    return stripPassword(newUser);
 }
 
 /**
- * Get user by ID.
+ * Get user by ID (without password).
  */
 function getUserById(userId) {
-    return users.get(userId) || null;
+    return stripPassword(users.get(userId));
 }
 
 /**
- * Get a user by email or return null if not found.
+ * Get a user by email (without password), or return null if not found.
  */
 function getUserByEmail(email) {
     for (const user of users.values()) {
         if (user.email === email) {
-            return user;
+            return stripPassword(user);
         }
     }
     return null;
@@ -67,5 +67,6 @@ function getUserByEmail(email) {
 module.exports = {
     createUser,
     getUserById,
-    getUserByEmail
+    getUserByEmail, 
+    stripPassword
 };
