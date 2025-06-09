@@ -32,7 +32,7 @@ function getMailById(req, res) {
     if (!mail) {
         return res.status(404).json({ error: 'Mail not found' });
     }
-
+    mailStatusModel.markAsRead(mailId, req.userId);
     res.status(200).json(mail);
 }
 
@@ -119,6 +119,12 @@ function getSentMails(req, res) {
     res.status(200).json(mails);
 }
 
+function getSpamMails(req, res) {
+    const { limit = 50, offset = 0 } = req.query;
+    const mails = mailStatusModel.getSpamMails(req.userId, +limit, +offset);
+    res.status(200).json(mails);
+}
+
 function getStarredMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
     const mails = mailStatusModel.getStarredMails(req.userId, +limit, +offset);
@@ -140,5 +146,6 @@ module.exports = {
     getInboxMails,
     getSentMails,
     getStarredMails,
-    getAllMails
+    getAllMails,
+    getSpamMails
 };

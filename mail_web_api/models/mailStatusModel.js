@@ -76,6 +76,10 @@ function getAllNonSpamMails(userId, offset = 0, limit = 50) {
     return getFilteredMails(userId, s => !s.isSpam, offset, limit);
 }
 
+function getSpamMails(userId, limit = 50, offset = 0) {
+    return getFilteredMails(userId, s => s.isSpam, offset, limit);
+}
+
 module.exports = {
     initializeSenderStatus,
     initializeRecipientStatus,
@@ -85,7 +89,8 @@ module.exports = {
     getInboxMails,
     getSentMails,
     getStarredMails,
-    getAllNonSpamMails
+    getAllNonSpamMails,
+    getSpamMails
 };
 
 
