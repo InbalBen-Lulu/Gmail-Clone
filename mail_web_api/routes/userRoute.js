@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const { isLoggedIn } = require('../middleware/auth'); 
+
+console.log("isLoggedIn type:", typeof isLoggedIn);
 
 const {
   registerUser,
@@ -10,6 +13,6 @@ const {
 router.post('/', registerUser);
 
 // Get user details by ID
-router.get('/:id', getUserDetails);
+router.get('/:id', isLoggedIn, getUserDetails);
 
 module.exports = router;

@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 const mailController = require('../controllers/mailController');
-const validateUserHeader = require('../middleware/validateUser');
+const { isLoggedIn } = require('../middleware/auth');
 
 // Apply user validation middleware to all mails routes
-router.use(validateUserHeader);
+router.use(isLoggedIn);
 
 // Routes for /api/mails
 router.route('/')
