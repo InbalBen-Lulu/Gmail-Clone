@@ -8,6 +8,8 @@ const { resolveProfileImagePath } = require('../models/profileImageModel');
 function registerUser(req, res) {
     const userData = req.body;
     const { userId, name, password, gender, birthDate } = userData;
+    
+    userData.userId = userId.toLowerCase();
 
     if (!userId || !name || !password || !gender || !birthDate) {
         return res.status(400).json({ error: 'Missing required user fields' });

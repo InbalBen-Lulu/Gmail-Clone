@@ -26,7 +26,22 @@ function getUserIdFromEmail(email) {
     return email.slice(0, atIndex);
 }
 
+/**
+ * Checks whether the email belongs to the system's configured mail domain.
+ * Example: "user@mailme.com" ➝ true, "user@gmail.com" ➝ false
+ * @param {string} email 
+ * @returns {boolean}
+ */
+function isValidSystemEmail(email) {
+    if (typeof email !== 'string') return false;
+    const parts = email.trim().toLowerCase().split('@');
+    if (parts.length !== 2) return false;
+
+    return parts[1] === MAIL_DOMAIN.toLowerCase();
+}
+
 module.exports = {
     getEmailFromUserId,
-    getUserIdFromEmail
+    getUserIdFromEmail,
+    isValidSystemEmail
 };

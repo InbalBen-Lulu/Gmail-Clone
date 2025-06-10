@@ -7,7 +7,8 @@ const { generateToken } = require('../models/tokenModel');
 function loginUser(req, res) {
     const { userId, password } = req.body;
 
-    const user = users.get(userId);
+    const user = users.get(userId.toLowerCase());
+
     if (!user || user.password !== password) {
         return res.status(401).json({ error: 'Invalid credentials' });
     }
