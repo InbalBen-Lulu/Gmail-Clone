@@ -3,12 +3,9 @@ const path = require('path');
 const { users } = require('../storage/userStorage');
 
 /**
- * Saves a base64-encoded profile image for a given user.
- * Replaces any previously uploaded image.
- * 
- * @param {Object} user - The user object to update
- * @param {string} image - The base64-encoded image string
- * @returns {Object} result - Success or error object
+ * Saves a new base64-encoded profile image for the given user.
+ * Deletes any previous uploaded image if it exists.
+ * Returns an object with success or error information.
  */
 function saveProfileImage(user, image) {
     if (!image || !image.startsWith('data:image/')) {
@@ -22,6 +19,9 @@ function saveProfileImage(user, image) {
 
     const ext = matches[1];
     const base64Data = matches[2];
+    if (base64Data.length > 2_000_000) { // ~1.5MB
+        return { error: 'Image too large' };
+    }
     const buffer = Buffer.from(base64Data, 'base64');
 
     // delete old image if exists
@@ -45,8 +45,6 @@ function saveProfileImage(user, image) {
 /**
  * Removes the uploaded profile image of the user (if exists)
  * and resets it to a default avatar based on userId.
- * 
- * @param {Object} user - The user object to update
  */
 function removeProfileImage(user) {
     if (user.profileImage && user.profileImage.startsWith('/profilePics/uploads/')) {
@@ -61,9 +59,6 @@ function removeProfileImage(user) {
 /**
  * Resolves the default profile image path based on the user's ID.
  * Uses the first character of the userId to pick an avatar, or fallback to default.
- * 
- * @param {string} userId - The user's ID
- * @returns {string} path - The resolved image path
  */
 function resolveProfileImagePath(userId) {
     const firstChar = userId[0].toUpperCase();

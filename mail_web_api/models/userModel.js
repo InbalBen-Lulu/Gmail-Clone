@@ -56,9 +56,6 @@ function getUserById(userId) {
 /**
  * Finds a user based on their system email (userId@mailme.com).
  * Only emails that belong to the system domain are accepted.
- * 
- * @param {string} email - Full email address to look up
- * @returns {object|null} User object without password, or null if not found
  */
 function getUserByEmail(email) {
     const normalizedEmail = email.trim().toLowerCase();
