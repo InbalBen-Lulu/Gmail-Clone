@@ -2,7 +2,6 @@ const { getUserById } = require('../models/userModel');
 const {
     saveProfileImage,
     removeProfileImage,
-    resolveProfileImagePath
 } = require('../models/profileImageModel');
 
 /**
