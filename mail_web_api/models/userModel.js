@@ -1,6 +1,7 @@
 const { users } = require('../storage/userStorage');
 const { userLabels } = require('../storage/labelStorage');
 const { userMailIds } = require('../storage/userMailsStorage');
+const { isValidSystemEmail, getUserIdFromEmail } = require('../utils/emailUtils');
 
 /**
  * Remove the password field from a user object.
@@ -49,19 +50,30 @@ function createUser({
  * Get user by ID (without password).
  */
 function getUserById(userId) {
-    return stripPassword(users.get(userId));
+    return stripPassword(users.get(userId.toLowerCase()));
 }
 
 /**
- * Get a user by email (without password), or return null if not found.
+ * Finds a user based on their system email (userId@mailme.com).
+ * Only emails that belong to the system domain are accepted.
+ * 
+ * @param {string} email - Full email address to look up
+ * @returns {object|null} User object without password, or null if not found
  */
 function getUserByEmail(email) {
-    for (const user of users.values()) {
-        if (user.email === email) {
-            return stripPassword(user);
-        }
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // 1. Check if email matches system domain
+    if (!isValidSystemEmail(normalizedEmail)) {
+        return null;
     }
-    return null;
+
+    // 2. Extract userId and look up in users map
+    const userId = getUserIdFromEmail(normalizedEmail);
+    if (!userId) return null;
+
+    const user = users.get(userId);
+    return user ? stripPassword(user) : null;
 }
 
 module.exports = {
