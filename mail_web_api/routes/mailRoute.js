@@ -7,19 +7,25 @@ const validateUserHeader = require('../middleware/validateUser');
 // Apply user validation middleware to all mails routes
 router.use(validateUserHeader);
 
-router.get('/', mailController.getInboxMails);
-router.post('/', mailController.createMail);
+router.route('/')
+    .get(mailController.getInboxMails)
+    .post(mailController.createMail);
+
+router.patch('/:id/send', mailController.sendDraft);
+router.patch('/:id/star', mailController.toggleStar);
+
+router.get('/search/:query', mailController.searchMails);
 
 router.get('/allmails', mailController.getAllMails);
 router.get('/inbox', mailController.getInboxMails);
 router.get('/sent', mailController.getSentMails);
-router.get('/starred', mailController.getStarredMails);
+router.get('/drafts', mailController.getDraftMails);
 router.get('/spam', mailController.getSpamMails);
-router.get('/search/:query', mailController.searchMails);
+router.get('/starred', mailController.getStarredMails);
 
-router.get('/:id', mailController.getMailById);
-router.patch('/:id', mailController.updateMail);
-router.delete('/:id', mailController.deleteMail);
-router.patch('/:id/star', mailController.toggleStar);
+router.route('/:id')
+    .get(mailController.getMailById)
+    .patch(mailController.updateMail)
+    .delete(mailController.deleteMail);
 
 module.exports = router;

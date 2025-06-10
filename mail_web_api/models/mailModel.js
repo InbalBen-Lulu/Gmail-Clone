@@ -1,5 +1,6 @@
 const { mails } = require('../storage/mailStorage');
 const { userMailStatus } = require('../storage/mailStatusStorage');
+const { userLabels } = require('../storage/userLabels');
 const { getUserById } = require('./userModel');
 const { checkUrlsAgainstBlacklist } = require('./blackListModel');
 const {
@@ -55,27 +56,60 @@ function deleteMail(mailId, userId) {
     return true;
 }
 
-/**
- * Updates the subject and/or body of a mail after a blacklist check.
- * Returns:
- *   - null if mail doesn't exist or user is not the sender
- *   - -1 if new content contains blacklisted URLs
- *   - 0 on success
- */
-async function updateMail(mailId, userId, updatedFields) {
+function updateMail(mailId, userId, updatedFields) {
     const mail = mails.get(mailId);
     if (!mail || mail.from !== userId) return null;
 
-    const subject = updatedFields.subject ?? mail.subject;
-    const body = updatedFields.body ?? mail.body;
-    const words = (subject + ' ' + body).split(/\s+/);
+    const status = getMailStatus(mailId, userId);
+    if (!status || !status.isDraft) return null;
 
-    if (await checkUrlsAgainstBlacklist(words)) return -1;
+    if ('subject' in updatedFields) {
+        mail.subject = updatedFields.subject;
+    }
+    if ('body' in updatedFields) {
+        mail.body = updatedFields.body;
+    }
+    if ('to' in updatedFields && Array.isArray(updatedFields.to)) {
+        mail.to = updatedFields.to;
+    }
+}
 
-    mail.subject = subject;
-    mail.body = body;
+async function sendDraft(mailId, userId, updatedFields) {
+    const mail = mails.get(mailId);
+    if (!mail || mail.from !== userId) return null;
+
+    const status = getMailStatus(mailId, userId);
+    if (!status?.isDraft) return null;
+
+    // Update mail
+    if ('subject' in updatedFields) {
+        mail.subject = updatedFields.subject;
+    }
+    if ('body' in updatedFields) {
+        mail.body = updatedFields.body;
+    }
+    if ('to' in updatedFields && Array.isArray(updatedFields.to)) {
+        mail.to = updatedFields.to;
+    }
+
+    // Update sent time
+    mail.sentAt = new Date().toISOString();
+
+    // Update draft flag
+    status.isDraft = false;
+
+    // Blacklist check
+    const words = (mail.subject + ' ' + mail.body).split(/\s+/);
+    const isSpam = await checkUrlsAgainstBlacklist(words);
+
+    // Create status for recipients
+    for (const userId of mail.to) {
+        initializeRecipientStatus(mailId, userId, isSpam);
+    }
+
     return 0;
 }
+
 
 function searchMails(userId, query, limit = 5, offset = 0) {
     const statusMap = userMailStatus.get(userId);
@@ -146,5 +180,6 @@ module.exports = {
     updateMail,
     searchMails,
     formatMailSummary,
-    formatFullMail
+    formatFullMail,
+    sendDraft
 };

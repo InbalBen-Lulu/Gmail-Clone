@@ -56,40 +56,59 @@ function deleteMail(req, res) {
 
 /**
  * PATCH /api/mails/:id
- * Updates subject/body of a mail.
- * Only the sender can update.
- * Handles blacklist violations.
  */
-async function updateMail(req, res) {
+function updateMail(req, res) {
     const mailId = parseInt(req.params.id);
+    if (isNaN(mailId)) {
+        return res.status(400).json({ error: 'Invalid mail ID' });
+    }
+
     const original = mailModel.getMailById(mailId, req.userId);
     if (!original) {
         return res.status(404).json({ error: 'Mail not found' });
     }
 
-    if ('from' in req.body || 'to' in req.body) {
-        return res.status(400).json({ error: 'You cannot modify this field' });
-    }
+    const updates = {
+        subject: req.body.subject ?? original.subject,
+        body: req.body.body ?? original.body,
+        to: req.body.to ?? original.to
+    };
 
-    const allowedFields = ['subject', 'body'];
-    const updates = {};
-    for (const field of allowedFields) {
-        if (field in req.body) {
-            updates[field] = req.body[field];
-        }
-    }
-
-    const result = await mailModel.updateMail(mailId, req.userId, updates);
+    const result = mailModel.updateMail(mailId, req.userId, updates);
 
     if (result === null) {
-        return res.status(404).json({ error: 'Mail not found' });
-    }
-    if (result === -1) {
-        return res.status(400).json({ error: 'Mail contains a blacklisted link' });
+        return res.status(400).json({ error: 'Only draft mails can be edited' });
     }
 
     res.status(204).end();
 }
+
+async function sendDraftMail(req, res) {
+    const mailId = parseInt(req.params.id);
+    if (isNaN(mailId)) {
+        return res.status(400).json({ error: 'Invalid mail ID' });
+    }
+
+    const original = mailModel.getMailById(mailId, req.userId);
+    if (!original) {
+        return res.status(404).json({ error: 'Mail not found' });
+    }
+
+    const updates = {
+        subject: req.body.subject ?? original.subject,
+        body: req.body.body ?? original.body,
+        to: req.body.to ?? original.to
+    };
+
+    const result = await mailModel.sendDraft(mailId, req.userId, updates);
+
+    if (result === null) {
+        return res.status(400).json({ error: 'Only draft mails can be sent' });
+    }
+
+    res.status(200).json({ message: 'Mail sent successfully', mailId });
+}
+
 
 /**
  * GET /api/mails/search/:query
@@ -125,6 +144,12 @@ function getSpamMails(req, res) {
     res.status(200).json(mails);
 }
 
+function getDraftMails(req, res) {
+    const { limit = 50, offset = 0 } = req.query;
+    const mails = mailStatusModel.getDraftMails(req.userId, +limit, +offset);
+    res.status(200).json(mails);
+}
+
 function getStarredMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
     const mails = mailStatusModel.getStarredMails(req.userId, +limit, +offset);
@@ -147,5 +172,7 @@ module.exports = {
     getSentMails,
     getStarredMails,
     getAllMails,
-    getSpamMails
+    getSpamMails, 
+    getDraftMails,
+    sendDraftMail
 };
