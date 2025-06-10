@@ -1,4 +1,5 @@
 const { createUser, getUserById } = require('../models/userModel');
+const { resolveProfileImagePath } = require('../models/profileImageModel');
 
 /**
  * POST /api/users
@@ -6,15 +7,21 @@ const { createUser, getUserById } = require('../models/userModel');
  */
 function registerUser(req, res) {
     const userData = req.body;
-    const { userId, name, password, gender, birthDate, profileImage } = userData;
+    const { userId, name, password, gender, birthDate } = userData;
 
-    if (!userId || !name || !password || !gender || !birthDate || !profileImage) {
+    if (!userId || !name || !password || !gender || !birthDate) {
         return res.status(400).json({ error: 'Missing required user fields' });
     }
 
-    let newUser;
+    const profileImage = resolveProfileImagePath(userId);
+
+    const userWithImage = {
+        ...userData,
+        profileImage
+    };
+
     try {
-        const newUser = createUser(userData); // returns user without password
+        const newUser = createUser(userWithImage);
         return res.status(201).json(newUser);
     } catch (err) {
         return res.status(400).json({ error: err.message });
