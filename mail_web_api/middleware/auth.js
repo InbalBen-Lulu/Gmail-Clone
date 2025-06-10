@@ -20,6 +20,26 @@ function isLoggedIn(req, res, next) {
     }
 }
 
+/**
+ * Middleware that ensures the user is accessing their own account.
+ * Safely compares user ID from token and route parameter (case-insensitive).
+ */
+function isSelf(req, res, next) {
+    const tokenUserId = req.user?.userId;
+    const requestedId = req.params?.id;
+
+    if (!tokenUserId || !requestedId) {
+        return res.status(400).json({ error: 'Missing user ID for validation' });
+    }
+
+    if (tokenUserId.toLowerCase() !== requestedId.toLowerCase()) {
+        return res.status(403).json({ error: 'Access denied: You can only access your own account' });
+    }
+
+    next();
+}
+
 module.exports = {
-    isLoggedIn
+    isLoggedIn,
+    isSelf
 };

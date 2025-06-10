@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { isLoggedIn } = require('../middleware/auth'); 
+const { isLoggedIn, isSelf } = require('../middleware/auth'); 
 const {
     uploadProfileImage,
     deleteProfileImage
@@ -14,12 +14,12 @@ const {
 router.post('/', registerUser);
 
 // Get user details by ID
-router.get('/:id', isLoggedIn, getUserDetails);
+router.get('/:id', isLoggedIn, isSelf, getUserDetails);
 
 // Upload a new profile image for the specified user
-router.post('/:id/profile-image', isLoggedIn, uploadProfileImage);
+router.post('/:id/profile-image', isLoggedIn, isSelf, uploadProfileImage);
 
 // Delete the uploaded profile image and reset to default avatar
-router.delete('/:id/profile-image', isLoggedIn, deleteProfileImage);
+router.delete('/:id/profile-image', isLoggedIn, isSelf, deleteProfileImage);
 
 module.exports = router;
