@@ -1,4 +1,5 @@
 const { createUser, getUserById } = require('../models/userModel');
+const { resolveProfileImagePath } = require('../models/profileImageModel');
 
 /**
  * POST /api/users
@@ -6,22 +7,40 @@ const { createUser, getUserById } = require('../models/userModel');
  */
 function registerUser(req, res) {
     const userData = req.body;
-    const { firstName, lastName, email, password, dateOfBirth } = userData;
+    const { userId, name, password, gender, birthDate } = userData;
 
-    if (!firstName || !lastName || !email || !password || !dateOfBirth) {
-        return res.status(400).json({ error: 'Missing required user fields' });
+    userData.userId = userId.toLowerCase();
+
+    if (!birthDate) {
+    return res.status(400).json({ error: 'Please fill in a complete birthday' });
+    }
+    if (!gender) {
+        return res.status(400).json({ error: 'Please select your gender' });
+    }
+    if (!name) {
+        return res.status(400).json({ error: 'Enter first name' });
+    }
+    if (!password) {
+        return res.status(400).json({ error: 'Enter a password' });
+    }
+    if (!userId) {
+        return res.status(400).json({ error: 'Missing user ID' });
     }
 
-    let newUser;
+
+    const profileImage = resolveProfileImagePath(userId);
+
+    const userWithImage = {
+        ...userData,
+        profileImage
+    };
+
     try {
-        newUser = createUser(userData);
+        const newUser = createUser(userWithImage);
+        return res.status(201).json(newUser);
     } catch (err) {
         return res.status(400).json({ error: err.message });
     }
-
-    const { password: _, ...userSafe } = newUser;
-
-    res.status(201).json(userSafe);
 }
 
 
@@ -30,16 +49,14 @@ function registerUser(req, res) {
  * Retrieve user details by userId
  */
 function getUserDetails(req, res) {
-    const userId = Number(req.params.id);
+    const userId = req.params.id; 
     const user = getUserById(userId);
 
     if (!user) {
-        return res.status(404).json({ error: 'User not found'});
+        return res.status(404).json({ error: 'User not found' });
     }
 
-    // Exclude sensitive fields (like password) before returning the user object
-    const { password, ...userSafe } = user;
-    res.json(userSafe);
+    res.json(user); 
 }
 
 module.exports = {
