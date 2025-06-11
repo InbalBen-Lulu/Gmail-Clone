@@ -29,6 +29,27 @@ function getMailStatus(mailId, userId) {
     return userMailStatus.get(userId)?.get(mailId) || null;
 }
 
+function addLabel(mailId, userId, labelId) {
+    const status = getMailStatus(mailId, userId);
+    if (!status) return null;             
+    if (status.isSpam) return -1;         
+
+    if (!status.labels.includes(labelId)) {
+        status.labels.push(labelId);
+    }
+
+    return 0;
+}
+
+function removeLabel(mailId, userId, labelId) {
+    const status = getMailStatus(mailId, userId);
+    if (!status) return null;             
+    if (status.isSpam) return -1;
+
+    status.labels = status.labels.filter(id => id !== labelId);
+    return true;
+}
+
 function markAsRead(mailId, userId) {
     const status = getMailStatus(mailId, userId);
     if (status?.type === 'received') status.isRead = true;
@@ -84,6 +105,14 @@ function getDraftMails(userId, limit = 50, offset = 0) {
     return getFilteredMails(userId, s => s.type === 'sent' && s.isDraft, offset, limit);
 }
 
+function getMailsByLabel(userId, labelId, limit = 50, offset = 0) {
+    return getFilteredMails(userId, s =>
+        !s.isSpam && Array.isArray(s.labels) && s.labels.includes(labelId),
+        offset,
+        limit
+    );
+}
+
 module.exports = {
     initializeSenderStatus,
     initializeRecipientStatus,
@@ -95,7 +124,10 @@ module.exports = {
     getStarredMails,
     getAllNonSpamMails,
     getSpamMails,
-    getDraftMails
+    getDraftMails,
+    addLabel,
+    removeLabel,
+    getMailsByLabel
 };
 
 

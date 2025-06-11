@@ -1,5 +1,6 @@
 const mailModel = require('../models/mailModel');
 const mailStatusModel = require('../models/mailStatusModel');
+const { labelExistsForUser } = require('../models/userLabelsModel');
 
 /**
  * POST /api/mails
@@ -63,15 +64,15 @@ function updateMail(req, res) {
         return res.status(400).json({ error: 'Invalid mail ID' });
     }
 
-    const original = mailModel.getMailById(mailId, req.userId);
-    if (!original) {
+    const mail = mailModel.getMailById(mailId, req.userId);
+    if (!mail) {
         return res.status(404).json({ error: 'Mail not found' });
     }
 
     const updates = {
-        subject: req.body.subject ?? original.subject,
-        body: req.body.body ?? original.body,
-        to: req.body.to ?? original.to
+        subject: req.body.subject ?? mail.subject,
+        body: req.body.body ?? mail.body,
+        to: req.body.to ?? mail.to
     };
 
     const result = mailModel.updateMail(mailId, req.userId, updates);
@@ -89,15 +90,15 @@ async function sendDraftMail(req, res) {
         return res.status(400).json({ error: 'Invalid mail ID' });
     }
 
-    const original = mailModel.getMailById(mailId, req.userId);
-    if (!original) {
+    const mail = mailModel.getMailById(mailId, req.userId);
+    if (!mail) {
         return res.status(404).json({ error: 'Mail not found' });
     }
 
     const updates = {
-        subject: req.body.subject ?? original.subject,
-        body: req.body.body ?? original.body,
-        to: req.body.to ?? original.to
+        subject: req.body.subject ?? mail.subject,
+        body: req.body.body ?? mail.body,
+        to: req.body.to ?? mail.to
     };
 
     const result = await mailModel.sendDraft(mailId, req.userId, updates);
@@ -108,7 +109,6 @@ async function sendDraftMail(req, res) {
 
     res.status(200).json({ message: 'Mail sent successfully', mailId });
 }
-
 
 /**
  * GET /api/mails/search/:query
@@ -125,6 +125,75 @@ function searchMails(req, res) {
     const results = mailModel.searchMails(req.userId, query);
     res.status(200).json(results);
 }
+
+
+function addLabelToMail(req, res) {
+    const mailId = parseInt(req.params.id);
+    const labelId = req.body.labelId;
+
+    if (!labelId) {
+        return res.status(400).json({ error: 'labelId is required' });
+    }
+
+    if (!labelExistsForUser(req.userId, labelId)) {
+        return res.status(404).json({ error: 'Label not found' });
+    }
+
+    const result = mailStatusModel.addLabel(mailId, req.userId, labelId);
+
+    if (result === null) {
+        return res.status(404).json({ error: 'Mail not found' });
+    }
+    if (result === -1) {
+        return res.status(400).json({ error: 'Cannot add label to a spam mail' });
+    }
+
+    res.status(204).end();
+}
+
+function removeLabelFromMail(req, res) {
+    const mailId = parseInt(req.params.id);
+    const labelId = req.body.labelId;
+
+    if (!labelId) {
+        return res.status(400).json({ error: 'labelId is required' });
+    }
+
+    if (!labelExistsForUser(req.userId, labelId)) {
+        return res.status(404).json({ error: 'Label not found' });
+    }
+
+    const result = mailStatusModel.removeLabel(mailId, req.userId, labelId);
+
+    if (result === null) {
+        return res.status(404).json({ error: 'Mail not found' });
+    }
+    if (result === -1) {
+        return res.status(400).json({ error: 'Cannot remove label from a spam mail' });
+    }
+
+    res.status(204).end();
+}
+
+function toggleStar(req, res) {
+    const mailId = parseInt(req.params.id);
+    if (isNaN(mailId)) {
+        return res.status(400).json({ error: 'Invalid mail ID' });
+    }
+
+    const status = mailStatusModel.getMailStatus(mailId, req.userId);
+    if (!status) {
+        return res.status(404).json({ error: 'Mail not found' });
+    }
+
+    if (status.isSpam) {
+        return res.status(400).json({ error: 'Cannot star a spam mail' });
+    }
+
+    mailStatusModel.toggleStar(mailId, req.userId);
+    res.status(204).end();
+}
+
 
 function getInboxMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
@@ -162,6 +231,18 @@ function getAllMails(req, res) {
     res.status(200).json(mails);
 }
 
+function getMailsByLabel(req, res) {
+    const { labelId } = req.params;
+    const { limit = 50, offset = 0 } = req.query;
+
+    if (!labelExistsForUser(req.userId, labelId)) {
+        return res.status(404).json({ error: 'Label not found' });
+    }
+
+    const mails = mailStatusModel.getMailsByLabel(req.userId, labelId, +limit, +offset);
+    res.status(200).json(mails);
+}
+
 module.exports = {
     createMail,
     getMailById,
@@ -174,5 +255,9 @@ module.exports = {
     getAllMails,
     getSpamMails, 
     getDraftMails,
-    sendDraftMail
+    sendDraftMail,
+    toggleStar,
+    getMailsByLabel,
+    addLabelToMail,
+    removeLabelFromMail
 };
