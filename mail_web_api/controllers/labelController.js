@@ -1,4 +1,6 @@
 const labelModel = require('../models/labelModel');
+const mailStatusModel = require('../models/mailStatusModel');
+const { isValidHexColor } = require('../utils/validation');
 
 /**
  * GET /api/labels
@@ -99,10 +101,49 @@ function deleteLabel(req, res) {
     res.status(204).end();
 }
 
+function setLabelColor(req, res) {
+    const labelId = parseInt(req.params.id);
+    const { color } = req.body;
+
+    if (isNaN(labelId)) {
+        return res.status(404).json({ error: 'Label not found' });
+    }
+
+    if (!isValidHexColor(color)) {
+        return res.status(400).json({ error: 'Invalid color format. Must be 6-digit hex (e.g., #AABBCC)' });
+    }
+
+    const result = labelModel.setLabelColor(req.userId, labelId, color);
+
+    if (result === -1) {
+        return res.status(404).json({ error: 'Label not found' });
+    }
+
+    res.status(204).end();
+}
+
+function resetLabelColor(req, res) {
+    const labelId = parseInt(req.params.id);
+
+    if (isNaN(labelId)) {
+        return res.status(404).json({ error: 'Label not found' });
+    }
+
+    const result = labelModel.resetLabelColor(req.userId, labelId);
+
+    if (result === -1) {
+        return res.status(404).json({ error: 'Label not found' });
+    }
+
+    res.status(204).end();
+}
+
 module.exports = {
     getAllLabels,
     createLabel,
     getLabelById,
     renameLabel,
-    deleteLabel
+    deleteLabel,
+    setLabelColor,
+    resetLabelColor
 };

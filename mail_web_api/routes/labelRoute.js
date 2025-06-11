@@ -12,6 +12,10 @@ router.route('/')
     .get(labelController.getAllLabels)
     .post(labelController.createLabel);
 
+router.route('/:id/color')
+    .patch(labelController.setLabelColor)
+    .delete(labelController.resetLabelColor);
+    
 // Routes for /api/labels/:id
 router.route('/:id')
     .get(labelController.getLabelById)
