@@ -26,7 +26,7 @@ function createLabel(name, userId) {
  * Gets all labels for a user.
  */
 function getLabelsByUser(userId) {
-  return userLabels.get(userId);
+  return userLabels.get(userId) || [];
 }
 
 /**
@@ -36,7 +36,7 @@ function getLabelsByUser(userId) {
  *   - null if not found
  */
 function getLabelById(userId, labelId) {
-  const labels = userLabels.get(userId);
+  const labels = userLabels.get(userId) || [];
   return labels.find(label => label.id === labelId) || null;
 }
 
@@ -120,8 +120,8 @@ function resetLabelColor(userId, labelId) {
  *   - false otherwise
  */
 function labelExistsForUser(userId, labelId) {
-    const labels = userLabels.get(userId);
-    return labels?.some(label => label.id === labelId) || false;
+    const labels = userLabels.get(userId) || [];
+    return labels.some(label => label.id === Number(labelId));
 }
 
 module.exports = {

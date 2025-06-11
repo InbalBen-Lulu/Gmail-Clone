@@ -215,8 +215,9 @@ function getDraftMails(userId, limit = 50, offset = 0) {
  * Returns up to 50 mails associated with the given label and not marked as spam.
  */
 function getMailsByLabel(userId, labelId, limit = 50, offset = 0) {
+    const numericLabelId = Number(labelId);
     return getFilteredMails(userId, s =>
-        !s.isSpam && Array.isArray(s.labels) && s.labels.includes(labelId),
+        !s.isSpam && Array.isArray(s.labels) && s.labels.includes(numericLabelId),
         offset,
         limit
     );

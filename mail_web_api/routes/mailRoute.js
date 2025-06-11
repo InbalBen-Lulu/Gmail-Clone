@@ -15,15 +15,8 @@ router.patch('/:id/send', mailController.sendDraftMail);
 router.patch('/:id/star', mailController.toggleStar);
 router.patch('/:id/spam', mailController.setSpamStatus);
 
-router.post('/:id/labels/add', mailController.addLabelToMail);
-router.delete('/:id/labels/remove', mailController.removeLabelFromMail);
-
-router.route('/:id')
-    .get(mailController.getMailById)
-    .patch(mailController.updateMail)
-    .delete(mailController.deleteMail);
-
-router.get('/search/:query', mailController.searchMails);
+router.post('/:id/labels', mailController.addLabelToMail);
+router.delete('/:id/labels', mailController.removeLabelFromMail);
 
 // Route: Filtered mail views
 router.get('/allmails', mailController.getAllMails);
@@ -33,5 +26,12 @@ router.get('/drafts', mailController.getDraftMails);
 router.get('/spam', mailController.getSpamMails);
 router.get('/starred', mailController.getStarredMails);
 router.get('/labels/:labelId', mailController.getMailsByLabel);
+
+router.get('/search/:query', mailController.searchMails);
+
+router.route('/:id')
+    .get(mailController.getMailById)
+    .patch(mailController.updateMail)
+    .delete(mailController.deleteMail);
 
 module.exports = router;

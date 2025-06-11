@@ -23,7 +23,7 @@ async function createMail(req, res) {
 
     const { validRecipients, responseMeta } = result;
 
-    const mail = await mailModel.createMail(req.userId, validRecipients, subject, body, isDraft);
+    const mail = await mailModel.createMail(req.user.userId.toLowerCase(), validRecipients, subject, body, isDraft);
     if (!mail) {
         return res.status(500).json({ error: 'Failed to create mail' });
     }
@@ -41,11 +41,11 @@ async function createMail(req, res) {
  */
 function getMailById(req, res) {
     const mailId = parseInt(req.params.id);
-    const mail = mailModel.getMailById(mailId, req.userId);
+    const mail = mailModel.getMailById(mailId, req.user.userId.toLowerCase());
     if (!mail) {
         return res.status(404).json({ error: 'Mail not found' });
     }
-    mailStatusModel.markAsRead(mailId, req.userId);
+    mailStatusModel.markAsRead(mailId, req.user.userId.toLowerCase());
     res.status(200).json(mail);
 }
 
@@ -63,7 +63,7 @@ function deleteMail(req, res) {
         return res.status(404).json({ error: 'Mail not found' });
     }
 
-    const success = mailModel.deleteMail(mailId, req.userId);
+    const success = mailModel.deleteMail(mailId, req.user.userId.toLowerCase());
     if (!success) {
         return res.status(404).json({ error: 'Mail not found' });
     }
@@ -86,7 +86,7 @@ function updateMail(req, res) {
         return res.status(400).json({ error: 'Invalid mail ID' });
     }
 
-    const mail = mailModel.getMailById(mailId, req.userId);
+    const mail = mailModel.getMailById(mailId, req.user.userId.toLowerCase());
     if (!mail) {
         return res.status(404).json({ error: 'Mail not found' });
     }
@@ -97,7 +97,7 @@ function updateMail(req, res) {
         to: req.body.to
     };
 
-    const result = mailModel.updateMail(mailId, req.userId, updates);
+    const result = mailModel.updateMail(mailId, req.user.userId.toLowerCase(), updates);
 
     if (result === null) {
         return res.status(400).json({ error: 'Only draft mails can be edited' });
@@ -120,7 +120,7 @@ async function sendDraftMail(req, res) {
         return res.status(400).json({ error: 'Invalid mail ID' });
     }
 
-    const mail = mailModel.getMailById(mailId, req.userId);
+    const mail = mailModel.getMailById(mailId, req.user.userId.toLowerCase());
     if (!mail) {
         return res.status(404).json({ error: 'Mail not found' });
     }
@@ -133,7 +133,7 @@ async function sendDraftMail(req, res) {
 
     const result = processRecipients(to, false, res);
     if (!result) {
-        mailModel.deleteMail(mailId, req.userId);
+        mailModel.deleteMail(mailId, req.user.userId.toLowerCase());
         return;
     }
 
@@ -145,7 +145,7 @@ async function sendDraftMail(req, res) {
         to: validRecipients  
     };
 
-    const updated = await mailModel.sendDraft(mailId, req.userId, updates);
+    const updated = await mailModel.sendDraft(mailId, req.user.userId.toLowerCase(), updates);
     if (updated === null) {
         return res.status(400).json({ error: 'Only draft mails can be sent' });
     }
@@ -167,7 +167,7 @@ function searchMails(req, res) {
         return res.status(400).json({ error: 'Search query cannot be empty' });
     }
 
-    const results = mailModel.searchMails(req.userId, query);
+    const results = mailModel.searchMails(req.user.userId.toLowerCase(), query);
     res.status(200).json(results);
 }
 
@@ -182,16 +182,17 @@ function searchMails(req, res) {
 function addLabelToMail(req, res) {
     const mailId = parseInt(req.params.id);
     const labelId = req.body.labelId;
+    const userId = req.user.userId.toLowerCase();
 
     if (!labelId) {
         return res.status(400).json({ error: 'labelId is required' });
     }
 
-    if (!labelExistsForUser(req.userId, labelId)) {
+    if (!labelExistsForUser(userId, labelId)) {
         return res.status(404).json({ error: 'Label not found' });
     }
 
-    const result = mailStatusModel.addLabel(mailId, req.userId, labelId);
+    const result = mailStatusModel.addLabel(mailId, userId, labelId);
 
     if (result === null) {
         return res.status(404).json({ error: 'Mail not found' });
@@ -214,16 +215,17 @@ function addLabelToMail(req, res) {
 function removeLabelFromMail(req, res) {
     const mailId = parseInt(req.params.id);
     const labelId = req.body.labelId;
+    const userId = req.user.userId.toLowerCase();
 
     if (!labelId) {
         return res.status(400).json({ error: 'labelId is required' });
     }
 
-    if (!labelExistsForUser(req.userId, labelId)) {
+    if (!labelExistsForUser(userId, labelId)) {
         return res.status(404).json({ error: 'Label not found' });
     }
 
-    const result = mailStatusModel.removeLabel(mailId, req.userId, labelId);
+    const result = mailStatusModel.removeLabel(mailId, userId, labelId);
 
     if (result === null) {
         return res.status(404).json({ error: 'Mail not found' });
@@ -246,11 +248,13 @@ function removeLabelFromMail(req, res) {
  */
 function toggleStar(req, res) {
     const mailId = parseInt(req.params.id);
+    const userId = req.user.userId.toLowerCase();
+
     if (isNaN(mailId)) {
         return res.status(400).json({ error: 'Invalid mail ID' });
     }
 
-    const status = mailStatusModel.getMailStatus(mailId, req.userId);
+    const status = mailStatusModel.getMailStatus(mailId, userId);
     if (!status) {
         return res.status(404).json({ error: 'Mail not found' });
     }
@@ -259,7 +263,7 @@ function toggleStar(req, res) {
         return res.status(400).json({ error: 'Cannot star a spam mail' });
     }
 
-    mailStatusModel.toggleStar(mailId, req.userId);
+    mailStatusModel.toggleStar(mailId, userId);
     res.status(204).end();
 }
 
@@ -275,18 +279,19 @@ function toggleStar(req, res) {
  */
 async function setSpamStatus(req, res) {
     const mailId = parseInt(req.params.id);
+    const userId = req.user.userId.toLowerCase();
     const { isSpam } = req.body;
 
     if (typeof isSpam !== 'boolean') {
         return res.status(400).json({ error: 'isSpam must be true or false' });
     }
 
-    const mail = mailModel.getMailById(mailId, req.userId);
+    const mail = mailModel.getMailById(mailId, userId);
     if (!mail) {
         return res.status(404).json({ error: 'Mail not found' });
     }
 
-    const success = mailStatusModel.setSpamStatus(mailId, req.userId, isSpam);
+    const success = mailStatusModel.setSpamStatus(mailId, userId, isSpam);
     if (!success) {
         return res.status(500).json({ error: 'Failed to update spam status' });
     }
@@ -309,7 +314,7 @@ async function setSpamStatus(req, res) {
  */
 function getInboxMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
-    const mails = mailStatusModel.getInboxMails(req.userId, +limit, +offset);
+    const mails = mailStatusModel.getInboxMails(req.user.userId.toLowerCase(), +limit, +offset);
     res.status(200).json(mails);
 }
 
@@ -320,7 +325,7 @@ function getInboxMails(req, res) {
  */
 function getSentMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
-    const mails = mailStatusModel.getSentMails(req.userId, +limit, +offset);
+    const mails = mailStatusModel.getSentMails(req.user.userId.toLowerCase(), +limit, +offset);
     res.status(200).json(mails);
 }
 
@@ -331,7 +336,7 @@ function getSentMails(req, res) {
  */
 function getSpamMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
-    const mails = mailStatusModel.getSpamMails(req.userId, +limit, +offset);
+    const mails = mailStatusModel.getSpamMails(req.user.userId.toLowerCase(), +limit, +offset);
     res.status(200).json(mails);
 }
 
@@ -342,7 +347,7 @@ function getSpamMails(req, res) {
  */
 function getDraftMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
-    const mails = mailStatusModel.getDraftMails(req.userId, +limit, +offset);
+    const mails = mailStatusModel.getDraftMails(req.user.userId.toLowerCase(), +limit, +offset);
     res.status(200).json(mails);
 }
 
@@ -353,7 +358,7 @@ function getDraftMails(req, res) {
  */
 function getStarredMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
-    const mails = mailStatusModel.getStarredMails(req.userId, +limit, +offset);
+    const mails = mailStatusModel.getStarredMails(req.user.userId.toLowerCase(), +limit, +offset);
     res.status(200).json(mails);
 }
 
@@ -364,7 +369,7 @@ function getStarredMails(req, res) {
  */
 function getAllMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
-    const mails = mailStatusModel.getAllNonSpamMails(req.userId, +limit, +offset);
+    const mails = mailStatusModel.getAllNonSpamMails(req.user.userId.toLowerCase(), +limit, +offset);
     res.status(200).json(mails);
 }
 
@@ -378,12 +383,13 @@ function getAllMails(req, res) {
 function getMailsByLabel(req, res) {
     const { labelId } = req.params;
     const { limit = 50, offset = 0 } = req.query;
+    const userId = req.user.userId.toLowerCase();
 
-    if (!labelExistsForUser(req.userId, labelId)) {
+    if (!labelExistsForUser(userId, labelId)) {
         return res.status(404).json({ error: 'Label not found' });
     }
 
-    const mails = mailStatusModel.getMailsByLabel(req.userId, labelId, +limit, +offset);
+    const mails = mailStatusModel.getMailsByLabel(userId, labelId, +limit, +offset);
     res.status(200).json(mails);
 }
 
