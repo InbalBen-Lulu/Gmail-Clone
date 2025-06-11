@@ -1,9 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const { loginUser } = require('../controllers/tokenController');
+const  { loginUser, logoutUser } = require('../controllers/tokenController');
+const { isLoggedIn } = require('../middleware/auth'); 
 
-// Validates user credentials and returns userId if correct.
-// Note: In this exercise, no token is returned yet — only userId.
-router.post('/', loginUser);
+/**
+ * Logs in a user by validating credentials and issuing a token.
+ * No authentication required.
+ */
+router.post('/login', loginUser);
+
+/**
+ * Logs out the currently authenticated user.
+ * Only allowed if the user is logged in and acting on their own account.
+ */
+router.post('/logout', isLoggedIn, logoutUser);
 
 module.exports = router;

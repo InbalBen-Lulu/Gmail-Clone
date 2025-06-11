@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 const labelController = require('../controllers/labelController');
-const validateUserHeader = require('../middleware/validateUser');
+const { isLoggedIn } = require('../middleware/auth');
 
 // Apply user validation middleware to all label routes
-router.use(validateUserHeader);
+router.use(isLoggedIn);
 
 // Routes for /api/labels
 router.route('/')
