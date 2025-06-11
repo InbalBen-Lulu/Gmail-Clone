@@ -63,15 +63,9 @@ function updateMail(mailId, userId, updatedFields) {
     const status = getMailStatus(mailId, userId);
     if (!status || !status.isDraft) return null;
 
-    if ('subject' in updatedFields) {
-        mail.subject = updatedFields.subject;
-    }
-    if ('body' in updatedFields) {
-        mail.body = updatedFields.body;
-    }
-    if ('to' in updatedFields && Array.isArray(updatedFields.to)) {
-        mail.to = updatedFields.to;
-    }
+    mail.subject = updatedFields.subject;
+    mail.body = updatedFields.body;
+    mail.to = Array.isArray(updatedFields.to) ? updatedFields.to : [];
 
     return true;
 }
@@ -84,15 +78,9 @@ async function sendDraft(mailId, userId, updatedFields) {
     if (!status?.isDraft) return null;
 
     // Update mail
-    if ('subject' in updatedFields) {
-        mail.subject = updatedFields.subject;
-    }
-    if ('body' in updatedFields) {
-        mail.body = updatedFields.body;
-    }
-    if ('to' in updatedFields && Array.isArray(updatedFields.to)) {
-        mail.to = updatedFields.to;
-    }
+    mail.subject = updatedFields.subject;
+    mail.body = updatedFields.body;
+    mail.to = Array.isArray(updatedFields.to) ? updatedFields.to : [];
 
     // Update sent time
     mail.sentAt = new Date().toISOString();

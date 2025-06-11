@@ -3,6 +3,34 @@ const mailStatusModel = require('../models/mailStatusModel');
 const { labelExistsForUser } = require('../models/userLabelsModel');
 const { extractUrls } = require('../utils/urlUtils');
 const { addUrlsToBlacklist, removeUrlsFromBlacklist } = require('../models/blackListModel');
+const { getUserByEmail } = require('../models/userModel');
+
+function processRecipients(to, isDraft, res) {
+    const validRecipients = [];
+    const invalidRecipients = [];
+
+    for (const email of to) {
+        const user = getUserByEmail(email);
+        if (user) validRecipients.push(user.id);
+        else invalidRecipients.push(email);
+    }
+
+    if (!isDraft && validRecipients.length === 0) {
+        res.status(400).json({
+            error: 'Mail was not sent. None of the recipients exist.',
+            invalidEmails: invalidRecipients
+        });
+        return null;
+    }
+
+    const responseMeta = {};
+    if (invalidRecipients.length > 0) {
+        responseMeta.warning = 'Mail was not sent to some addresses because they do not exist';
+        responseMeta.invalidEmails = invalidRecipients;
+    }
+
+    return { validRecipients, responseMeta };
+}
 
 /**
  * POST /api/mails
@@ -16,14 +44,19 @@ async function createMail(req, res) {
         return res.status(400).json({ error: 'Recipients are required for sending mails' });
     }
 
-    const mail = await mailModel.createMail(req.userId, to, subject, body, isDraft);
+    const result = processRecipients(to, isDraft, res);
+    if (!result) return;
 
+    const { validRecipients, responseMeta } = result;
+
+    const mail = await mailModel.createMail(req.userId, validRecipients, subject, body, isDraft);
     if (!mail) {
         return res.status(500).json({ error: 'Failed to create mail' });
     }
 
-    res.status(201).location(`/api/mails/${mail.id}`).json({ id: mail.id });
+    res.status(201).location(`/api/mails/${mail.id}`).json({ id: mail.id, ...responseMeta });
 }
+
 
 /**
  * GET /api/mails/:id
@@ -72,9 +105,9 @@ function updateMail(req, res) {
     }
 
     const updates = {
-        subject: req.body.subject ?? mail.subject,
-        body: req.body.body ?? mail.body,
-        to: req.body.to ?? mail.to
+        subject: req.body.subject,
+        body: req.body.body,
+        to: req.body.to
     };
 
     const result = mailModel.updateMail(mailId, req.userId, updates);
@@ -97,19 +130,32 @@ async function sendDraftMail(req, res) {
         return res.status(404).json({ error: 'Mail not found' });
     }
 
+    const { to = [], subject = '', body = '' } = req.body;
+
+    if (!Array.isArray(to) || to.length === 0) {
+        return res.status(400).json({ error: 'Recipients are required for sending mails' });
+    }
+
+    const result = processRecipients(to, false, res);
+    if (!result) {
+        mailModel.deleteMail(mailId, req.userId);
+        return;
+    }
+
+    const { validRecipients, responseMeta } = result;
+
     const updates = {
-        subject: req.body.subject ?? mail.subject,
-        body: req.body.body ?? mail.body,
-        to: req.body.to ?? mail.to
+        subject,
+        body,
+        to: validRecipients  
     };
 
-    const result = await mailModel.sendDraft(mailId, req.userId, updates);
-
-    if (result === null) {
+    const updated = await mailModel.sendDraft(mailId, req.userId, updates);
+    if (updated === null) {
         return res.status(400).json({ error: 'Only draft mails can be sent' });
     }
 
-    res.status(200).json({ message: 'Mail sent successfully', mailId });
+    res.status(200).json({ message: 'Mail sent successfully', mailId, ...responseMeta });
 }
 
 /**
@@ -127,7 +173,6 @@ function searchMails(req, res) {
     const results = mailModel.searchMails(req.userId, query);
     res.status(200).json(results);
 }
-
 
 function addLabelToMail(req, res) {
     const mailId = parseInt(req.params.id);
