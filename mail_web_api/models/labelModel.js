@@ -68,7 +68,7 @@ function renameLabel(userId, labelId, newName) {
 function deleteLabel(userId, labelId) {
   const labels = userLabels.get(userId);
   const index = labels.findIndex(l => l.id === labelId);
-  if (index === -1) return -1;
+  if (!labels || index === -1) return -1;
 
   labels.splice(index, 1);
 
@@ -113,7 +113,19 @@ function resetLabelColor(userId, labelId) {
   return true;
 }
 
+/**
+ * Checks whether a label exists for a given user.
+ * Returns:
+ *   - true if the label exists
+ *   - false otherwise
+ */
+function labelExistsForUser(userId, labelId) {
+    const labels = userLabels.get(userId);
+    return labels?.some(label => label.id === labelId) || false;
+}
+
 module.exports = {
+  labelExistsForUser,
   createLabel,
   getLabelsByUser,
   getLabelById,

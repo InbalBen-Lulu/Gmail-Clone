@@ -1,41 +1,15 @@
 const mailModel = require('../models/mailModel');
 const mailStatusModel = require('../models/mailStatusModel');
-const { labelExistsForUser } = require('../models/userLabelsModel');
-const { extractUrls } = require('../utils/urlUtils');
+const { labelExistsForUser } = require('../models/labelModel');
 const { addUrlsToBlacklist, removeUrlsFromBlacklist } = require('../models/blackListModel');
-const { getUserByEmail } = require('../models/userModel');
-
-function processRecipients(to, isDraft, res) {
-    const validRecipients = [];
-    const invalidRecipients = [];
-
-    for (const email of to) {
-        const user = getUserByEmail(email);
-        if (user) validRecipients.push(user.id);
-        else invalidRecipients.push(email);
-    }
-
-    if (!isDraft && validRecipients.length === 0) {
-        res.status(400).json({
-            error: 'Mail was not sent. None of the recipients exist.',
-            invalidEmails: invalidRecipients
-        });
-        return null;
-    }
-
-    const responseMeta = {};
-    if (invalidRecipients.length > 0) {
-        responseMeta.warning = 'Mail was not sent to some addresses because they do not exist';
-        responseMeta.invalidEmails = invalidRecipients;
-    }
-
-    return { validRecipients, responseMeta };
-}
+const { processRecipients } = require('../utils/mailUtils');
 
 /**
  * POST /api/mails
  * Creates a new mail and sends it to recipients.
- * On success, responds with 201 and sets the Location header to the new mail's URL.
+ * Returns:
+ *   - 201 with mail ID if created successfully
+ *   - 400/500 with appropriate error message on failure
  */
 async function createMail(req, res) {
     const { to = [], subject = '', body = '', isDraft = false } = req.body;
@@ -57,10 +31,13 @@ async function createMail(req, res) {
     res.status(201).location(`/api/mails/${mail.id}`).json({ id: mail.id, ...responseMeta });
 }
 
-
 /**
  * GET /api/mails/:id
- * Returns a mail if the user has access to it.
+ * Returns the full mail content for the requesting user.
+ * Marks the mail as read.
+ * Returns:
+ *   - 200 with mail content
+ *   - 404 if not found or inaccessible
  */
 function getMailById(req, res) {
     const mailId = parseInt(req.params.id);
@@ -74,7 +51,11 @@ function getMailById(req, res) {
 
 /**
  * DELETE /api/mails/:id
- * Removes the mail only from the user's list.
+ * Removes the mail from the current user's status map.
+ * If it was a draft, deletes the mail completely.
+ * Returns:
+ *   - 204 on success
+ *   - 404 if mail not found or already deleted
  */
 function deleteMail(req, res) {
     const mailId = parseInt(req.params.id);
@@ -92,6 +73,12 @@ function deleteMail(req, res) {
 
 /**
  * PATCH /api/mails/:id
+ * Updates the subject, body and recipients of a draft mail.
+ * Only the sender can perform this action.
+ * Returns:
+ *   - 204 if update succeeded
+ *   - 400 if not a draft or invalid input
+ *   - 404 if mail not found
  */
 function updateMail(req, res) {
     const mailId = parseInt(req.params.id);
@@ -119,6 +106,14 @@ function updateMail(req, res) {
     res.status(204).end();
 }
 
+/**
+ * PATCH /api/mails/:id/send
+ * Sends an existing draft mail to updated recipients.
+ * If no valid recipients are found, deletes the draft mail.
+ * Returns:
+ *   - 200 if mail sent successfully
+ *   - 400/404 if mail is not valid or not a draft
+ */
 async function sendDraftMail(req, res) {
     const mailId = parseInt(req.params.id);
     if (isNaN(mailId)) {
@@ -160,12 +155,14 @@ async function sendDraftMail(req, res) {
 
 /**
  * GET /api/mails/search/:query
- * Searches mails accessible to the user.
+ * Searches accessible mails by query string in subject/body.
+ * Returns:
+ *   - 200 with array of mail summaries
+ *   - 400 if query is empty
  */
 function searchMails(req, res) {
     const query = req.params.query?.trim();
 
-    // query not sent at all
     if (!query) {
         return res.status(400).json({ error: 'Search query cannot be empty' });
     }
@@ -174,6 +171,14 @@ function searchMails(req, res) {
     res.status(200).json(results);
 }
 
+/**
+ * POST /api/mails/:id/labels
+ * Adds a label to a mail for the current user.
+ * Returns:
+ *   - 204 on success
+ *   - 400 if label is missing or mail is spam
+ *   - 404 if mail or label not found
+ */
 function addLabelToMail(req, res) {
     const mailId = parseInt(req.params.id);
     const labelId = req.body.labelId;
@@ -198,6 +203,14 @@ function addLabelToMail(req, res) {
     res.status(204).end();
 }
 
+/**
+ * DELETE /api/mails/:id/labels
+ * Removes a label from a mail for the current user.
+ * Returns:
+ *   - 204 on success
+ *   - 400 if label is missing or mail is spam
+ *   - 404 if mail or label not found
+ */
 function removeLabelFromMail(req, res) {
     const mailId = parseInt(req.params.id);
     const labelId = req.body.labelId;
@@ -222,6 +235,15 @@ function removeLabelFromMail(req, res) {
     res.status(204).end();
 }
 
+/**
+ * POST /api/mails/:id/star
+ * Toggles the "starred" status of a mail.
+ * Only works on non-spam mails.
+ * Returns:
+ *   - 204 on success
+ *   - 400 if mail is spam or ID is invalid
+ *   - 404 if mail not found
+ */
 function toggleStar(req, res) {
     const mailId = parseInt(req.params.id);
     if (isNaN(mailId)) {
@@ -241,6 +263,16 @@ function toggleStar(req, res) {
     res.status(204).end();
 }
 
+/**
+ * PATCH /api/mails/:id/spam
+ * Updates the spam status of a mail for the current user.
+ * Also updates blacklist if necessary.
+ * Returns:
+ *   - 204 on success
+ *   - 400 if isSpam is invalid
+ *   - 404 if mail not found
+ *   - 500 if spam update failed
+ */
 async function setSpamStatus(req, res) {
     const mailId = parseInt(req.params.id);
     const { isSpam } = req.body;
@@ -259,7 +291,7 @@ async function setSpamStatus(req, res) {
         return res.status(500).json({ error: 'Failed to update spam status' });
     }
 
-    const urls = extractUrls(mail.subject + ' ' + mail.body);
+    const urls = (mail.subject + ' ' + mail.body).split(/\s+/); 
 
     if (isSpam) {
         await addUrlsToBlacklist(urls);
@@ -270,42 +302,79 @@ async function setSpamStatus(req, res) {
     res.status(204).end();
 }
 
+/**
+ * GET /api/mails/inbox
+ * Returns the current user's non-spam received mails.
+ * Supports pagination via limit and offset.
+ */
 function getInboxMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
     const mails = mailStatusModel.getInboxMails(req.userId, +limit, +offset);
     res.status(200).json(mails);
 }
 
+/**
+ * GET /api/mails/sent
+ * Returns non-draft mails sent by the current user.
+ * Supports pagination via limit and offset.
+ */
 function getSentMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
     const mails = mailStatusModel.getSentMails(req.userId, +limit, +offset);
     res.status(200).json(mails);
 }
 
+/**
+ * GET /api/mails/spam
+ * Returns mails marked as spam by the user.
+ * Supports pagination via limit and offset.
+ */
 function getSpamMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
     const mails = mailStatusModel.getSpamMails(req.userId, +limit, +offset);
     res.status(200).json(mails);
 }
 
+/**
+ * GET /api/mails/drafts
+ * Returns draft mails created by the current user.
+ * Supports pagination via limit and offset.
+ */
 function getDraftMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
     const mails = mailStatusModel.getDraftMails(req.userId, +limit, +offset);
     res.status(200).json(mails);
 }
 
+/**
+ * GET /api/mails/starred
+ * Returns all non-spam starred mails for the user.
+ * Supports pagination via limit and offset.
+ */
 function getStarredMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
     const mails = mailStatusModel.getStarredMails(req.userId, +limit, +offset);
     res.status(200).json(mails);
 }
 
+/**
+ * GET /api/mails/allmails
+ * Returns all non-spam mails for the current user.
+ * Supports pagination via limit and offset.
+ */
 function getAllMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
     const mails = mailStatusModel.getAllNonSpamMails(req.userId, +limit, +offset);
     res.status(200).json(mails);
 }
 
+/**
+ * GET /api/mails/labels/:labelId
+ * Returns all non-spam mails associated with a label.
+ * Returns:
+ *   - 200 with list of mail summaries
+ *   - 404 if label does not exist
+ */
 function getMailsByLabel(req, res) {
     const { labelId } = req.params;
     const { limit = 50, offset = 0 } = req.query;
@@ -328,7 +397,7 @@ module.exports = {
     getSentMails,
     getStarredMails,
     getAllMails,
-    getSpamMails, 
+    getSpamMails,
     getDraftMails,
     sendDraftMail,
     toggleStar,

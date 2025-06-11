@@ -11,12 +11,12 @@ router.route('/')
     .get(mailController.getInboxMails)
     .post(mailController.createMail);
 
-router.patch('/:id/send', mailController.sendDraft);
+router.patch('/:id/send', mailController.sendDraftMail);
 router.patch('/:id/star', mailController.toggleStar);
 router.patch('/:id/spam', mailController.setSpamStatus);
 
-router.patch('/:id/labels/add', mailController.addLabelToMail);
-router.patch('/:id/labels/remove', mailController.removeLabelFromMail);
+router.post('/:id/labels/add', mailController.addLabelToMail);
+router.delete('/:id/labels/remove', mailController.removeLabelFromMail);
 
 router.route('/:id')
     .get(mailController.getMailById)
@@ -25,6 +25,7 @@ router.route('/:id')
 
 router.get('/search/:query', mailController.searchMails);
 
+// Route: Filtered mail views
 router.get('/allmails', mailController.getAllMails);
 router.get('/inbox', mailController.getInboxMails);
 router.get('/sent', mailController.getSentMails);

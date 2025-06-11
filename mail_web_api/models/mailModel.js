@@ -1,19 +1,22 @@
 const { mails } = require('../storage/mailStorage');
 const { userMailStatus } = require('../storage/mailStatusStorage');
-const { userLabels } = require('../storage/userLabels');
+const { isContentBlacklisted } = require('../utils/mailUtils');
+const { userLabels } = require('../storage/labelStorage');
 const { getUserById } = require('./userModel');
-const { checkUrlsAgainstBlacklist } = require('./blackListModel');
 const {
     initializeSenderStatus,
     initializeRecipientStatus,
-    getMailStatus
+    getMailStatus,
+    formatMailSummary
 } = require('./mailStatusModel');
 
 let mailIdCounter = 0;
 
+/**
+ * Creates a new mail and initializes status for sender and recipients.
+ */
 async function createMail(fromUserId, toUserIds, subject = '', body = '', isDraft = false) {
-    const words = (subject + ' ' + body).split(/\s+/); 
-    const isBlacklisted = !isDraft && await checkUrlsAgainstBlacklist(words);
+    const isBlacklisted = await isContentBlacklisted(subject, body, isDraft);
 
     const mailId = ++mailIdCounter;
 
@@ -37,6 +40,12 @@ async function createMail(fromUserId, toUserIds, subject = '', body = '', isDraf
     return mail;
 }
 
+/**
+ * Retrieves a full mail by ID for a specific user, including labels and sender info.
+ * Returns:
+ *   - formatted full mail object if found
+ *   - null if mail or status not found
+ */
 function getMailById(mailId, userId) {
     const mail = mails.get(mailId);
     const status = getMailStatus(mailId, userId);
@@ -44,6 +53,13 @@ function getMailById(mailId, userId) {
     return formatFullMail(mail, userId);
 }
 
+/**
+ * Deletes a mail for a specific user.
+ * If it's a draft, it is deleted from the main storage as well.
+ * Returns:
+ *   - true if successfully deleted
+ *   - false if status not found
+ */
 function deleteMail(mailId, userId) {
     const statusMap = userMailStatus.get(userId);
     const status = statusMap?.get(mailId);
@@ -56,6 +72,13 @@ function deleteMail(mailId, userId) {
     return true;
 }
 
+/**
+ * Updates a draft mail’s fields for a specific user.
+ * Only allowed if the mail is still marked as draft.
+ * Returns:
+ *   - true if updated successfully
+ *   - null if mail is not found or not editable
+ */
 function updateMail(mailId, userId, updatedFields) {
     const mail = mails.get(mailId);
     if (!mail || mail.from !== userId) return null;
@@ -70,6 +93,39 @@ function updateMail(mailId, userId, updatedFields) {
     return true;
 }
 
+/**
+ * Formats a mail object for full view (detailed), for a specific user.
+ * Displays sender’s name and profile image.
+ * Returns:
+ *   - object with id, subject, body, from (name), to (userIds), image, labels, isStar
+ */
+function formatFullMail(mail, viewerId) {
+    const fromUser = getUserById(mail.from);
+    const status = getMailStatus(mail.id, viewerId);
+
+    const labelList = userLabels.get(viewerId) || [];
+    const fullLabels = labelList.filter(l => (status?.labels || []).includes(l.id));
+
+    return {
+        id: mail.id,
+        subject: mail.subject,
+        body: mail.body,
+        sentAt: mail.sentAt,
+        from: fromUser.name,
+        to: mail.to,
+        image: fromUser.profileImage,
+        labels: fullLabels,
+        isStar: status?.isStar || false
+    };
+}
+
+/**
+ * Sends a previously saved draft after updating its fields.
+ * Updates sent time and initializes recipient status (spam or not).
+ * Returns:
+ *   - 0 on success
+ *   - null if mail not found, not draft, or not owned by user
+ */
 async function sendDraft(mailId, userId, updatedFields) {
     const mail = mails.get(mailId);
     if (!mail || mail.from !== userId) return null;
@@ -89,8 +145,7 @@ async function sendDraft(mailId, userId, updatedFields) {
     status.isDraft = false;
 
     // Blacklist check
-    const words = (mail.subject + ' ' + mail.body).split(/\s+/);
-    const isSpam = await checkUrlsAgainstBlacklist(words);
+    const isSpam = await isContentBlacklisted(mail.subject, mail.body, false);
 
     // Create status for recipients
     for (const userId of mail.to) {
@@ -100,7 +155,12 @@ async function sendDraft(mailId, userId, updatedFields) {
     return 0;
 }
 
-
+/**
+ * Searches for mails visible to the user, containing the query string.
+ * Results are sorted by send date (descending).
+ * Returns:
+ *   - list of formatted mail summaries
+ */
 function searchMails(userId, query, limit = 5, offset = 0) {
     const statusMap = userMailStatus.get(userId);
     if (!statusMap) return [];
@@ -121,55 +181,11 @@ function searchMails(userId, query, limit = 5, offset = 0) {
         .map(mail => formatMailSummary(mail, userId));
 }
 
-function formatMailSummary(mail, viewerId) {
-    const fromUser = getUserById(mail.from);
-    const toUsers = mail.to.map(getUserById).filter(Boolean);
-    const status = getMailStatus(mail.id, viewerId);
-
-    const labelList = userLabels.get(viewerId) || [];
-    const fullLabels = labelList.filter(l => (status?.labels || []).includes(l.id));
-
-    return {
-        id: mail.id,
-        subject: mail.subject,
-        body: mail.body,
-        sentAt: mail.sentAt,
-        from: fromUser.name,
-        to: toUsers.map(u => u.name),
-        labels: fullLabels,
-        isStar: status?.isStar || false,
-        isDraft: status?.isDraft || false
-    };
-}
-
-function formatFullMail(mail, viewerId) {
-    const fromUser = getUserById(mail.from);
-    const toUsers = mail.to.map(getUserById).filter(Boolean);
-    const status = getMailStatus(mail.id, viewerId);
-
-    const labelList = userLabels.get(viewerId) || [];
-    const fullLabels = labelList.filter(l => (status?.labels || []).includes(l.id));
-
-    return {
-        id: mail.id,
-        subject: mail.subject,
-        body: mail.body,
-        sentAt: mail.sentAt,
-        from: fromUser.name,
-        to: toUsers.map(u => u.name),
-        image: null,
-        labels: fullLabels,
-        isStar: status?.isStar || false
-    };
-}
-
 module.exports = {
     createMail,
     getMailById,
     deleteMail,
     updateMail,
     searchMails,
-    formatMailSummary,
-    formatFullMail,
     sendDraft
 };

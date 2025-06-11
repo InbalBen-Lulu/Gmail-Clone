@@ -1,5 +1,4 @@
 const labelModel = require('../models/labelModel');
-const mailStatusModel = require('../models/mailStatusModel');
 const { isValidHexColor } = require('../utils/validation');
 
 /**
@@ -7,7 +6,7 @@ const { isValidHexColor } = require('../utils/validation');
  * Returns all labels for the authenticated user.
  */
 function getAllLabels(req, res) {
-    const labels = labelModel.getLabelsByUser(req.userId);
+    const labels = labelModel.getLabelsByUser(req.user.userId);
     res.status(200).json(labels);
 }
 
@@ -24,7 +23,7 @@ function createLabel(req, res) {
         return res.status(400).json({ error: 'Name is required' });
     }
 
-    const result = labelModel.createLabel(name, req.userId);
+    const result = labelModel.createLabel(name, req.user.userId);
     if (result === null) {
         return res.status(400).json({ error: 'Label with the same name already exists' });
     }
@@ -43,7 +42,7 @@ function getLabelById(req, res) {
         return res.status(404).json({ error: 'Label not found' });
     }
 
-    const label = labelModel.getLabelById(req.userId, labelId);
+    const label = labelModel.getLabelById(req.user.userId, labelId);
     if (!label) {
         return res.status(404).json({ error: 'Label not found' });
     }
@@ -70,7 +69,7 @@ function renameLabel(req, res) {
         return res.status(400).json({ error: 'Name is required' });
     }
 
-    const result = labelModel.renameLabel(req.userId, labelId, name);
+    const result = labelModel.renameLabel(req.user.userId, labelId, name);
     if (result === -1) {
         return res.status(404).json({ error: 'Label not found' });
     }
@@ -93,7 +92,7 @@ function deleteLabel(req, res) {
         return res.status(404).json({ error: 'Label not found' });
     }
 
-    const result = labelModel.deleteLabel(req.userId, labelId);
+    const result = labelModel.deleteLabel(req.user.userId, labelId);
     if (result === -1) {
         return res.status(404).json({ error: 'Label not found' });
     }
@@ -101,6 +100,13 @@ function deleteLabel(req, res) {
     res.status(204).end();
 }
 
+/**
+ * PATCH /api/labels/:id/color
+ * Updates the color of a label.
+ * - Returns 404 if label is not found or ID is invalid.
+ * - Returns 400 if the provided color is invalid.
+ * - Returns 204 on success.
+ */
 function setLabelColor(req, res) {
     const labelId = parseInt(req.params.id);
     const { color } = req.body;
@@ -113,15 +119,21 @@ function setLabelColor(req, res) {
         return res.status(400).json({ error: 'Invalid color format. Must be 6-digit hex (e.g., #AABBCC)' });
     }
 
-    const result = labelModel.setLabelColor(req.userId, labelId, color);
+    const result = labelModel.setLabelColor(req.user.userId, labelId, color);
 
-    if (result === -1) {
+    if (result === false) {
         return res.status(404).json({ error: 'Label not found' });
     }
 
     res.status(204).end();
 }
 
+/**
+ * DELETE /api/labels/:id/color
+ * Resets the color of a label to the default value.
+ * - Returns 404 if label is not found or ID is invalid.
+ * - Returns 204 on success.
+ */
 function resetLabelColor(req, res) {
     const labelId = parseInt(req.params.id);
 
@@ -129,9 +141,9 @@ function resetLabelColor(req, res) {
         return res.status(404).json({ error: 'Label not found' });
     }
 
-    const result = labelModel.resetLabelColor(req.userId, labelId);
+    const result = labelModel.resetLabelColor(req.user.userId, labelId);
 
-    if (result === -1) {
+    if (result === false) {
         return res.status(404).json({ error: 'Label not found' });
     }
 
