@@ -7,7 +7,8 @@ const {
 } = require('../controllers/profileImageController');
 const {
   registerUser,
-  getUserDetails
+  getUserDetails,
+  getPublicUserInfo
 } = require('../controllers/userController');
 
 // Create a new user (registration)
@@ -15,6 +16,9 @@ router.post('/', registerUser);
 
 // Get user details by ID
 router.get('/:id', isLoggedIn, isSelf, getUserDetails);
+
+// Get user public details by ID
+router.get('/:id/public', isLoggedIn, getPublicUserInfo);
 
 // Upload a new profile image for the specified user
 router.post('/:id/profile-image', isLoggedIn, isSelf, uploadProfileImage);

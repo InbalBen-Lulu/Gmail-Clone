@@ -31,7 +31,7 @@ function createUser({
     const newUser = {
         userId,
         name,
-        password, // stored internally
+        password,
         gender,
         birthDate,
         profileImage
@@ -50,7 +50,24 @@ function createUser({
  * Get user by ID (without password).
  */
 function getUserById(userId) {
-    return stripPassword(users.get(userId.toLowerCase()));
+    const user = users.get(userId.toLowerCase());
+    if (!user) return null;
+
+    return stripPassword(user);
+}
+
+/**
+ * Get user by ID (only public data).
+ */
+function getPublicUserById(userId) {
+    const user = users.get(userId.toLowerCase());
+    if (!user) return null;
+
+    return {
+        userId: user.userId,
+        name: user.name,
+        profileImage: user.profileImage
+    };
 }
 
 /**
@@ -77,5 +94,6 @@ module.exports = {
     createUser,
     getUserById,
     getUserByEmail, 
-    stripPassword
+    stripPassword,
+    getPublicUserById
 };

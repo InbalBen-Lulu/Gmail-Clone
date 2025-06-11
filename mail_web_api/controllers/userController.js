@@ -1,4 +1,4 @@
-const { createUser, getUserById } = require('../models/userModel');
+const { createUser, getUserById, getPublicUserById } = require('../models/userModel');
 const { resolveProfileImagePath } = require('../models/profileImageModel');
 
 /**
@@ -59,7 +59,23 @@ function getUserDetails(req, res) {
     res.json(user); 
 }
 
+/**
+ * GET /api/users/:id/public
+ * Retrieve user public details by userId
+ */
+function getPublicUserInfo(req, res) {
+    const userId = req.params.id; 
+    const user = getPublicUserById(userId);
+
+    if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json(user); 
+}
+
 module.exports = {
     registerUser,
-    getUserDetails
+    getUserDetails, 
+    getPublicUserInfo
 };
