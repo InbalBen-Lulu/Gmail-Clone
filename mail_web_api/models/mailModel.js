@@ -11,7 +11,7 @@ const {
 
 let mailIdCounter = 0;
 
-async function createMail(fromUserId, toUserIds, subject = '', body = '') {
+async function createMail(fromUserId, toUserIds, subject = '', body = '', isDraft = false) {
     const words = (subject + ' ' + body).split(/\s+/); 
     const isBlacklisted = !isDraft && await checkUrlsAgainstBlacklist(words);
 
@@ -72,6 +72,8 @@ function updateMail(mailId, userId, updatedFields) {
     if ('to' in updatedFields && Array.isArray(updatedFields.to)) {
         mail.to = updatedFields.to;
     }
+
+    return true;
 }
 
 async function sendDraft(mailId, userId, updatedFields) {
