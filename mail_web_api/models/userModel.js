@@ -25,7 +25,7 @@ function createUser({
     profileImage
 }) {
     if (users.has(userId)) {
-        throw new Error("UserID already exists");
+        throw new Error("That username is taken. Try another.");
     }
 
     const newUser = {

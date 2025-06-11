@@ -10,7 +10,7 @@ function loginUser(req, res) {
     const user = users.get(userId.toLowerCase());
 
     if (!user || user.password !== password) {
-        return res.status(401).json({ error: 'Invalid credentials' });
+        return res.status(401).json({ error: 'Wrong password. Try again.' });
     }
 
     const token = generateToken(user);
@@ -36,7 +36,7 @@ function logoutUser(req, res) {
         path: '/'
     });
 
-    return res.status(200).json({ message: 'Logged out successfully' });
+    return res.status(200).json();
 }
 
 

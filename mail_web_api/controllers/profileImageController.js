@@ -18,7 +18,7 @@ function uploadProfileImage(req, res) {
     const result = saveProfileImage(user, image);
     if (result.error) return res.status(400).json({ error: result.error });
 
-    return res.status(200).json({ message: 'Profile image updated', path: user.profileImage });
+    return res.status(200).json({ message: 'Profile photo updated.', path: user.profileImage });
 }
 
 /**
@@ -31,7 +31,7 @@ function deleteProfileImage(req, res) {
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     removeProfileImage(user);
-    return res.status(200).json({ message: 'Profile image deleted' });
+    return res.status(200).json({ message: 'Profile photo updated.' });
 }
 
 module.exports = {
