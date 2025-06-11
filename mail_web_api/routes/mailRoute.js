@@ -13,6 +13,7 @@ router.route('/')
 
 router.patch('/:id/send', mailController.sendDraft);
 router.patch('/:id/star', mailController.toggleStar);
+router.patch('/:id/spam', mailController.setSpamStatus);
 
 router.patch('/:id/labels/add', mailController.addLabelToMail);
 router.patch('/:id/labels/remove', mailController.removeLabelFromMail);

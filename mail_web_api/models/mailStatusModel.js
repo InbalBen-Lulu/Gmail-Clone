@@ -62,6 +62,20 @@ function toggleStar(mailId, userId) {
     }
 }
 
+function setSpamStatus(mailId, userId, isSpam) {
+    const status = getMailStatus(mailId, userId);
+    if (!status) return null;
+
+    status.isSpam = isSpam;
+
+    if (isSpam) {
+        status.labels = [];
+        status.isStar = false;
+    }
+
+    return true;
+}
+
 function getFilteredMails(userId, filterFn, offset, limit) {
     const map = userMailStatus.get(userId);
     if (!map) return [];
@@ -127,7 +141,8 @@ module.exports = {
     getDraftMails,
     addLabel,
     removeLabel,
-    getMailsByLabel
+    getMailsByLabel,
+    setSpamStatus
 };
 
 

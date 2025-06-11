@@ -1,6 +1,8 @@
 const mailModel = require('../models/mailModel');
 const mailStatusModel = require('../models/mailStatusModel');
 const { labelExistsForUser } = require('../models/userLabelsModel');
+const { extractUrls } = require('../utils/urlUtils');
+const { addUrlsToBlacklist, removeUrlsFromBlacklist } = require('../models/blackListModel');
 
 /**
  * POST /api/mails
@@ -194,6 +196,34 @@ function toggleStar(req, res) {
     res.status(204).end();
 }
 
+async function setSpamStatus(req, res) {
+    const mailId = parseInt(req.params.id);
+    const { isSpam } = req.body;
+
+    if (typeof isSpam !== 'boolean') {
+        return res.status(400).json({ error: 'isSpam must be true or false' });
+    }
+
+    const mail = mailModel.getMailById(mailId, req.userId);
+    if (!mail) {
+        return res.status(404).json({ error: 'Mail not found' });
+    }
+
+    const success = mailStatusModel.setSpamStatus(mailId, req.userId, isSpam);
+    if (!success) {
+        return res.status(500).json({ error: 'Failed to update spam status' });
+    }
+
+    const urls = extractUrls(mail.subject + ' ' + mail.body);
+
+    if (isSpam) {
+        await addUrlsToBlacklist(urls);
+    } else {
+        await removeUrlsFromBlacklist(urls);
+    }
+
+    res.status(204).end();
+}
 
 function getInboxMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
@@ -259,5 +289,6 @@ module.exports = {
     toggleStar,
     getMailsByLabel,
     addLabelToMail,
-    removeLabelFromMail
+    removeLabelFromMail,
+    setSpamStatus
 };

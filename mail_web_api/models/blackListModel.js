@@ -84,7 +84,6 @@ async function checkUrlsAgainstBlacklist(words) {
   });
 }
 
-
 /**
  * Adds a URL to the blacklist.
  * Expects response: "201 Created"
@@ -118,8 +117,28 @@ async function removeFromBlacklist(word) {
     return { success: false, message: 'Unexpected response' };
 }
 
+/**
+ * Adds multiple URLs to the blacklist.
+ * Ignores failures silently.
+ * @param {string[]} words
+ */
+async function addUrlsToBlacklist(words) {
+    await Promise.all(words.map(word => addToBlacklist(word)));
+}
+
+/**
+ * Removes multiple URLs from the blacklist.
+ * Ignores failures silently.
+ * @param {string[]} words
+ */
+async function removeUrlsFromBlacklist(words) {
+    await Promise.all(words.map(word => removeFromBlacklist(word)));
+}
+
 module.exports = {
     checkUrlsAgainstBlacklist,
     addToBlacklist,
-    removeFromBlacklist
+    removeFromBlacklist,
+    addUrlsToBlacklist,
+    removeUrlsFromBlacklist
 };
