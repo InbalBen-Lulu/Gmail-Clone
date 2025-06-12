@@ -7,15 +7,28 @@ const { isLoggedIn } = require('../middleware/auth');
 // Apply user validation middleware to all mails routes
 router.use(isLoggedIn);
 
-// Routes for /api/mails
 router.route('/')
-    .get(mailController.getMailsForUser)
+    .get(mailController.getInboxMails)
     .post(mailController.createMail);
 
-// Route for /api/mails/search/:query
+router.patch('/:id/send', mailController.sendDraftMail);
+router.patch('/:id/star', mailController.toggleStar);
+router.patch('/:id/spam', mailController.setSpamStatus);
+
+router.post('/:id/labels', mailController.addLabelToMail);
+router.delete('/:id/labels', mailController.removeLabelFromMail);
+
+// Route: Filtered mail views
+router.get('/allmails', mailController.getAllMails);
+router.get('/inbox', mailController.getInboxMails);
+router.get('/sent', mailController.getSentMails);
+router.get('/drafts', mailController.getDraftMails);
+router.get('/spam', mailController.getSpamMails);
+router.get('/starred', mailController.getStarredMails);
+router.get('/labels/:labelId', mailController.getMailsByLabel);
+
 router.get('/search/:query', mailController.searchMails);
 
-// Routes for /api/mails/:id
 router.route('/:id')
     .get(mailController.getMailById)
     .patch(mailController.updateMail)

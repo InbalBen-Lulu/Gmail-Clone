@@ -1,6 +1,8 @@
 const { userLabels } = require('../storage/labelStorage');
+const { userMailStatus } = require('../storage/mailStatusStorage');
 
 let idCounter = 0;
+const DEFAULT_LABEL_COLOR = '#808080';
 
 /**
  * Creates a new label for the user.
@@ -16,18 +18,15 @@ function createLabel(name, userId) {
   }
   if (labels.some(label => label.name === name)) return null;
 
-  const label = { id: ++idCounter, name };
-  labels.push(label);
+  const label = { id: ++idCounter, name, color: DEFAULT_LABEL_COLOR };  labels.push(label);
   return label;
 }
 
 /**
  * Gets all labels for a user.
- * Returns Array of { id, name } if exists
-
  */
 function getLabelsByUser(userId) {
-  return userLabels.get(userId);
+  return userLabels.get(userId) || [];
 }
 
 /**
@@ -37,7 +36,7 @@ function getLabelsByUser(userId) {
  *   - null if not found
  */
 function getLabelById(userId, labelId) {
-  const labels = userLabels.get(userId);
+  const labels = userLabels.get(userId) || [];
   return labels.find(label => label.id === labelId) || null;
 }
 
@@ -61,25 +60,77 @@ function renameLabel(userId, labelId, newName) {
 }
 
 /**
- * Deletes a label.
+ * Deletes a label and removes it from all mail statuses.
  * Returns:
  *   - 0 if successful
  *   - -1 if label 
  */
 function deleteLabel(userId, labelId) {
   const labels = userLabels.get(userId);
-
   const index = labels.findIndex(l => l.id === labelId);
-  if (index === -1) return -1;
+  if (!labels || index === -1) return -1;
 
   labels.splice(index, 1);
+
+  // Remove the label from all mail statuses of the user
+  const mailMap = userMailStatus.get(userId);
+  if (mailMap) {
+    for (const status of mailMap.values()) {
+      if (Array.isArray(status.labels)) {
+        status.labels = status.labels.filter(id => id !== labelId);
+      }
+    }
+  }
+
   return 0;
 }
 
+/**
+ * Sets a new color for a label.
+ * Returns:
+ *   - true if success
+ *   - false if label not found
+ */
+function setLabelColor(userId, labelId, hexColor) {
+  const label = getLabelById(userId, labelId);
+  if (!label) return false;
+
+  label.color = hexColor;
+  return true;
+}
+
+/**
+ * Resets label color to default.
+ * Returns:
+ *   - true if success
+ *   - false if label not found
+ */
+function resetLabelColor(userId, labelId) {
+  const label = getLabelById(userId, labelId);
+  if (!label) return false;
+
+  label.color = DEFAULT_LABEL_COLOR;
+  return true;
+}
+
+/**
+ * Checks whether a label exists for a given user.
+ * Returns:
+ *   - true if the label exists
+ *   - false otherwise
+ */
+function labelExistsForUser(userId, labelId) {
+    const labels = userLabels.get(userId) || [];
+    return labels.some(label => label.id === Number(labelId));
+}
+
 module.exports = {
+  labelExistsForUser,
   createLabel,
   getLabelsByUser,
   getLabelById,
   renameLabel,
+  setLabelColor,
+  resetLabelColor,
   deleteLabel
 };

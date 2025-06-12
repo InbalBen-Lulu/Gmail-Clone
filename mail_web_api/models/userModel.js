@@ -1,6 +1,6 @@
 const { users } = require('../storage/userStorage');
 const { userLabels } = require('../storage/labelStorage');
-const { userMailIds } = require('../storage/userMailsStorage');
+const { userMailStatus } = require('../storage/mailStatusStorage');
 const { isValidSystemEmail, getUserIdFromEmail } = require('../utils/emailUtils');
 
 /**
@@ -41,7 +41,7 @@ function createUser({
 
     // Initialize userLabels and userMailIds
     userLabels.set(userId, []);
-    userMailIds.set(userId, new Set());
+    userMailStatus.set(userId, new Map());
 
     return stripPassword(newUser);
 }
