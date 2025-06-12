@@ -16,7 +16,6 @@ const mailsRoutes = require('./routes/mailRoute');
 app.use(express.json());
 app.use('/api/users', usersRoutes);
 app.use('/api/tokens', tokensRoutes);
-app.use('/api/blacklist', blackListRoutes);
 app.use('/api/labels', labelsRoutes);
 app.use('/api/mails', mailsRoutes);
 app.use('/profilePics', express.static(path.join(__dirname, 'profilePics')));
