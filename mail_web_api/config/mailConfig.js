@@ -1,3 +1,3 @@
-const MAIL_DOMAIN = "mailme.com";
+const MAIL_DOMAIN = "gmail.com";
 
 module.exports = { MAIL_DOMAIN };
