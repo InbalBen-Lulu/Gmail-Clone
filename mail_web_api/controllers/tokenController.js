@@ -1,11 +1,18 @@
 const { users } = require('../storage/userStorage');
 const { generateToken } = require('../models/tokenModel');
+const { getUserIdFromEmail } = require('../utils/emailUtils');
 
 /**
  * Authenticate user and return JWT token.
  */
 function loginUser(req, res) {
-    const { userId, password } = req.body;
+    let { userId, password } = req.body;
+
+    // Try to extract userId from email format if necessary
+    const emailBasedId = getUserIdFromEmail(userId);
+    if (emailBasedId) {
+        userId = emailBasedId;
+    }
 
     const user = users.get(userId.toLowerCase());
 
