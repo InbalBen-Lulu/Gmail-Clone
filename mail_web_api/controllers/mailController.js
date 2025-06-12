@@ -160,16 +160,31 @@ async function sendDraftMail(req, res) {
  *   - 200 with array of mail summaries
  *   - 400 if query is empty
  */
-function searchMails(req, res) {
-    const query = req.params.query?.trim();
-    const { limit = 5, offset = 0 } = req.query;
+function searchMails(userId, query, limit = 5, offset = 0) {
+    const statusMap = userMailStatus.get(userId);
+    if (!statusMap) return [];
 
-    if (!query) {
-        return res.status(400).json({ error: 'Search query cannot be empty' });
-    }
+    const q = String(query || '').trim().toLowerCase();
+    if (!q) return [];
 
-    const results = mailModel.searchMails(req.user.userId.toLowerCase(), query, +limit, +offset);
-    res.status(200).json(results);
+    return [...statusMap.entries()]
+        .map(([id]) => mails.get(id))
+        .filter(Boolean)
+        .filter(mail => {
+            const subjectMatch = mail.subject?.toLowerCase().includes(q);
+            const bodyMatch = mail.body?.toLowerCase().includes(q);
+            const toMatch = Array.isArray(mail.to) &&
+                mail.to.some(recipient => recipient.toLowerCase().includes(q));
+            const fromMatch = mail.from?.toLowerCase().includes(q);
+
+            const fromUser = getUserById(mail.from);
+            const fromNameMatch = fromUser?.name?.toLowerCase().includes(q);
+
+            return subjectMatch || bodyMatch || toMatch || fromMatch || fromNameMatch;
+        })
+        .sort((a, b) => new Date(b.sentAt) - new Date(a.sentAt))
+        .slice(offset, offset + limit)
+        .map(mail => formatMailSummary(mail, userId));
 }
 
 /**
