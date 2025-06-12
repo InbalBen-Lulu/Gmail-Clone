@@ -21,4 +21,4 @@ app.use('/api/labels', labelsRoutes);
 app.use('/api/mails', mailsRoutes);
 app.use('/profilePics', express.static(path.join(__dirname, 'profilePics')));
 
-app.listen(3000, '0.0.0.0');
+app.listen(4000, '0.0.0.0');
