@@ -171,14 +171,21 @@ function searchMails(userId, query, limit = 5, offset = 0) {
     return [...statusMap.entries()]
         .map(([id]) => mails.get(id))
         .filter(Boolean)
-        .filter(mail =>
-            Object.values(mail).some(val =>
-                typeof val === 'string' && val.toLowerCase().includes(q)
-            )
-        )
+        .filter(mail => {
+            const subjectMatch = mail.subject?.toLowerCase().includes(q);
+            const bodyMatch = mail.body?.toLowerCase().includes(q);
+            const toMatch = Array.isArray(mail.to) &&
+                mail.to.some(recipient => recipient.toLowerCase().includes(q));
+            const fromMatch = mail.from?.toLowerCase().includes(q);
+
+            const fromUser = getUserById(mail.from);
+            const fromNameMatch = fromUser?.name?.toLowerCase().includes(q);
+
+            return subjectMatch || bodyMatch || toMatch || fromMatch || fromNameMatch;
+        })
         .sort((a, b) => new Date(b.sentAt) - new Date(a.sentAt))
         .slice(offset, offset + limit)
-        .map(mail => formatMailSummary(mail, userId));
+        .map(mail => formatMailSummary(mail, userId));
 }
 
 module.exports = {
