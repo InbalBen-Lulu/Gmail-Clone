@@ -110,6 +110,8 @@ function setSpamStatus(mailId, userId, isSpam) {
     const status = getMailStatus(mailId, userId);
     if (!status) return null;
 
+    if (status.type !== 'received') return false;
+
     status.isSpam = isSpam;
 
     if (isSpam) {
@@ -133,7 +135,7 @@ function formatMailSummary(mail, viewerId) {
     const labelList = userLabels.get(viewerId) || [];
     const fullLabels = labelList.filter(l => (status?.labels || []).includes(l.id));
 
-    return {
+    const summary = {
         id: mail.id,
         subject: mail.subject,
         body: mail.body,
@@ -144,6 +146,12 @@ function formatMailSummary(mail, viewerId) {
         isStar: status?.isStar || false,
         isDraft: status?.isDraft || false
     };
+
+    if (status?.type === 'received') {
+        summary.isRead = status.isRead || false;
+    }
+
+    return summary;
 }
 
 /**
@@ -193,15 +201,24 @@ function getStarredMails(userId, limit = 50, offset = 0) {
 /**
  * Returns up to 50 mails that are not marked as spam.
  */
-function getAllNonSpamMails(userId, offset = 0, limit = 50) {
-    return getFilteredMails(userId, s => !s.isSpam, offset, limit);
-}
+function getAllNonSpamMails(userId, limit = 50, offset = 0) {
+    return getFilteredMails(
+        userId,
+        s => (s.type === 'received' && !s.isSpam) || s.type === 'sent',
+        offset,
+        limit
+    );}
 
 /**
- * Returns up to 50 mails that are marked as spam.
+ * Returns up to 50 mails that are marked as spam and were received by the user.
  */
 function getSpamMails(userId, limit = 50, offset = 0) {
-    return getFilteredMails(userId, s => s.isSpam, offset, limit);
+        return getFilteredMails(
+        userId,
+        s => s.type === 'received' && s.isSpam === true,
+        offset,
+        limit
+    );
 }
 
 /**

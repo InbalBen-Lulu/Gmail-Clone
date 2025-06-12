@@ -274,8 +274,8 @@ function toggleStar(req, res) {
  * Returns:
  *   - 204 on success
  *   - 400 if isSpam is invalid
+ *   - 403 if user is not allowed to mark this mail as spam
  *   - 404 if mail not found
- *   - 500 if spam update failed
  */
 async function setSpamStatus(req, res) {
     const mailId = parseInt(req.params.id);
@@ -291,12 +291,15 @@ async function setSpamStatus(req, res) {
         return res.status(404).json({ error: 'Mail not found' });
     }
 
-    const success = mailStatusModel.setSpamStatus(mailId, userId, isSpam);
-    if (!success) {
-        return res.status(500).json({ error: 'Failed to update spam status' });
+    const result = mailStatusModel.setSpamStatus(mailId, userId, isSpam);
+    if (result === null) {
+        return res.status(404).json({ error: 'Mail not found' });
+    }
+    if (result === false) {
+        return res.status(403).json({ error: 'Only recipients can mark mail as spam' });
     }
 
-    const urls = (mail.subject + ' ' + mail.body).split(/\s+/); 
+    const urls = (mail.subject + ' ' + mail.body).split(/\s+/);
 
     if (isSpam) {
         await addUrlsToBlacklist(urls);
@@ -306,6 +309,7 @@ async function setSpamStatus(req, res) {
 
     res.status(204).end();
 }
+
 
 /**
  * GET /api/mails/inbox
