@@ -123,7 +123,14 @@ async function removeFromBlacklist(word) {
  * @param {string[]} words
  */
 async function addUrlsToBlacklist(words) {
-    await Promise.all(words.map(word => addToBlacklist(word)));
+    const decodedWords = words.map(word => {
+        try {
+            return decodeURIComponent(word);
+        } catch (e) {
+            return word;
+        }
+    });
+    await Promise.all(decodedWords.map(word => addToBlacklist(word)));
 }
 
 /**
@@ -132,7 +139,14 @@ async function addUrlsToBlacklist(words) {
  * @param {string[]} words
  */
 async function removeUrlsFromBlacklist(words) {
-    await Promise.all(words.map(word => removeFromBlacklist(word)));
+    const decodedWords = words.map(word => {
+        try {
+            return decodeURIComponent(word);
+        } catch (e) {
+            return word;
+        }
+    });
+    await Promise.all(decodedWords.map(word => removeFromBlacklist(word)));
 }
 
 module.exports = {

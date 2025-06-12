@@ -56,8 +56,15 @@ function processRecipients(to, isDraft, res) {
 async function isContentBlacklisted(subject, body, isDraft) {
   if (isDraft) return false;
 
-  const words = (subject + ' ' + body).split(/\s+/);
-  return await checkUrlsAgainstBlacklist(words);
+    const words = (subject + ' ' + body).split(/\s+/);
+    const decodedWords = words.map(word => {
+        try {
+            return decodeURIComponent(word);
+        } catch (e) {
+            return word;
+        }
+    });
+  return await checkUrlsAgainstBlacklist(decodedWords);
 }
 
 module.exports = {
