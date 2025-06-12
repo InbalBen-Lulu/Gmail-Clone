@@ -9,7 +9,11 @@ function loginUser(req, res) {
 
     const user = users.get(userId.toLowerCase());
 
-    if (!user || user.password !== password) {
+    if (!user) {
+        return res.status(401).json({ error: 'Enter a valid email.' });
+    }
+
+    if (user.password !== password) {
         return res.status(401).json({ error: 'Wrong password. Try again.' });
     }
 
