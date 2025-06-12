@@ -162,12 +162,13 @@ async function sendDraftMail(req, res) {
  */
 function searchMails(req, res) {
     const query = req.params.query?.trim();
+    const { limit = 5, offset = 0 } = req.query;
 
     if (!query) {
         return res.status(400).json({ error: 'Search query cannot be empty' });
     }
 
-    const results = mailModel.searchMails(req.user.userId.toLowerCase(), query);
+    const results = mailModel.searchMails(req.user.userId.toLowerCase(), query, +limit, +offset);
     res.status(200).json(results);
 }
 
