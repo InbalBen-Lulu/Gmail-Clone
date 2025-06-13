@@ -1,0 +1,182 @@
+/* ========== BASE STYLES ========== */
+.textbox-wrapper {
+  max-width: 360px;
+  width: 100%;
+  margin-bottom: 20px;
+  position: relative;
+  border: 1px solid var(--gray-dark);
+  border-radius: 4px;
+  background-color: var(--secondary-bg);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.textbox-wrapper.focused {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-hover);
+}
+
+.textbox-wrapper.invalid {
+  border-color: var(--danger-color);
+}
+
+.textbox-input-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.textbox-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  outline: none;
+  color: var(--text-color);
+  min-width: 0;
+}
+
+.textbox-label {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--secondary-bg);
+  transition: all 0.2s ease;
+  font-size: 16px;
+  color: var(--icon-color);
+  pointer-events: none;
+  padding: 0 4px;
+  z-index: 1; 
+}
+
+.textbox-input-wrapper:has(input:focus) + .textbox-label,
+.textbox-input-wrapper:has(input:not(:placeholder-shown)) + .textbox-label,
+.textbox-wrapper.focused .textbox-label,
+.textbox-wrapper.filled .textbox-label {
+  top: -10px;
+  left: 12px;
+  font-size: 12px;
+  color: var(--primary-color);
+}
+
+/* Error */
+.error-message {
+  color: var(--danger-color);
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+
+/* Sizes */
+.textbox-wrapper.quarter {
+  max-width: 90px;
+  flex: 0 0 auto;
+}
+
+.textbox-wrapper.sm .textbox-input {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.textbox-wrapper.lg .textbox-input {
+  padding: 16px 20px;
+  font-size: 18px;
+}
+
+/* ========== VARIANTS ========== */
+
+.textbox-wrapper.search {
+  max-width: 600px;
+  border-radius: 30px;
+  background-color: rgba(255, 255, 255, 0.2);
+  position: relative;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  border: 1px solid var(--border-color);
+}
+
+.textbox-wrapper.search:focus-within {
+  background-color: var(--secondary-bg);
+  box-shadow: 0 0 0 2px var(--primary-hover);
+}
+
+.textbox-wrapper.search .textbox-input {
+  padding-left: 40px;
+  border: none;
+  background-color: transparent;
+}
+
+.textbox-wrapper.search .textbox-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--icon-color);
+  font-size: 20px;
+  pointer-events: none;
+}
+
+.textbox-wrapper.simple {
+  border: 1px solid var(--border-color);
+  background-color: var(--secondary-bg);
+}
+
+.textbox-wrapper.gmail {
+  border: 1px solid var(--primary-color);
+  background-color: #f5f5f5;
+}
+
+.textbox-wrapper.compose {
+  background: none;
+  margin-bottom: 10px;
+  padding: 0;
+  font-size: 15px;
+  max-width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--gray-dark);
+  box-shadow: 0 1px 0 0 var(--border-color);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.textbox-wrapper.compose.focused {
+  box-shadow: 0 1px 0 0 var(--gray-dark);
+}
+
+.textbox-wrapper.compose .textbox-input {
+  border: none;
+  background: none;
+  font-size: inherit;
+  padding: 8px 0;
+  outline: none;
+  width: 100%;
+  color: var(--text-color);
+  border-radius: 0;
+}
+
+.textbox-wrapper.compose.body {
+  min-height: 150px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-bottom: none;
+  box-shadow: none;
+}
+
+.textbox-wrapper.compose.body .textbox-input,
+.textbox-wrapper.compose.body textarea.textbox-input {
+  min-height: 120px;
+  resize: vertical;
+  font-size: 15px;
+  line-height: 1.5;
+  padding: 8px 0;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  height: 100%;
+  width: 100%;
+  display: block;
+  font-family: inherit;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  outline: none;
+}
