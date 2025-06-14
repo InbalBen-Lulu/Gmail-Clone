@@ -1,0 +1,25 @@
+.checkbox {
+  width: 16px;
+  height: 16px;
+  background-color: var(--white);
+  border: 2px solid var(--gray-dark);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: border-color 0.2s ease;
+}
+
+.checked {
+  /* רק מופיע הסימן ✓ */
+}
+
+.checkbox-icon {
+  width: 12px;
+  height: 12px;
+  color: var(--gray-dark);
+  pointer-events: none;
+}
+
