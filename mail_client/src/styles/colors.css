@@ -1,19 +1,24 @@
-:root {
-  --primary-color: #007bff;
-  --primary-hover: #0056b3;
+body {
+    /* --- Existing buttons --- */
+    --primary-color: #1E64D4;
+    --primary-hover: #3775d9;
+    --primary-ghost-hover-bg: #ECF2FC;
+    --compose-bg: #C2E7FF;      
+    --compose-text: #202124;  
+    --icon-dark-gray: #717379; 
+    --icon-light-gray: #898686;
+    --icon-hover-bg: #EAEBEE;
 
-  --danger-color: #dc3545;
-  --danger-hover: #a71d2a;
+    /* === Checkbox specific === */
+    --checkbox-border: #585858; 
+    --checkbox-bg: var(--white);              
+    --checkbox-icon-color: #585858; 
 
-  --success-color: #28a745;
-  --success-hover: #1e7e34;
+    --star-color: #F4B400;
 
-  --warning-color: #ffc107;
-  --warning-hover: #d39e00;
-
-  --gray-light: #e9ecef;
-  --gray-dark: #343a40;
-
-  --white: #ffffff;
-  --black: #000000;
+    /* --- Shared --- */
+    --white: #ffffff;
+    --black: #000000;
+    --gray-light: #e9ecef;
+    --gray-dark: #343a40;
 }
