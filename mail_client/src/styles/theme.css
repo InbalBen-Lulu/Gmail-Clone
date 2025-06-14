@@ -18,7 +18,7 @@ body.light-mode {
     --mail-item-unread-bg: #FFFFFF;         /* Background for an unread mail item */
 
     /* Icon colors*/
-    --main-icon-color: #5f6368;             /* Icon color for top bar/settings */
+    --main-icon-color: #444746;             /* Icon color for top bar/settings */
     --icon-main-hover-bg: #EAEBEE;          /* Hover background for large icon buttons */
     --icon-hover-bg: #EAEBEE;               /* Hover background for small icon buttons */
 
@@ -50,13 +50,13 @@ body.dark-mode {
     --mail-item-unread-bg: #2C2C2C;         /* Background for an unread mail item */
 
     /* Icon colors*/
-    --main-icon-color: #e8eaed;             /* Icon color for top bar/settings */
-    --icon-main-hover-bg: #8e8e8e;          /* Hover background for large icon buttons */
-    --icon-hover-bg: #EAEBEE;               /* Hover background for small icon buttons */
+    --main-icon-color: #E7E7E7;             /* Icon color for top bar/side bar */
+    --icon-main-hover-bg: #414141;          /* Hover background for large icon buttons */
+    --icon-hover-bg: #575757;               /* Hover background for small icon buttons */
 
     /* Compose button */
     --compose-button-bg: #ffffff;           /* Compose button background */
-    --compose-button-text: #8d8d90;         /* Compose button text color */
+    --compose-button-text: #5F6368;         /* Compose button text color */
 
     /* Toggle switch */
     --toggle-knob-color: #afb0b3;           /* Color of the toggle knob (circle) */

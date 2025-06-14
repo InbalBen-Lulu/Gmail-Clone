@@ -12,13 +12,15 @@ import { ReactComponent as Logout } from "./logout.svg";
 import { ReactComponent as Mail } from "./mail.svg";
 import { ReactComponent as More } from "./more.svg";
 import { ReactComponent as PhotoCamera } from "./photo_camera.svg";
-import { ReactComponent as Report } from "./report.svg";
+import { ReactComponent as Spam } from "./spam.svg";
 import { ReactComponent as Send } from "./send.svg";
 import { ReactComponent as Settings } from "./settings.svg";
-import { ReactComponent as StackedEmail } from "./stacked_email.svg";
+import { ReactComponent as AllMail } from "./all_mail.svg";
 import { ReactComponent as Star } from "./star.svg";
 import { ReactComponent as Check } from "./check.svg";
 import { ReactComponent as Search } from "./search.svg";
+import { ReactComponent as Inbox } from "./inbox.svg";
+import { ReactComponent as Add } from "./add.svg";
 
 // Map of icon name → SVG component
 const icons = {
@@ -35,13 +37,15 @@ const icons = {
   mail: Mail,
   more: More,
   photo_camera: PhotoCamera,
-  report: Report,
+  Spam: Spam,
   send: Send,
   settings: Settings,
-  stacked_email: StackedEmail,
+  all_mail: AllMail,
   star: Star,
   check: Check,
   search: Search,
+  inbox: Inbox,
+  add: Add,
 };
 
 /**
