@@ -1,28 +1,30 @@
-// src/contexts/AuthContext.js
-import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
+import { createContext, useState, useContext, useCallback, useEffect } from 'react';
 
+// Create an authentication context
 const AuthContext = createContext(null);
 
+// AuthProvider wraps the app and provides authentication state and methods
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState(null);         // Current user object
+  const [isLoading, setIsLoading] = useState(true); // Whether auth is initializing
 
-  // Initialize auth state from localStorage
+  // On initial load: try to load auth state from localStorage
   useEffect(() => {
     const token = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
     
     if (token && storedUser) {
       try {
-        setUser(JSON.parse(storedUser));
+        setUser(JSON.parse(storedUser));          // Parse user JSON
       } catch (error) {
         console.error('Error parsing stored user:', error);
-        logout();
+        logout();                                  // Clear storage on error
       }
     }
-    setIsLoading(false);
+    setIsLoading(false);                           // Initialization done
   }, []);
 
+  // Login function: send credentials, store token & user if successful
   const login = useCallback(async (username, password) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/tokens`, {
@@ -39,6 +41,7 @@ export const AuthProvider = ({ children }) => {
         throw new Error(data.error || 'Login failed');
       }
 
+      // Save auth data to localStorage
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
       setUser(data.user);
@@ -49,17 +52,20 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  // Logout function: clear auth data
   const logout = useCallback(() => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
   }, []);
 
+  // Helper to get auth headers for API calls
   const getAuthHeaders = useCallback(() => {
     const token = localStorage.getItem('token');
     return token ? { 'Authorization': `Bearer ${token}` } : {};
   }, []);
 
+  // Context value to provide to consumers
   const value = {
     user,
     isLoading,
@@ -77,6 +83,7 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+// Hook to access authentication context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
