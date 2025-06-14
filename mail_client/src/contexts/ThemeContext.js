@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 // Context for managing theme (light/dark)
 const ThemeContext = createContext();
@@ -9,7 +9,8 @@ export const ThemeProvider = ({ children }) => {
 
   // Update <body> class when theme changes
   useEffect(() => {
-    document.body.className = darkMode ? "dark-mode" : "light-mode";
+    document.body.classList.remove("light-mode", "dark-mode");
+    document.body.classList.add(darkMode ? "dark-mode" : "light-mode");
   }, [darkMode]);
 
   // Toggle between light and dark mode
@@ -24,3 +25,6 @@ export const ThemeProvider = ({ children }) => {
 
 // Custom hook for accessing theme context
 export const useTheme = () => useContext(ThemeContext);
+
+// Default export for simplified import
+export default ThemeProvider;
