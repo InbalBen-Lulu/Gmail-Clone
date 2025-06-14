@@ -3,7 +3,9 @@ import "./Checkbox.css";
 
 /**
  * Custom checkbox component.
- * Supports variants via CSS: 'primary' (filled) and 'minimal' (border only).
+ * Rendered as a button with role="checkbox".
+ * Shows a checkmark icon (✓) when checked.
+ * Toggles state via onClick and applies "checked" class for styling.
  */
 const Checkbox = ({ checked, onChange, className = "" }) => {
   const finalClassName = `checkbox ${checked ? "checked" : ""} ${className}`.trim();
@@ -20,6 +22,5 @@ const Checkbox = ({ checked, onChange, className = "" }) => {
     </button>
   );
 };
-
 
 export default Checkbox;

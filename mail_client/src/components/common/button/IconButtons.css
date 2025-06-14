@@ -1,0 +1,61 @@
+/* Base styles for icon-only buttons */
+.btn.icon {
+  background-color: transparent;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+/* Hover background by size */
+.btn.icon.icon-small:hover {
+  background-color: var(--icon-hover-bg);
+}
+
+.btn.icon.icon-large:hover {
+  background-color: var(--icon-main-hover-bg);
+}
+
+/* Size-specific dimensions */
+.btn.icon.icon-small {
+  width: 35px;
+  height: 35px;
+  font-size: 20px;
+  padding: 6px;
+}
+
+.btn.icon.icon-large {
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  padding: 6px;
+}
+
+/* Icon alignment and color for small buttons */
+.btn.icon.icon-small .icon {
+  color: var(--icon-light-gray);
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+/* Icon alignment and color for large buttons */
+.btn.icon.icon-large .icon {
+  color: var(--main-icon-color);
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+/* Star button (special case) */
+.star-button .star-icon {
+  color: var(--icon-light-gray);
+  transition: color 0.2s ease;
+}
+
+.star-button .star-icon.starred {
+  color: var(--star-color);
+}

@@ -1,5 +1,3 @@
-import React from "react";
-
 // Import all SVGs as React components
 import { ReactComponent as AddPhoto } from "./add_a_photo.svg";
 import { ReactComponent as ArrowBack } from "./arrow_back.svg";
@@ -48,27 +46,20 @@ const icons = {
 
 /**
  * General-purpose icon component.
- *
  * Props:
  * - name: string key from the icon map (e.g., "edit", "send")
- * - size: number in px (default 18)
- * - color: any CSS color (default "currentColor")
  * - className: optional class for styling
  */
-const Icon = ({ name, size = 18, className = "" }) => {
+const Icon = ({ name, className = "" }) => {
   const SvgIcon = icons[name];
   if (!SvgIcon) return null;
 
   return (
     <SvgIcon
-      width={size}
-      height={size}
       fill="currentColor"
-      stroke="currentColor"
-      className={className}
+      className={`icon ${className}`.trim()}
     />
   );
 };
-
 
 export default Icon;
