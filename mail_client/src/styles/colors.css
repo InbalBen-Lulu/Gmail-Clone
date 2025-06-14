@@ -18,4 +18,5 @@ body {
     --black: #000000;
     --gray-light: #e9ecef;                  /* Light gray for backgrounds, borders, etc. */
     --gray-dark: #343a40;                   /* Dark gray for text, borders, etc. */
+    --danger-color:#B3261E;
 }
