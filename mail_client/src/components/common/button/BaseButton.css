@@ -1,0 +1,41 @@
+/* Base button style */
+.btn {
+  font-family: inherit;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Sizes */
+.btn.sm {
+  font-size: 0.85rem;
+  padding: 0.4rem 1rem;
+}
+
+.btn.md {
+  font-size: 0.95rem;
+}
+
+.btn.lg {
+  font-size: 1.05rem;
+  padding: 0.7rem 1.7rem;
+}
+
+/* Icon wrapper */
+.btn .btn-icon {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
+.btn .btn-icon-img {
+  width: 18px;
+  height: 18px;
+  margin-right: 0.5rem;
+  display: inline-block;
+  vertical-align: middle;
+}
