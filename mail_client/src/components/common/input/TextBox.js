@@ -1,22 +1,24 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './TextBox.css';
 import { TEXTBOX_VARIANTS } from './constants';
 
+/**
+ * Reusable Textbox component with support for different variants and styles.
+ */
 const Textbox = ({
-  label,
-  name,
-  value,
-  onChange,
+  label, // Label to display above or inside the input
+  name, // Input name and id
+  value, // Controlled value
+  onChange, // Callback to update value
+  maxLength, // Optional: max number of characters allowed
   placeholder = '',
   type = 'text',
-  size = 'md',
-  variant = TEXTBOX_VARIANTS.FLOATING,
-  suffix = ''
+  size = 'md', // Size class
+  variant = TEXTBOX_VARIANTS.FLOATING,  // Input style variant
+  suffix = '' // Optional: suffix to display after the input
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const hasValue = value?.length > 0;
-
-
   const isTextarea = variant === TEXTBOX_VARIANTS.COMPOSE_BODY;
   const wrapperClass = `textbox-wrapper ${size} ${variant} ${isFocused ? 'focused' : ''} ${hasValue ? 'filled' : ''}`;
 
@@ -30,6 +32,7 @@ const Textbox = ({
             name={name}
             value={value}
             onChange={onChange}
+            maxLength={maxLength}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             placeholder={label ? ' ' : placeholder}
@@ -48,6 +51,7 @@ const Textbox = ({
               type={type}
               value={value}
               onChange={onChange}
+              maxLength={maxLength}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               placeholder={variant === TEXTBOX_VARIANTS.FLOATING ? ' ' : placeholder}

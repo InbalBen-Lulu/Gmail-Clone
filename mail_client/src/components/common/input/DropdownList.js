@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './DropdownList.css';
 import { DROPDOWN_VARIANTS } from './constants';
 
+/**
+ * Reusable Dropdown (select) component with styling variants and floating labels.
+ */
 const DropdownList = ({
-  label,
-  name,
-  value,
-  onChange,
-  options = [],
-  size = 'md',
-  variant = DROPDOWN_VARIANTS.FLOATING
+  label, // Label for the dropdown (optional, especially useful for floating variant)
+  name, // Input name and id
+  value, // Current selected value
+  onChange, // Callback for value change
+  options = [], // List of options: { value, label }
+  size = 'md', // Size class
+  variant = DROPDOWN_VARIANTS.FLOATING // Dropdown style variant
 }) => {
   const [focused, setFocused] = useState(false);
   const hasValue = value && value.length > 0;

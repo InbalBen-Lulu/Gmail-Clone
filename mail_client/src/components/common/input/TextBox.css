@@ -1,11 +1,11 @@
 /* ========== BASE STYLES ========== */
 .textbox-wrapper {
-  max-width: 360px;
+  max-width: 370px;
   width: 100%;
   margin-bottom: 20px;
   position: relative;
   border: 1px solid var(--gray-dark);
-  border-radius: 4px;
+  border-radius: 2px;
   background-color: var(--secondary-bg);
   transition: border-color 0.3s, box-shadow 0.3s;
 }
@@ -71,7 +71,7 @@
 
 /* Sizes */
 .textbox-wrapper.quarter {
-  max-width: 90px;
+  max-width: 120px;
   flex: 0 0 auto;
 }
 
@@ -88,9 +88,9 @@
 /* ========== VARIANTS ========== */
 
 .textbox-wrapper.search {
-  max-width: 600px;
+  max-width: 710px;
   border-radius: 30px;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: #e9edf5;
   position: relative;
   transition: background-color 0.3s, box-shadow 0.3s;
   border: 1px solid var(--border-color);
@@ -98,7 +98,8 @@
 
 .textbox-wrapper.search:focus-within {
   background-color: var(--secondary-bg);
-  box-shadow: 0 0 0 2px var(--primary-hover);
+  box-shadow: 0 0 0 2px var(--border-color);
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .textbox-wrapper.search .textbox-input {
@@ -124,7 +125,7 @@
 
 .textbox-wrapper.gmail {
   border: 1px solid var(--primary-color);
-  background-color: #f5f5f5;
+  background-color: var(--search-background);
 }
 
 .textbox-wrapper.compose {
