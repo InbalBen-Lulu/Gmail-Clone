@@ -1,0 +1,52 @@
+/* Toggle Theme Switch Wrapper*/
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 24px;
+}
+
+/* Hide the native checkbox input */
+.theme-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Slider Background*/
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--border-color); /* Base background */
+    transition: 0.4s;
+    border-radius: 24px;
+    border: 2px solid var(--toggle-knob-color); /* Outer border */
+}
+
+/* Slider Knob (circle)*/
+.slider::before {
+    content: "";
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    left: 2px;
+    bottom: 2px;
+    background-color: var(--toggle-knob-color); /* Fill of the knob */
+    transition: 0.4s;
+    border-radius: 50%;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+}
+
+/* Checked state background */
+input:checked + .slider {
+    background-color: var(--icon-color); /* Darker background when active */
+}
+
+/* Move knob to right when checked */
+input:checked + .slider::before {
+    transform: translateX(22px);
+}
