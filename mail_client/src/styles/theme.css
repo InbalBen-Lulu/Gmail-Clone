@@ -1,4 +1,4 @@
-/* LIGHT MODE – inspired by Gmail */
+/* Light mode theme variables  */
 body.light-mode {
   --bg-color: #ffffff;
   --text-color: #202124;
@@ -12,7 +12,7 @@ body.light-mode {
   --label-color: #3c4043;
 }
 
-/* DARK MODE – inspired by Gmail dark theme */
+/* Dark mode theme variables */
 body.dark-mode {
   --bg-color: #202124;
   --text-color: #e8eaed;
@@ -26,7 +26,7 @@ body.dark-mode {
   --label-color: #e8eaed;
 }
 
-/* Global application styles */
+/* Global base styles */
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
@@ -35,36 +35,37 @@ body {
   margin: 0;
 }
 
+/* Link styles */
 a {
   color: inherit;
   text-decoration: none;
 }
 
-button {
-  font-family: inherit;
-  cursor: pointer;
-}
-
+/* Input and form fields */
 input, textarea, select {
   background-color: var(--secondary-bg);
   color: var(--text-color);
   border: 1px solid var(--border-color);
 }
 
+/* Sidebar component */
 .sidebar {
   background-color: var(--sidebar-bg);
   color: var(--label-color);
 }
 
+/* Header component */
 .header {
   background-color: var(--header-bg);
   border-bottom: 1px solid var(--border-color);
 }
 
+/* Mail list item hover effect */
 .mail-item:hover {
   background-color: var(--hover-bg);
 }
 
+/* Selected mail item */
 .mail-item.selected {
   background-color: var(--selected-bg);
 }
