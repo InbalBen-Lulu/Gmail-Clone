@@ -29,6 +29,20 @@ services:
     networks:
       - mail_service
 
+  mail_client:
+    build:
+      context: ./mail_client
+      dockerfile: Dockerfile.client
+    container_name: mail_client
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./mail_client:/usr/src/app
+    environment:
+      - REACT_APP_API_BASE_URL=http://mail_api:4000
+    networks:
+      - mail_service
+
   tests:
     build:
       context: ./blacklist_service
