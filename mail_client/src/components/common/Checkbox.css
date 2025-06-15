@@ -1,0 +1,28 @@
+/* Base checkbox styling*/
+.checkbox {
+  width: 16px;
+  height: 16px;
+  background-color: var(--checkbox-bg);
+  border: 2px solid var(--checkbox-border);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+/* Checked state background */
+.checked {
+  background-color: var(--checkbox-bg); 
+}
+
+/* Icon inside checkbox (✓) */
+.checkbox-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--checkbox-checkmark);
+  pointer-events: none;
+}
+

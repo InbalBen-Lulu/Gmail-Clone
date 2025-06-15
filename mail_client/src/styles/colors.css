@@ -1,0 +1,22 @@
+body {
+    /* Button colors */
+    --primary-color: #1E64D4;               /* Primary button background */
+    --primary-hover: #3775d9;               /* Hover state for primary button */
+    --primary-ghost-hover-bg: #ECF2FC;      /* Hover background for ghost (text-only) buttons */
+    --icon-light-gray: #898686;             /* Light gray for small icons */
+
+    /* Checkbox colors */
+    --checkbox-bg: var(--white);              /* Background color of unchecked checkbox */
+    --checkbox-border: #585858;             /* Border color of the checkbox */
+    --checkbox-checkmark: #333333;          /* Color of the checkmark (✓) when checked */     
+
+    /* Icon colors */
+    --star-color: #F4B400;                  /* Color for starred icons (e.g. favorites) */
+
+    /* Shared base colors */
+    --white: #ffffff;
+    --black: #000000;
+    --gray-light: #e9ecef;                  /* Light gray for backgrounds, borders, etc. */
+    --gray-dark: #343a40;                   /* Dark gray for text, borders, etc. */
+    --danger-color:#B3261E;
+}
