@@ -10,15 +10,34 @@
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
+/* Focused (default) */
 .textbox-wrapper.focused {
+  box-shadow: 0 0 0 2px var(--primary-hover);
+}
+
+/* Focused + Valid */
+.textbox-wrapper.focused.valid,
+.textbox-wrapper.valid.focused {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 2px var(--primary-hover);
 }
 
+/* Focused + Invalid */
+.textbox-wrapper.focused.invalid,
+.textbox-wrapper.invalid.focused {
+  border-color: var(--danger-color);
+  box-shadow: 0 0 0 2px var(--danger-color);
+}
+
+/* Only border when not focused */
+.textbox-wrapper.valid {
+  border-color: var(--primary-color);
+}
 .textbox-wrapper.invalid {
   border-color: var(--danger-color);
 }
 
+/* ========== INPUT ========== */
 .textbox-input-wrapper {
   display: flex;
   align-items: center;
@@ -28,7 +47,7 @@
 
 .textbox-input {
   flex: 1;
-  padding: 12px 16px;
+  padding: 14px 16px;
   border: none;
   background: transparent;
   font-size: 16px;
@@ -37,6 +56,7 @@
   min-width: 0;
 }
 
+/* ========== FLOATING LABEL ========== */
 .textbox-label {
   position: absolute;
   left: 16px;
@@ -45,31 +65,57 @@
   background-color: var(--secondary-bg);
   transition: all 0.2s ease;
   font-size: 16px;
+  font-weight: 500;
   color: var(--icon-color);
   pointer-events: none;
   padding: 0 4px;
-  z-index: 1; 
+  z-index: 1;
 }
 
-.textbox-input-wrapper:has(input:focus) + .textbox-label,
-.textbox-input-wrapper:has(input:not(:placeholder-shown)) + .textbox-label,
+/* Label floats up */
 .textbox-wrapper.focused .textbox-label,
 .textbox-wrapper.filled .textbox-label {
   top: -10px;
   left: 12px;
   font-size: 12px;
+}
+
+/* Label color when valid */
+.textbox-wrapper.valid .textbox-label,
+.textbox-wrapper.focused.valid .textbox-label {
   color: var(--primary-color);
 }
 
-/* Error */
-.error-message {
+/* Label color when invalid */
+.textbox-wrapper.invalid .textbox-label,
+.textbox-wrapper.focused.invalid .textbox-label {
   color: var(--danger-color);
-  font-size: 12px;
-  margin-top: 4px;
-  display: block;
 }
 
-/* Sizes */
+/* ========== ERROR MESSAGE ========== */
+.error-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--danger-color);
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.error-message {
+  display: block;
+  font-weight: 470;
+}
+
+.error-icon {
+  margin-top: 4px;
+  font-weight: bold;
+  line-height: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ========== SIZES ========== */
 .textbox-wrapper.quarter {
   max-width: 120px;
   flex: 0 0 auto;
@@ -85,27 +131,22 @@
   font-size: 18px;
 }
 
-/* ========== VARIANTS ========== */
-
+/* ========== OTHER VARIANTS ========== */
 .textbox-wrapper.search {
   max-width: 710px;
   border-radius: 30px;
   background-color: #e9edf5;
-  position: relative;
-  transition: background-color 0.3s, box-shadow 0.3s;
   border: 1px solid var(--border-color);
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .textbox-wrapper.search:focus-within {
   background-color: var(--secondary-bg);
   box-shadow: 0 0 0 2px var(--border-color);
-  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .textbox-wrapper.search .textbox-input {
   padding-left: 40px;
-  border: none;
-  background-color: transparent;
 }
 
 .textbox-wrapper.search .textbox-icon {

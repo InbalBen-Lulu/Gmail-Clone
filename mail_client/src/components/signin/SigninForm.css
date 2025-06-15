@@ -1,0 +1,115 @@
+/* Gray background fullscreen */
+.signin-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f2f3f5;
+}
+
+/* Main container */
+.signin-container {
+  display: flex;
+  background-color: #f7f7f7;
+  border-radius: 25px;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.3);
+  width: 100%;
+  max-width: 750px;
+  min-height: 280px;
+  padding: 3rem 4rem;
+  gap: 3rem;
+}
+
+/* Left side */
+.signin-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
+}
+
+/* Google logo */
+.google-logo {
+  width: 48px;
+  margin-bottom: 0rem;
+}
+
+/* Title */
+.signin-title {
+  font-size: 40px;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  color: var(--black);
+}
+
+/* Subtext */
+.signin-subtext {
+  font-size: 15px;
+  color: var(--black);
+  line-height: 1.4;
+  max-width: 280px;
+}
+
+/* Right side (form area) */
+.signin-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 5rem; 
+}
+
+/* Email preview */
+.email-preview {
+  font-size: 14px;
+  color: #5f6368;
+  margin-bottom: 0.5rem;
+}
+
+/* Input wrapper */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+/* Forgot / Guest note */
+.guest-hint {
+  font-size: 13px;
+  color: #5f6368;
+  margin-bottom: 2.5rem;
+}
+
+/* Button row */
+.button-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.5rem;
+}
+
+/* Textbox resizing (optional refinement) */
+.signin-box .textbox-wrapper {
+  width: 100%;
+  max-width: 340px;
+}
+
+/* "Show password" checkbox */
+.show-password-label {
+  font-size: 14px;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  font-weight: 400;
+}
+
+/* Email preview (like "Hi user") */
+.email-preview {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
