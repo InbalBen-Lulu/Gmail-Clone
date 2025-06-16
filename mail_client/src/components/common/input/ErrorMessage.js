@@ -1,6 +1,10 @@
 import { MdError } from 'react-icons/md';
 import './ErrorMessage.css';
 
+/**
+ * A reusable component to display an error message with an icon.
+ * Renders nothing if no message is provided.
+ */
 const ErrorMessage = ({ message }) => {
   if (!message) return null;
 

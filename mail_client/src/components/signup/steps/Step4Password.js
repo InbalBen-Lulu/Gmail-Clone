@@ -1,10 +1,14 @@
-import Textbox from '../../common/input/TextBox';
+import Textbox from '../../common/input/textBox/TextBox';
 import Checkbox from '../../common/Checkbox';
 import TextButton from '../../common/button/TextButton';
 import './Step4Password.css';
 import ErrorMessage from '../../common/input/ErrorMessage';
 import { useState } from 'react';
 
+/**
+ * Step 4 of the signup process – password creation.
+ * Handles password and confirmation inputs, validation, and error display.
+ */
 const Step4Password = ({
     password,
     confirm,

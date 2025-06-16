@@ -1,4 +1,4 @@
-/* ========== ERROR MESSAGE ========== */
+/* Container for error icon and text */
 .error-container {
   display: flex;
   align-items: center;
@@ -8,11 +8,13 @@
   margin-top: 4px;
 }
 
+/* The actual error message text */
 .error-message {
   display: block;
   font-weight: 470;
 }
 
+/* Error icon styling */
 .error-icon {
   margin-top: 4px;
   font-weight: bold;

@@ -6,9 +6,19 @@ import Step4Password from './steps/Step4Password';
 import { months, genders } from './steps/constants';
 import './SignupForm.css';
 
+/**
+ * SignupForm handles a 4-step account creation form:
+ * Step 1 – User provides name
+ * Step 2 – User selects birthday and gender
+ * Step 3 – User selects Gmail address
+ * Step 4 – User creates a password
+ * 
+ * Each step has local state and validation errors.
+ */
 const SignupForm = () => {
     const [step, setStep] = useState(1);
 
+    // Form fields
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [month, setMonth] = useState('');
@@ -20,6 +30,7 @@ const SignupForm = () => {
     const [confirm, setConfirm] = useState('');
     const [showPassword, setShowPassword] = useState(false);
 
+    // Validation error messages
     const [firstNameError, setFirstNameError] = useState('');
     const [monthError, setMonthError] = useState('');
     const [dayError, setDayError] = useState('');

@@ -4,15 +4,15 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f2f3f5;
 }
 
 /* Main container */
+/* Box that holds the left text area and the form */
 .signup-container {
   display: flex;
-  background-color: #f7f7f7;
+  background-color: var(--signin-box-bg);
   border-radius: 25px;
-  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.3);
+  box-shadow: 0 1px 3px var(--auth-box-shadow);
   width: 100%;
   max-width: 750px;
   min-height: 280px;
@@ -20,6 +20,7 @@
   gap: 3rem;
 }
 
+/* ========== LEFT SIDE (Logo & Title) ========== */
 /* Left side */
 .signup-left {
   flex: 1;
@@ -39,17 +40,18 @@
   font-size: 36px;
   font-weight: 500;
   margin-bottom: 1rem;
-  color: var(--black);
+  color: var(--text-color);
 }
 
 /* Subtext */
 .signup-subtext {
   font-size: 15px;
-  color: var(--black);
+  color: var(--text-color);
   line-height: 1.4;
   max-width: 280px;
 }
 
+/* ========== RIGHT SIDE (Form area) ========== */
 /* Right side (form area) */
 .signup-box {
   flex: 1;
@@ -59,10 +61,11 @@
   padding-top: 5rem; 
 }
 
+/* ========== INPUT SECTIONS ========== */
 /* Email preview */
 .email-preview {
   font-size: 14px;
-  color: #5f6368;
+  color: var(--input-placeholder-color);
   margin-bottom: 0.5rem;
 }
 
@@ -74,7 +77,7 @@
 /* Forgot / Guest note */
 .guest-hint {
   font-size: 13px;
-  color: #5f6368;
+  color: var(--input-placeholder-color);
   margin-bottom: 2.5rem;
 }
 
@@ -112,23 +115,4 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-}
-
-/* birthday row */
-.birthday-row {
-  display: flex;
-  gap: 1.5rem;
-  margin-top: 2.5rem;
-  align-items: flex-start;
-}
-
-.textbox-wrapper,
-.dropdown-wrapper {
-  height: 48px; 
-}
-.textbox-input,
-.dropdown-select {
-  height: 100%;
-  padding: 14px 16px; 
-  box-sizing: border-box;
 }

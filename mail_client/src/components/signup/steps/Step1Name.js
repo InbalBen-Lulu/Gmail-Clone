@@ -1,7 +1,11 @@
 import { useState } from 'react';
-import Textbox from '../../common/input/TextBox';
+import Textbox from '../../common/input/textBox/TextBox';
 import TextButton from '../../common/button/TextButton';
 
+/**
+ * Step 1: Collects user's first and last name.
+ * Validates that first name is not empty before proceeding.
+ */
 const Step1Name = ({
     firstName,
     setFirstName,

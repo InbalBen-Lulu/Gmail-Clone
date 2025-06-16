@@ -4,15 +4,14 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f2f3f5;
 }
 
 /* Main container */
 .signin-container {
   display: flex;
-  background-color: #f7f7f7;
+  background-color: var(--signin-box-bg);
   border-radius: 25px;
-  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.3);
+  box-shadow: 0 1px 3px var(--auth-box-shadow);
   width: 100%;
   max-width: 750px;
   min-height: 280px;
@@ -39,13 +38,13 @@
   font-size: 40px;
   font-weight: 500;
   margin-bottom: 1rem;
-  color: var(--black);
+  color: var(--text-color);
 }
 
 /* Subtext */
 .signin-subtext {
   font-size: 15px;
-  color: var(--black);
+  color: var(--text-color);
   line-height: 1.4;
   max-width: 280px;
 }
@@ -62,7 +61,7 @@
 /* Email preview */
 .email-preview {
   font-size: 14px;
-  color: #5f6368;
+  color: var(--input-placeholder-color);
   margin-bottom: 0.5rem;
 }
 
@@ -74,7 +73,7 @@
 /* Forgot / Guest note */
 .guest-hint {
   font-size: 13px;
-  color: #5f6368;
+  color: var(--input-placeholder-color);
   margin-bottom: 2.5rem;
 }
 

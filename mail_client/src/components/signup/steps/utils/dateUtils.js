@@ -1,3 +1,7 @@
+/**
+ * Checks if a given day, month, and year represent a valid, non-future date.
+ * Returns true if the date is valid and not in the future, otherwise false.
+ */
 export function isValidDate(day, monthValue, year) {
   const monthIndex = parseInt(monthValue, 10) - 1;
   const dayNum = parseInt(day, 10);

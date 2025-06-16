@@ -1,10 +1,16 @@
 import { useState } from 'react';
-import Textbox from '../common/input/TextBox';
+import Textbox from '../common/input/textBox/TextBox';
 import TextButton from '../common/button/TextButton';
 import Checkbox from '../common/Checkbox';
 import useAuthFetch from '../../hooks/useAuthFetch';
 import "./SigninForm.css";
 
+/**
+ * SigninForm component handles a two-step Gmail-style sign-in:
+ * Step 1 – user enters email
+ * Step 2 – user enters password
+ * Shows validation errors and conditionally renders based on step
+ */
 const SigninForm = () => {
     const [step, setStep] = useState(1);
     const [email, setEmail] = useState('');

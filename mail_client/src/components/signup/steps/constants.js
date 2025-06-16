@@ -1,4 +1,4 @@
-
+// List of months for use in a dropdown selector
 export const months = [
   { value: '', label: 'Month' },
   { value: '1', label: 'January' },
@@ -15,6 +15,7 @@ export const months = [
   { value: '12', label: 'December' },
 ];
 
+// List of gender options for use in a dropdown selector
 export const genders = [
   { value: '', label: 'Gender' },
   { value: 'female', label: 'Female' },

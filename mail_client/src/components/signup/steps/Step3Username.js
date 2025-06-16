@@ -1,6 +1,10 @@
-import Textbox from '../../common/input/TextBox';
+import Textbox from '../../common/input/textBox/TextBox';
 import TextButton from '../../common/button/TextButton';
 
+/**
+ * Step3Username component allows the user to choose a Gmail username.
+ * Validates the input and displays an error if the field is empty.
+ */
 const Step3Username = ({
   gmail,
   setGmail,

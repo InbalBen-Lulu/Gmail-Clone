@@ -1,4 +1,4 @@
-import Textbox from '../../common/input/TextBox';
+import Textbox from '../../common/input/textBox/TextBox';
 import DropdownList from '../../common/input/DropdownList';
 import TextButton from '../../common/button/TextButton';
 import { isValidDate } from './utils/dateUtils';
@@ -6,6 +6,10 @@ import ErrorMessage from '../../common/input/ErrorMessage';
 import { useState } from 'react';
 import './Step2Birth.css';
 
+/**
+ * Step2Birth component collects and validates the user's birthdate and gender.
+ * It ensures all fields are filled and the date is valid before proceeding.
+ */
 const Step2Birth = ({
     month,
     day,
