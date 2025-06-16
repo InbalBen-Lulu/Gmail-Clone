@@ -13,6 +13,9 @@ body {
     /* Icon colors */
     --star-color: #F4B400;                  /* Color for starred icons (e.g. favorites) */
 
+    /* Shadow for signin/signup box */
+    --auth-box-shadow: rgba(60, 64, 67, 0.3); /* Subtle shadow used in login/signup containers */
+
     /* Shared base colors */
     --white: #ffffff;
     --black: #000000;
