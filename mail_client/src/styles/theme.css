@@ -3,7 +3,7 @@
 ----------------------------- */
 body.light-mode {
     /* Backgrounds */
-    --main-bg-color: #F8FAFD;               /* Main background of the whole page */
+    --main-bg-color: #FFFFFF;               /* Main background of the whole page */
     --mail-list-bg: #ffffff;                /* Background of the mail list area */
     --search-bar-bg: #E9EEF6;               /* Background of the search bar */
     --menu-bg: #F8FAFD;                     /* Shared background for top and side menus */
@@ -28,6 +28,14 @@ body.light-mode {
 
     /* Toggle switch */
     --toggle-knob-color: #717379;           /* Color of the toggle knob (circle) */
+
+    --dialog-box-bg: white;                 /* Background for the dialog box */
+    --dialog-account-label: #5F6368;        /* Color for the Gmail Account label */
+    --dialog-title: #202124;                /* Color for the main dialog title */
+    --dialog-subtext: #555;                 /* Color for the dialog subtext */
+    
+    --add-profile-bg: #C2E7FF;              /* Background color of 'Add profile picture' button */
+    --add-profile-color: #001D35;           /* Text/icon color of 'Add profile picture' button */
 }
 
 /* -----------------------------
@@ -60,15 +68,23 @@ body.dark-mode {
 
     /* Toggle switch */
     --toggle-knob-color: #afb0b3;           /* Color of the toggle knob (circle) */
+
+    --dialog-box-bg: #1B1B1B;               /* Background for the dialog box */
+    --dialog-account-label: #E8EAED;        /* Color for the Gmail Account label */
+    --dialog-title: #E3E3E3;                /* Color for the main dialog title */
+    --dialog-subtext: #E3E3E3;              /* Color for the dialog subtext */
+
+    --add-profile-bg: #004A77;              /* Background color of 'Add profile picture' button */
+    --add-profile-color: #E3E3E3;           /* Text/icon color of 'Add profile picture' button */
 }
 
 /* -----------------------------
    Global Base Styles
 ----------------------------- */
 body {
-    background-color: var(--main-bg-color);       /* Apply main background */
-    color: var(--text-color);                /* Apply main text color */
-    font-family: 'Roboto', sans-serif;       /* Base font */
+    background-color: var(--main-bg-color);     /* Apply main background */
+    color: var(--text-color);                   /* Apply main text color */
+    font-family: 'Roboto', sans-serif;          /* Base font */
     transition: background-color 0.3s, color 0.3s; /* Smooth theme transition */
-    margin: 0;                               /* Remove default margin */
+    margin: 0;                                  /* Remove default margin */
 }
