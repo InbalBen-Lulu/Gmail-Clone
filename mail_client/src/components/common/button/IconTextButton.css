@@ -1,0 +1,66 @@
+/* Base style for any icon + text button */
+.btn.icon-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Variant: compose button */
+.btn.icon-text.compose {
+  background-color: var(--compose-button-bg);
+  color: var(--compose-button-text);
+  border-radius: 16px;
+  padding: 0.9rem 1.2rem;
+  font-size: 0.95rem;
+  width: 138px;
+}
+
+.btn.icon-text.compose:hover {
+  background-color: var(--compose-button-bg);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Variant: add-profile button */
+.btn.icon-text.add-profile {
+  background-color: var(--add-profile-bg);
+  color: var(--add-profile-color);
+  border-radius: 2rem;
+  padding: 0.7rem 2rem;
+  font-size: 0.9rem;
+  gap: 0.1rem;
+  justify-content: center;
+  width: 100%;
+}
+
+.btn.icon-text.add-profile:hover {
+  background-color: var(--add-profile-bg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); 
+  filter: brightness(0.9);
+}  
+
+/* Icon inside the button – default */
+.btn.icon-text .btn-icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.4em;
+}
+
+/* Icon style for Compose button */
+.btn.icon-text.compose .btn-icon {
+  width: 26px;
+  height: 26px;
+  color: var(--compose-button-text);
+}
+
+/* Icon style for Add Profile button */
+.btn.icon-text.add-profile .btn-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--add-profile-color);
+}
+
