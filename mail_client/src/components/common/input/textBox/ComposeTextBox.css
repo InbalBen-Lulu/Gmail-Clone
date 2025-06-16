@@ -1,0 +1,58 @@
+  /* single-line input with bottom border only */
+.textbox-wrapper.compose {
+  background: none;
+  margin-bottom: 10px;
+  padding: 0;
+  font-size: 15px;
+  max-width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--gray-dark);
+  box-shadow: 0 1px 0 0 var(--border-color);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* darker shadow when focused */
+.textbox-wrapper.compose.focused {
+  box-shadow: 0 1px 0 0 var(--gray-dark);
+}
+
+/* clean inline styling for input */
+.textbox-wrapper.compose .textbox-input {
+  border: none;
+  background: none;
+  font-size: inherit;
+  padding: 8px 0;
+  outline: none;
+  width: 100%;
+  color: var(--text-color);
+  border-radius: 0;
+}
+
+/* larger container for multi-line input */
+.textbox-wrapper.compose.body {
+  min-height: 150px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-bottom: none;
+  box-shadow: none;
+}
+
+/* textarea styles for message body */
+.textbox-wrapper.compose.body .textbox-input,
+.textbox-wrapper.compose.body textarea.textbox-input {
+  min-height: 120px;
+  resize: vertical;
+  font-size: 15px;
+  line-height: 1.5;
+  padding: 8px 0;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  height: 100%;
+  width: 100%;
+  display: block;
+  font-family: inherit;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  outline: none;
+}
