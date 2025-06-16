@@ -1,0 +1,19 @@
+
+/* birthday row */
+.birthday-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+  align-items: flex-start;
+}
+
+.textbox-wrapper,
+.dropdown-wrapper {
+  height: 48px; 
+}
+.textbox-input,
+.dropdown-select {
+  height: 100%;
+  padding: 14px 16px; 
+  box-sizing: border-box;
+}
