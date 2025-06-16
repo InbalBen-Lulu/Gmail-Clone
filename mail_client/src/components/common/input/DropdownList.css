@@ -1,5 +1,5 @@
 
-/* ========== STYLES ========== */
+/* Container for the dropdown component */
 .dropdown-wrapper {
   max-width: 370px;
   width: 100%;
@@ -13,31 +13,36 @@
   margin-top: 20px;
 }
 
+/* Focused and valid state */
 .dropdown-wrapper.focused.valid {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 2px var(--primary-hover);
 }
 
+/* Focused and invalid state */
 .dropdown-wrapper.focused.invalid {
   border-color: var(--danger-color);
   box-shadow: 0 0 0 2px var(--danger-color);
 }
 
+/* Focused with no validation status */
 .dropdown-wrapper.focused:not(.invalid):not(.valid) {
   border-color: var(--primary-hover);
   box-shadow: 0 0 0 2px var(--primary-hover);
 }
 
+/* Static invalid state */
 .dropdown-wrapper.invalid {
   border-color: var(--danger-color);
 }
 
+/* Style for the native <select> element */
 .dropdown-select {
   width: 100%;
   height: 48px;
   padding: 14px 16px;
   border: none;
-  background: transparent;
+  background-color: var(--secondary-bg);
   font-size: 16px;
   outline: none;
   color: var(--text-color);
@@ -48,21 +53,35 @@
   cursor: pointer;
 }
 
+
+/* Style for each option inside the <select> dropdown */
+.dropdown-select option {
+  background-color: var(--menu-bg);   
+  color: var(--text-color);      
+}
+
+/* Style for the selected option */
+.dropdown-select option:checked {
+  background-color: var(--side-item-hover-bg);
+  color: var(--text-color);
+}
+
+/* Floating label - initial hidden state */
 .dropdown-floating-label {
   position: absolute;
   left: 16px;
   top: 50%;
   transform: translateY(-50%);
-  background-color: var(--secondary-bg);
   transition: all 0.2s ease;
   font-size: 16px;
-  color: var(--icon-color);
+  color: var(--text-color);
   pointer-events: none;
   padding: 0 4px;
   z-index: 2;
   opacity: 0;
 }
 
+/* Floating label when field has value or is focused */
 .dropdown-wrapper .dropdown-floating-label {
   top: -10px;
   left: 12px;
@@ -70,18 +89,22 @@
   opacity: 1;
 }
 
+/* Label color when valid and focused */
 .dropdown-wrapper.focused.valid .dropdown-floating-label {
   color: var(--primary-color);
 }
 
+/* Label color when invalid and focused */
 .dropdown-wrapper.focused.invalid .dropdown-floating-label {
   color: var(--danger-color);
 }
 
+/* Label color when focused with no validation */
 .dropdown-wrapper.focused:not(.invalid):not(.valid) .dropdown-floating-label {
   color: var(--primary-hover);
 }
-/* Sizes */
+
+/* Small size variant */
 .dropdown-wrapper.quarter {
   width: 120px;
   flex: 0 0 auto;
