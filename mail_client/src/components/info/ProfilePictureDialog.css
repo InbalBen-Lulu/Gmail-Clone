@@ -97,4 +97,13 @@
   object-fit: cover;
 }
 
+/* Container for profile action buttons – laid out horizontally */
+.profile-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  justify-content: center;
+}
+
+
 

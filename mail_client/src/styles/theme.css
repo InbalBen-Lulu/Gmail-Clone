@@ -34,8 +34,8 @@ body.light-mode {
     --dialog-title: #202124;                /* Color for the main dialog title */
     --dialog-subtext: #555;                 /* Color for the dialog subtext */
     
-    --add-profile-bg: #C2E7FF;              /* Background color of 'Add profile picture' button */
-    --add-profile-color: #001D35;           /* Text/icon color of 'Add profile picture' button */
+    --profile-action-bg: #C2E7FF;              /* Background color of 'Add profile picture' button */
+    --profile-action-color: #001D35;           /* Text/icon color of 'Add profile picture' button */
 }
 
 /* -----------------------------
@@ -74,8 +74,8 @@ body.dark-mode {
     --dialog-title: #E3E3E3;                /* Color for the main dialog title */
     --dialog-subtext: #E3E3E3;              /* Color for the dialog subtext */
 
-    --add-profile-bg: #004A77;              /* Background color of 'Add profile picture' button */
-    --add-profile-color: #E3E3E3;           /* Text/icon color of 'Add profile picture' button */
+    --profile-action-bg: #004A77;              /* Background color of 'Add profile picture' button */
+    --profile-action-color: #E3E3E3;           /* Text/icon color of 'Add profile picture' button */
 }
 
 /* -----------------------------
