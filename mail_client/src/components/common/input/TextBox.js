@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef, forwardRef } from 'react';
 import './TextBox.css';
 import { MdError } from 'react-icons/md';
+import ErrorMessage from './ErrorMessage';
 
 /**
  * Reusable Textbox component with support for different variants and styles.
  */
-const Textbox = ({
+const Textbox = forwardRef(({
   label,
   name,
   value,
@@ -18,18 +19,29 @@ const Textbox = ({
   suffix = '',
   isInvalid = false,
   isValid = false,
-  errorMessage = ''
-}) => {
+  errorMessage = '',
+  autoFocusOnError = false
+}, ref) => {
   const [isFocused, setIsFocused] = useState(false);
-  const hasValue = value?.length > 0;
+  const hasValue = !!value && value.trim().length > 0;
   const isTextarea = variant === 'compose body';
+
+  const internalRef = useRef();
+  const inputRef = ref || internalRef;
+
+  // Focus on error if needed
+  useEffect(() => {
+    if (isInvalid && autoFocusOnError && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isInvalid, autoFocusOnError]);
 
   const wrapperClass = `
     textbox-wrapper ${size} ${variant}
     ${isFocused ? 'focused' : ''}
     ${hasValue ? 'filled' : ''}
     ${isInvalid ? 'invalid' : ''}
-    ${!isInvalid && isValid ? 'valid' : ''}
+    ${!isInvalid && isValid && hasValue ? 'valid' : ''}
   `.trim();
 
   return (
@@ -47,6 +59,7 @@ const Textbox = ({
               onBlur={() => setIsFocused(false)}
               placeholder={label ? ' ' : placeholder}
               className={`textbox-input ${hasValue ? 'has-value' : ''}`}
+              ref={inputRef}
             />
             {label && variant === 'floating' && (
               <label htmlFor={name} className="textbox-label">{label}</label>
@@ -66,6 +79,7 @@ const Textbox = ({
                 onBlur={() => setIsFocused(false)}
                 placeholder={variant === 'floating' ? ' ' : placeholder}
                 className={`textbox-input ${hasValue ? 'has-value' : ''}`}
+                ref={inputRef}
               />
               {suffix && <span className="textbox-suffix">{suffix}</span>}
             </div>
@@ -77,17 +91,11 @@ const Textbox = ({
       </div>
 
       {/* Show error message *below* the wrapper */}
-      {/* {isInvalid && errorMessage && (
-        <div className="error-message">{errorMessage}</div>
-      )} */}
-      {isInvalid && errorMessage && (
-        <div className="error-container">
-          <span className="error-icon">< MdError /></span>
-          <span className="error-message">{errorMessage}</span>
-        </div>
+      {isInvalid && errorMessage.trim() !== '' && (
+        <ErrorMessage message={errorMessage} />
       )}
     </>
   );
-};
+});
 
 export default Textbox;

@@ -1,0 +1,22 @@
+/* ========== ERROR MESSAGE ========== */
+.error-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--danger-color);
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.error-message {
+  display: block;
+  font-weight: 470;
+}
+
+.error-icon {
+  margin-top: 4px;
+  font-weight: bold;
+  line-height: 1;
+  align-items: center;
+  justify-content: center;
+}
