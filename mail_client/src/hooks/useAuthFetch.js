@@ -1,7 +1,6 @@
-/ 📁 src/hooks/useAuthFetch.js
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { getApiUrl, createAuthHeaders } from '../utils/auth';
+import { useAuth } from '../contexts/AuthContext';
+import { getApiUrl, createAuthHeaders } from '../utils/authUtils';
 
 /**
  * Custom hook to send authenticated requests to the server.
@@ -10,7 +9,7 @@ import { getApiUrl, createAuthHeaders } from '../utils/auth';
  */
 const useAuthFetch = () => {
   const { logout } = useAuth();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   /**
    * Sends a secure fetch request with auth headers.
@@ -38,7 +37,7 @@ const useAuthFetch = () => {
       // If token is missing or invalid, log out and redirect
       if (response.status === 401) {
         logout();
-        navigate('/login');
+        // navigate('/login');
         throw new Error('Unauthorized. Please login again.');
       }
 
