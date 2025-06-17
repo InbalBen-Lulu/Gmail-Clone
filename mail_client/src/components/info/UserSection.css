@@ -1,0 +1,124 @@
+/* Main wrapper for user info page */
+.user-section {
+  padding: 2rem;
+  font-family: 'Roboto', sans-serif;
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+/* Top heading section */
+.page-header {
+  text-align: center;
+  margin: 1rem 0 3rem 0;
+}
+
+.main-page-title {
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 0.4rem;
+}
+
+.main-page-subtitle {
+  font-size: 0.95rem;
+  color: var(--dialog-subtext);
+}
+
+/* General box container for sections */
+.user-info-box {
+  border: 1px solid var(--user-info-box-border);
+  border-radius: 10px;
+  margin-bottom: 2.5rem;
+  padding: 0 1.5rem;
+  box-shadow: 0 1px 2px rgba(60, 64, 67, 0.1);
+  max-width: 100%;
+}
+
+/* Box heading */
+.box-header h2 {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-top: 1.5rem;
+}
+
+/* Optional box subtext */
+.box-header p.box-subtext {
+  font-size: 0.9rem;
+  color: var(--dialog-subtext);
+}
+
+/* If there is no subtext, we need to add spacing below the title */
+.box-header.no-subtext {
+  margin-bottom: 1.5rem; 
+}
+
+/* Container for rows */
+.user-info-details {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Default row style: 2 columns (label + value) */
+.user-info-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  align-items: center;
+  gap: 4rem;
+  padding: 0.75rem 0.2rem;
+  height: 3rem;
+  border-bottom: 1px solid var(--user-info-box-border);
+}
+
+/* Remove bottom border on last row in each box */
+.user-info-details .user-info-row:last-child {
+  border-bottom: none;
+}
+
+/* Left column (labels like Name, Email) */
+.user-info-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--user-info-label);
+  text-align: left;
+}
+
+/* Right column (actual values) */
+.user-info-value {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-color);
+  text-align: left;
+}
+
+/* Special row: profile picture – with 3 columns */
+.user-info-row.full {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  gap: 1rem;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0.5rem 0 2rem 0;
+}
+
+/* Label styling in profile picture row */
+.user-info-row.full .user-info-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--user-info-label);
+}
+
+/* Subtext styling in profile picture row */
+.user-info-row.full .user-info-value {
+  font-size: 0.85rem;
+  color: var(--dialog-subtext);
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+/* Profile picture placement */
+.profile-picture-cell {
+  justify-self: end;
+  width: 70px;
+  height: 70px;
+}

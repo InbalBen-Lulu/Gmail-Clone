@@ -10,7 +10,7 @@ body.light-mode {
 
     /* Text colors */
     --text-color: #202124;                  /* Main text color */
-    --input-placeholder-color: #6F7071;    /* Placeholder text color inside input fields */
+    --input-placeholder-color: #6F7071;     /* Placeholder text color inside input fields */
 
     /* Interactive background states */
     --side-item-hover-bg: #E1E3E1;          /* Background when hovering over side menu item */
@@ -34,8 +34,11 @@ body.light-mode {
     --dialog-title: #202124;                /* Color for the main dialog title */
     --dialog-subtext: #555;                 /* Color for the dialog subtext */
     
-    --profile-action-bg: #C2E7FF;              /* Background color of 'Add profile picture' button */
-    --profile-action-color: #001D35;           /* Text/icon color of 'Add profile picture' button */
+    --profile-action-bg: #C2E7FF;           /* Background color of 'Add profile picture' button */
+    --profile-action-color: #001D35;        /* Text/icon color of 'Add profile picture' button */
+
+    --user-info-label: #555;                /* Color of user detail labels (e.g. Name, Gender) */
+    --user-info-box-border: #dadce0;        /* Border color for user info box */
 }
 
 /* -----------------------------
@@ -50,7 +53,7 @@ body.dark-mode {
 
     /* Text colors */
     --text-color: #FEFEFE;                  /* Main text color */
-    --input-placeholder-color: #D0D0D0;    /* Placeholder text color inside input fields */
+    --input-placeholder-color: #D0D0D0;     /* Placeholder text color inside input fields */
 
     /* Interactive background states */
     --side-item-hover-bg: #595959;          /* Background when hovering over side menu item */
@@ -74,8 +77,11 @@ body.dark-mode {
     --dialog-title: #E3E3E3;                /* Color for the main dialog title */
     --dialog-subtext: #E3E3E3;              /* Color for the dialog subtext */
 
-    --profile-action-bg: #004A77;              /* Background color of 'Add profile picture' button */
-    --profile-action-color: #E3E3E3;           /* Text/icon color of 'Add profile picture' button */
+    --profile-action-bg: #004A77;           /* Background color of 'Add profile picture' button */
+    --profile-action-color: #E3E3E3;        /* Text/icon color of 'Add profile picture' button */
+
+    --user-info-label: #E8EAED;             /* Color of user detail labels (e.g. Name, Gender) */
+    --user-info-box-border: #E8EAED;        /* Border color for user info box */
 }
 
 /* -----------------------------

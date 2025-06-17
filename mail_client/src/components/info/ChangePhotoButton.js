@@ -49,7 +49,7 @@ const ChangePhotoButton = ({ src, alt = "profile", onFileSelect }) => {
       {/* Overlay and dialog shown only when open */}
       {isDialogOpen && (
         <>
-          <Overlay />
+          <Overlay onClick={handleCloseDialog} />
           <ProfilePictureDialog
             imageSrc={src}
             onClose={handleCloseDialog}
