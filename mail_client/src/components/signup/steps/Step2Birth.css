@@ -1,0 +1,22 @@
+
+/* birthday row - aligns the date fields (month, day, year) in one horizontal row */
+.birthday-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+  align-items: flex-start;
+}
+
+/* Set consistent height for both textbox and dropdown wrappers */
+.textbox-wrapper,
+.dropdown-wrapper {
+  height: 48px; 
+}
+
+/* Style for the actual input/select inside the wrappers */
+.textbox-input,
+.dropdown-select {
+  height: 100%;
+  padding: 14px 16px; 
+  box-sizing: border-box;
+}

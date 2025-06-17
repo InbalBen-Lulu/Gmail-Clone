@@ -29,10 +29,10 @@ function loginUser(req, res) {
     res.cookie('token', token, {
         httpOnly: true,
         secure: false,
-        sameSite: 'Strict'
+        sameSite: 'Lax'
     });
 
-    return res.status(200).json();
+    return res.status(200).json({ token, user });
 }
 
 

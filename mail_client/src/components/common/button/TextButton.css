@@ -5,6 +5,7 @@
   border-radius: 24px;
   padding: 0.6rem 1.5rem;
   font-size: 0.95rem;
+  border:none;
 }
 
 .btn.primary:hover {
@@ -19,9 +20,9 @@
   border-radius: 24px;
   padding: 0.6rem 1rem;
   font-size: 0.95rem;
+  border:none;
 }
 
 .btn.ghost:hover {
   background-color: var(--primary-ghost-hover-bg);
 }
-

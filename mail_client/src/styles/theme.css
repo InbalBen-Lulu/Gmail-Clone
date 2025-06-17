@@ -3,10 +3,15 @@
 ----------------------------- */
 body.light-mode {
     /* Backgrounds */
-    --main-bg-color: #FFFFFF;               /* Main background of the whole page */
+    --main-bg-color: #f8fafd;               /* Main background of the whole page */
     --mail-list-bg: #ffffff;                /* Background of the mail list area */
     --search-bar-bg: #E9EEF6;               /* Background of the search bar */
     --menu-bg: #F8FAFD;                     /* Shared background for top and side menus */
+    --signin-box-bg: #ffffff;               /* Background color for the signin/signup form container */
+    --signin-bg: #e8f0fe;                   /* Background color for the signin/signup */
+    --search-background: #e9eef6;           /* Background for search bar */
+    --dropdownlist-bg: #e9eef6;           /* Background for dropdownlist */
+    --secondary-bg: #ffffff;
 
     /* Text colors */
     --text-color: #202124;                  /* Main text color */
@@ -50,7 +55,12 @@ body.dark-mode {
     --mail-list-bg: #2C2C2C;                /* Background of the mail list area */
     --search-bar-bg: #474747;               /* Background of the search bar */
     --menu-bg: #111111;                     /* Shared background for top and side menus */
-
+    --signin-box-bg: #000000;               /* Background color for the signin/signup form container */
+    --signin-bg: #202124;                   /* Background color for the signin/signup */
+    --search-background: #474747;           /* Background for search bar */
+    --dropdownlist-bg: #474747;           /* Background for dropdownlist */
+    --secondary-bg: #000000;
+    
     /* Text colors */
     --text-color: #FEFEFE;                  /* Main text color */
     --input-placeholder-color: #D0D0D0;     /* Placeholder text color inside input fields */
