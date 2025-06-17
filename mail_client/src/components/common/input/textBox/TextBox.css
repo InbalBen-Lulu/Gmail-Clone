@@ -1,0 +1,112 @@
+.textbox-wrapper {
+  max-width: 370px;
+  width: 100%;
+  margin-top: 20px;
+  position: relative;
+  border: 1px solid var(--gray-dark);
+  border-radius: 2px;
+  background-color: var(--secondary-bg);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Highlight on focus */
+.textbox-wrapper.focused {
+  box-shadow: 0 0 0 2px var(--primary-hover);
+}
+
+/* Highlight when valid and focused */
+.textbox-wrapper.focused.valid,
+.textbox-wrapper.valid.focused {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-hover);
+}
+
+/* Highlight when invalid and focused */
+.textbox-wrapper.focused.invalid,
+.textbox-wrapper.invalid.focused {
+  border-color: var(--danger-color);
+  box-shadow: 0 0 0 2px var(--danger-color);
+}
+
+/* Red border when invalid (even without focus) */
+.textbox-wrapper.invalid {
+  border-color: var(--danger-color);
+}
+
+/* Container for input and suffix */
+.textbox-input-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+/* Input field styling */
+.textbox-input {
+  flex: 1;
+  padding: 14px 16px;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  outline: none;
+  color: var(--text-color);
+  min-width: 0;
+}
+
+/* Floating label inside input */
+.textbox-label {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--secondary-bg);
+  transition: all 0.2s ease;
+  font-size: 16px;
+  color: var(--icon-color);
+  pointer-events: none;
+  padding: 0 4px;
+  z-index: 1;
+}
+
+/* Label shrinks and floats when filled */
+.textbox-wrapper.filled .textbox-label {
+  top: -10px;
+  left: 12px;
+  font-size: 12px;
+}
+
+/* Change label color when focused */
+.textbox-wrapper.focused .textbox-label {
+  color: var(--primary-hover);
+}
+
+/* Change label color when invalid */
+.textbox-wrapper.focused.invalid .textbox-label {
+  color: var(--danger-color);
+}
+
+/* When input is focused — float the label upwards */
+.textbox-wrapper.focused .textbox-label {
+  top: -10px;
+  left: 12px;
+  font-size: 12px;
+}
+
+/* When input is invalid but already filled — label also turns red */
+.textbox-wrapper.invalid.filled .textbox-label {
+  color: var(--danger-color);
+}
+
+/* Optional suffix */
+.textbox-suffix {
+  margin-left: 8px; 
+  padding-right: 12px;
+  color: var(--text-color);
+  white-space: nowrap;
+}
+
+/* Width override for small inputs */
+.textbox-wrapper.quarter {
+  max-width: 120px;
+  flex: 0 0 auto;
+}

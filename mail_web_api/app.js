@@ -5,6 +5,14 @@ const path = require('path');
 const app = express();
 app.use(cookieParser());
 
+const cors = require('cors');
+
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
+
+
 app.set('json spaces', 2);
 
 const usersRoutes = require('./routes/userRoute');

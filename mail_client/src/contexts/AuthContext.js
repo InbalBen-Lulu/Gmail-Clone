@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
-    
+
     if (token && storedUser) {
       try {
         setUser(JSON.parse(storedUser));          // Parse user JSON
@@ -25,14 +25,14 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Login function: send credentials, store token & user if successful
-  const login = useCallback(async (username, password) => {
+  const login = useCallback(async (userId, password) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/tokens`, {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/tokens/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ userId, password }),
       });
 
       const data = await response.json();
