@@ -5,6 +5,9 @@ import Step3Username from './steps/Step3Username';
 import Step4Password from './steps/Step4Password';
 import { months, genders } from './steps/constants';
 import './SignupForm.css';
+import { useUserService } from '../../services/userService';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 /**
  * SignupForm handles a 4-step account creation form:
@@ -39,6 +42,34 @@ const SignupForm = () => {
     const [gmailError, setGmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [confirmError, setConfirmError] = useState('');
+
+    const { createUser } = useUserService();
+    const { login } = useAuth();
+    const navigate = useNavigate();
+
+    // Submit signup form and create a new user
+    const handleSignupSubmit = async () => {
+        try {
+            const birthDate = `${year.padStart(4, '0')}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+            const name = `${firstName} ${lastName}`.trim();
+            const userId = gmail;
+
+            await createUser({
+                userId,
+                name,
+                password,
+                gender,
+                birthDate
+            });
+
+            await login(userId, password);
+
+            // navigate('/inbox');
+        } catch (error) {
+            alert(error.message || 'Signup failed');
+        }
+    };
+
 
     return (
         <div className="signup-wrapper">
@@ -118,7 +149,7 @@ const SignupForm = () => {
                             confirmError={confirmError}
                             setPasswordError={setPasswordError}
                             setConfirmError={setConfirmError}
-                            onNext={() => alert('Submit form')}
+                            onNext={handleSignupSubmit}
                         />
                     )}
                 </div>

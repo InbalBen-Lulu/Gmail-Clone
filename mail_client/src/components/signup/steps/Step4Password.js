@@ -20,25 +20,25 @@ const Step4Password = ({
     confirmError,
     onNext
 }) => {
-    const [changePasswordError, setChangePasswordError] = useState(''); 
+    const [changePasswordError, setChangePasswordError] = useState('');
+
     const handleNext = () => {
         let hasError = false;
 
         if (password.length < 8) {
             setChangePasswordError('Use 8 characters or more for your password');
             hasError = true;
-        } 
-        else if (confirm !== password) {
+        } else if (confirm !== password) {
             setChangePasswordError("Those passwords didn’t match. Try again.");
             hasError = true;
-        }
-        else {
+        } else {
             setChangePasswordError('');
         }
 
-        if (!hasError) onNext();
+        if (!hasError) {
+            onNext();
+        }
     };
-
 
     return (
         <>
@@ -66,7 +66,7 @@ const Step4Password = ({
                 errorMessage={confirmError}
                 autoFocusOnError
             />
-             {changePasswordError && (
+            {changePasswordError && (
                 <ErrorMessage message={changePasswordError} />
 
             )}
