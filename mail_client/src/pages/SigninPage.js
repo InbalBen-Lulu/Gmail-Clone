@@ -1,6 +1,10 @@
 import SigninForm from '../components/signin/SigninForm';
 
-const DemoSignin = () => {
+/**
+ * SigninPage is the main page component for handling user sign-in.
+ * It renders the SigninForm inside a simple container.
+ */
+const SigninPage = () => {
   return (
     <div>
       <SigninForm />
@@ -8,4 +12,4 @@ const DemoSignin = () => {
   );
 };
 
-export default DemoSignin;
+export default SigninPage;
