@@ -1,9 +1,11 @@
+/* Full-screen semi-transparent overlay that darkens the background 
+   when a modal/dialog is open. Appears behind the dialog content. */
 .overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.3); /* שכבה קפקפה */
-  z-index: 999; /* צריך להיות נמוך מ־dialog-box */
+  background-color: rgba(0, 0, 0, 0.3); 
+  z-index: 999; 
 }
