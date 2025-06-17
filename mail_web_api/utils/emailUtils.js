@@ -17,13 +17,14 @@ function getEmailFromUserId(userId) {
  * @returns {string|null}
  */
 function getUserIdFromEmail(email) {
-    const atIndex = email.indexOf('@');
-    if (atIndex === -1) return null;
+    if (typeof email !== 'string') return email;
 
-    const domain = email.slice(atIndex + 1);
-    if (domain.toLowerCase() !== MAIL_DOMAIN.toLowerCase()) return null;
+    const index = email.indexOf('@');
+    if (index === -1) {
+        return email; 
+    }
 
-    return email.slice(0, atIndex);
+    return email.slice(0, index); 
 }
 
 /**

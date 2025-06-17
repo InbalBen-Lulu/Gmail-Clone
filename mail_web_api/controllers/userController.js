@@ -1,5 +1,6 @@
 const { createUser, getUserById, getPublicUserById } = require('../models/userModel');
 const { resolveProfileImagePath } = require('../models/profileImageModel');
+const { getUserIdFromEmail } = require('../utils/emailUtils');
 
 /**
  * POST /api/users
@@ -64,7 +65,12 @@ function getUserDetails(req, res) {
  * Retrieve user public details by userId
  */
 function getPublicUserInfo(req, res) {
-    const userId = req.params.id; 
+    let userId = req.params.id; 
+    const emailBasedId = getUserIdFromEmail(userId);
+    if (emailBasedId) {
+        userId = emailBasedId;
+    }
+
     const user = getPublicUserById(userId);
 
     if (!user) {
