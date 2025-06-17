@@ -2,7 +2,10 @@ import { useState } from 'react';
 import Textbox from '../common/input/textBox/TextBox';
 import TextButton from '../common/button/TextButton';
 import Checkbox from '../common/Checkbox';
-import useAuthFetch from '../../hooks/useAuthFetch';
+import { useUserService } from '../../services/userService';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+
 import "./SigninForm.css";
 
 /**
@@ -14,55 +17,47 @@ import "./SigninForm.css";
 const SigninForm = () => {
     const [step, setStep] = useState(1);
     const [email, setEmail] = useState('');
+    const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
-    // const [emailTouched, setEmailTouched] = useState(false);
 
-    const fetchWithAuth = useAuthFetch();
+    const navigate = useNavigate();
 
-    // const handleEmailSubmit = async () => {
-    //     try {
-    //         const res = await fetchWithAuth(`/api/users/${email.toLowerCase()}/public`);
-    //         if (res.status === 200) {
-    //             setStep(2);
-    //             setEmailError('');
-    //         } else {
-    //             setEmailError('User not found');
-    //         }
-    //     } catch (err) {
-    //         setEmailError('Something went wrong');
-    //     }
-    // };
-
-    const handleEmailSubmit = async () => {
-    if (email.toLowerCase() !== 'moria') {
-        setEmailError('Only "moria" is allowed for testing');
-        return;
-    }
-
-    // simulate success
-    setStep(2);
-    setEmailError('');
+    // Redirect to the signup page
+    const handleSignupRedirect = () => {
+        navigate('/signup');
     };
 
-    const handlePasswordSubmit = async () => {
+    const { fetchPublicUser } = useUserService();
+    
+    // Submit the email and fetch public user info (e.g. name)
+    const handleEmailSubmit = async () => {
         try {
-            const res = await fetchWithAuth(`/api/tokens/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: email.toLowerCase(), password })
-            });
-            if (res.status === 200) {
-                setPasswordError('');
-                // redirect to dashboard or inbox
+            const { status, data } = await fetchPublicUser(email);
+            if (status === 200) {
+                setName(data.name);
+                setStep(2);
+                setEmailError('');
             } else {
-                const data = await res.json();
-                setPasswordError(data.error || 'Invalid password');
+                setEmailError(data?.error || 'User not found');
             }
         } catch (err) {
-            setPasswordError('Something went wrong');
+            setEmailError('Something went wrong');
+        }
+    };
+
+    const { login } = useAuth();
+    
+    // Submit login credentials and authenticate user
+    const handleLogin = async () => {
+        try {
+            setPasswordError('');
+            await login(email, password);
+            // navigate('/inbox');
+        } catch (err) {
+            setPasswordError(err.message || 'Login failed');
         }
     };
 
@@ -73,7 +68,7 @@ const SigninForm = () => {
                 <div className="signin-left">
                     <img src="/pics/google-g-icon.png" alt="Google logo" className="google-logo" />
                     <h2 className="signin-title">
-                        {step === 1 ? 'Sign in' : `Hi ${email.split('@')[0]}`}
+                        {step === 1 ? 'Sign in' : `Hi ${name}`}
                     </h2>
                     {step === 1 && (
                         <p className="signin-subtext">
@@ -96,7 +91,7 @@ const SigninForm = () => {
                                     }}
                                     variant={'floating'}
                                     isInvalid={!!emailError}
-                                    isValid={!emailError} 
+                                    isValid={!emailError}
                                     errorMessage={emailError}
                                 />
                             </div>
@@ -106,7 +101,7 @@ const SigninForm = () => {
                             </p>
 
                             <div className="button-row">
-                                <TextButton variant="ghost" onClick={() => alert("Redirect to signup")}>
+                                <TextButton variant="ghost" onClick={handleSignupRedirect}>
                                     Create account
                                 </TextButton>
                                 <TextButton variant="primary" onClick={handleEmailSubmit}>
@@ -131,7 +126,7 @@ const SigninForm = () => {
                                     }}
                                     variant='floating'
                                     isInvalid={!!passwordError}
-                                    isValid={!passwordError} 
+                                    isValid={!passwordError}
                                     errorMessage={passwordError}
                                 />
                             </div>
@@ -144,7 +139,7 @@ const SigninForm = () => {
                             </div>
 
                             <div className="button-row">
-                                <TextButton variant="primary" onClick={handlePasswordSubmit}>
+                                <TextButton variant="primary" onClick={handleLogin}>
                                     Next
                                 </TextButton>
                             </div>
