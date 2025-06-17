@@ -18,7 +18,7 @@ router.post('/', registerUser);
 router.get('/:id', isLoggedIn, isSelf, getUserDetails);
 
 // Get user public details by ID
-router.get('/:id/public', isLoggedIn, getPublicUserInfo);
+router.get('/:id/public', getPublicUserInfo);
 
 // Upload a new profile image for the specified user
 router.post('/:id/profile-image', isLoggedIn, isSelf, uploadProfileImage);
