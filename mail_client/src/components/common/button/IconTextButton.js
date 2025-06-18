@@ -10,12 +10,13 @@ import "./IconTextButton.css";
  * - className: string – additional class for styling variant
  * - style: object – optional inline styles (e.g., width, margin)
  */
-const IconTextButton = ({ iconName, text, onClick, className = "", style = {} }) => {
+const IconTextButton = ({ iconName, text, onClick, className = "", style = {}, disabled = false }) => {
   return (
     <button
       className={`btn icon-text ${className}`.trim()}
       onClick={onClick}
       style={style}
+      disabled={disabled}
     >
       <span className="btn-icon">
         <Icon name={iconName} />
@@ -55,6 +56,7 @@ export const ProfileActionButton = ({
   text,
   onClick,
   width = "100%",
+  disabled = false
 }) => {
   return (
     <IconTextButton
@@ -63,6 +65,7 @@ export const ProfileActionButton = ({
       onClick={onClick}
       className="profile-action"
       style={{ width }}
+      disabled={disabled}
     />
   );
 };

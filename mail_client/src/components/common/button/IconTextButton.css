@@ -43,7 +43,7 @@
 /* Style for general profile action buttons (Add / Change / Remove) */
 .btn.icon-text.profile-action {
   background-color: var(--profile-action-bg);
-  color: var(--add-profile-color);
+  color: var(--profile-action-color);
   border-radius: 2rem;
   padding: 0.6rem 2rem; 
   font-size: 0.87rem;
@@ -65,5 +65,13 @@
   width: 18px;
   height: 18px;
   color: var(--profile-actione-color);
+}
+
+/* Disabled state for all icon-text buttons */
+.btn.icon-text:disabled,
+.btn.icon-text.profile-action:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
