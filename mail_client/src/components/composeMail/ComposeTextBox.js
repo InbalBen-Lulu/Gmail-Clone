@@ -12,6 +12,8 @@ const ComposeTextbox = forwardRef(({
   onChange,
   placeholder = '',
   variant = 'compose',
+  onBlur,
+  onFocus
 }, ref) => {
   const [isFocused, setIsFocused] = useState(false);
   const hasValue = !!value && value.trim().length > 0;
@@ -25,6 +27,16 @@ const ComposeTextbox = forwardRef(({
     ${hasValue ? 'filled' : ''}
   `.trim();
 
+  const handleBlur = (e) => {
+    setIsFocused(false);
+    if (onBlur) onBlur(e);
+  };
+
+  const handleFocus = (e) => {
+    setIsFocused(true);
+    if (onFocus) onFocus(e);
+  };
+
   return (
     <div className={wrapperClass}>
       {isTextarea ? (
@@ -33,8 +45,8 @@ const ComposeTextbox = forwardRef(({
           name={name}
           value={value}
           onChange={onChange}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           placeholder={placeholder}
           className="textbox-input"
           ref={inputRef}
@@ -46,8 +58,8 @@ const ComposeTextbox = forwardRef(({
           type="text"
           value={value}
           onChange={onChange}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           placeholder={placeholder}
           className="textbox-input"
           ref={inputRef}

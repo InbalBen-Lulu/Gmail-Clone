@@ -1,19 +1,19 @@
-  /* single-line input with bottom border only */
+/* single-line input with bottom border only */
 .textbox-wrapper.compose {
   background: none;
-  margin-bottom: 10px;
   padding: 0;
   font-size: 15px;
   max-width: 100%;
   border: none;
-  border-bottom: 1px solid var(--gray-dark);
+  border-bottom: 1px solid var(--gray-light);
   box-shadow: 0 1px 0 0 var(--border-color);
   transition: border-color 0.3s, box-shadow 0.3s;
+  height: auto;
 }
 
 /* darker shadow when focused */
 .textbox-wrapper.compose.focused {
-  box-shadow: 0 1px 0 0 var(--gray-dark);
+  box-shadow: 0 1px 0 0 var(--gray-light);
 }
 
 /* clean inline styling for input */
@@ -21,18 +21,19 @@
   border: none;
   background: none;
   font-size: inherit;
-  padding: 8px 0;
+  padding: 4px 0;
   outline: none;
   width: 100%;
-  color: var(--text-color);
+  color: var(--black);
   border-radius: 0;
 }
 
 /* larger container for multi-line input */
 .textbox-wrapper.compose.body {
+  margin-top: 6px;   
   min-height: 150px;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding-top: 0px;
+  padding-bottom: 0px;
   border-bottom: none;
   box-shadow: none;
 }
@@ -40,11 +41,11 @@
 /* textarea styles for message body */
 .textbox-wrapper.compose.body .textbox-input,
 .textbox-wrapper.compose.body textarea.textbox-input {
-  min-height: 120px;
+  min-height: 200px;
   resize: vertical;
   font-size: 15px;
   line-height: 1.5;
-  padding: 8px 0;
+  padding: 0px 0;
   white-space: pre-wrap;
   overflow-y: auto;
   height: 100%;
@@ -53,6 +54,27 @@
   font-family: inherit;
   background: none;
   border: none;
-  color: var(--text-color);
+  color: var(--black);
   outline: none;
+}
+
+/* Scrollbar container */
+.textbox-wrapper.compose.body textarea::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Scrollbar background (track) */
+.textbox-wrapper.compose.body textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Scrollbar thumb (draggable part) */
+.textbox-wrapper.compose.body textarea::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border: none;
+}
+
+/* Thumb on hover */
+.textbox-wrapper.compose.body textarea::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
 }

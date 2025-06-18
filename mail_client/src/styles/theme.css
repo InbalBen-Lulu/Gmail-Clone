@@ -12,10 +12,12 @@ body.light-mode {
     --search-background: #e9eef6;           /* Background for search bar */
     --dropdownlist-bg: #e9eef6;           /* Background for dropdownlist */
     --secondary-bg: #ffffff;
+    --compose-title-bg: #f2f6fc;                      /* Compose mail title background */
 
     /* Text colors */
     --text-color: #202124;                  /* Main text color */
     --input-placeholder-color: #6F7071;    /* Placeholder text color inside input fields */
+    --compose-title-color: #041e49;                      /* Compose mail title text color */
 
     /* Interactive background states */
     --side-item-hover-bg: #E1E3E1;          /* Background when hovering over side menu item */
@@ -49,10 +51,12 @@ body.dark-mode {
     --search-background: #474747;           /* Background for search bar */
     --dropdownlist-bg: #474747;           /* Background for dropdownlist */
     --secondary-bg: #000000;
-    
+    --compose-title-bg: #f2f2f2;                      /* Compose mail title background */
+
     /* Text colors */
     --text-color: #FEFEFE;                  /* Main text color */
     --input-placeholder-color: #D0D0D0;    /* Placeholder text color inside input fields */
+    --compose-title-color: #3f5373;                      /* Compose mail title text color */
 
     /* Interactive background states */
     --side-item-hover-bg: #595959;          /* Background when hovering over side menu item */

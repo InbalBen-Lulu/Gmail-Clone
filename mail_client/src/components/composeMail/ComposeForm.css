@@ -1,0 +1,75 @@
+.compose-mail {
+  width: 520px;
+  background-color: var(--white);
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 0 10px var(--compose-box-shadow);
+  font-family: sans-serif;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  margin: 0px;
+  transition: all 0.3s ease;
+  position: fixed;
+  bottom: 0px;
+  right: 40px;
+  min-height: 520px;
+}
+
+/* Minimized state - compact view */
+.compose-mail.minimized {
+  width: 340px;
+  min-height: 40px;
+}
+
+/* Hide fields and actions when minimized */
+.compose-mail.minimized .compose-fields,
+.compose-mail.minimized .compose-actions {
+  display: none;
+}
+
+/* Header bar */
+.compose-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--compose-title-bg);
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--compose-title-border);
+  direction: rtl;
+}
+
+/* Header buttons (close, minimize, etc.) */
+.header-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+/* Title text in header */
+.header-title {
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: #1a237e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  direction: ltr;
+}
+
+/* Input fields section (To, Subject, Body) */
+.compose-fields {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px 10px 16px;
+  gap: 0;
+  flex-grow: 1; 
+}
+
+/* Action buttons section (Send, Trash, etc.) */
+.compose-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-top: 1px solid #eee;
+}
