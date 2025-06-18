@@ -1,5 +1,6 @@
 /* Main wrapper for user info page */
 .user-section {
+  background-color: var(--personal-info-bg);
   padding: 2rem;
   font-family: 'Roboto', sans-serif;
   max-width: 850px;
@@ -26,6 +27,7 @@
 
 /* General box container for sections */
 .user-info-box {
+  background-color: var(--personal-info-box-bg);
   border: 1px solid var(--user-info-box-border);
   border-radius: 10px;
   margin-bottom: 2.5rem;
@@ -48,18 +50,18 @@
   color: var(--dialog-subtext);
 }
 
-/* If there is no subtext, we need to add spacing below the title */
+/* Margin only when there's no subtext under heading */
 .box-header.no-subtext {
   margin-bottom: 1.5rem; 
 }
 
-/* Container for rows */
+/* Container for rows inside each section */
 .user-info-details {
   display: flex;
   flex-direction: column;
 }
 
-/* Default row style: 2 columns (label + value) */
+/* Default layout for a row: label + value */
 .user-info-row {
   display: grid;
   grid-template-columns: 180px 1fr;
@@ -70,12 +72,12 @@
   border-bottom: 1px solid var(--user-info-box-border);
 }
 
-/* Remove bottom border on last row in each box */
+/* Last row shouldn't have bottom border */
 .user-info-details .user-info-row:last-child {
   border-bottom: none;
 }
 
-/* Left column (labels like Name, Email) */
+/* Label (left side of row) */
 .user-info-label {
   font-size: 0.75rem;
   font-weight: 600;
@@ -83,7 +85,7 @@
   text-align: left;
 }
 
-/* Right column (actual values) */
+/* Value (right side of row) */
 .user-info-value {
   font-size: 1rem;
   font-weight: 400;
@@ -91,7 +93,7 @@
   text-align: left;
 }
 
-/* Special row: profile picture – with 3 columns */
+/* Special row layout for profile picture (3 columns) */
 .user-info-row.full {
   display: grid;
   grid-template-columns: 1fr 2fr auto;
@@ -101,14 +103,14 @@
   padding: 0.5rem 0 2rem 0;
 }
 
-/* Label styling in profile picture row */
+/* Label in profile picture row */
 .user-info-row.full .user-info-label {
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--user-info-label);
 }
 
-/* Subtext styling in profile picture row */
+/* Subtext in profile picture row */
 .user-info-row.full .user-info-value {
   font-size: 0.85rem;
   color: var(--dialog-subtext);
@@ -116,9 +118,15 @@
   font-weight: 400;
 }
 
-/* Profile picture placement */
+/* Container for the actual profile picture and button */
 .profile-picture-cell {
   justify-self: end;
   width: 70px;
   height: 70px;
+}
+
+/* Page-level override: custom background just for this page */
+.personal-info-page {
+  background-color: var(--personal-info-bg); 
+  min-height: 100vh;        
 }

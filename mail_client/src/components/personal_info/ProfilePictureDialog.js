@@ -3,6 +3,7 @@ import Icon from '../../assets/icons/Icon';
 import { MainIconButton } from '../common/button/IconButtons';
 import { ProfileActionButton } from '../common/button/IconTextButton';
 import ProfileImage from '../common/profile_image/ProfileImage';
+import { resizeAndConvertToBase64 } from '../../utils/imageUtils';
 import './ProfilePictureDialog.css';
 
 /**
@@ -11,31 +12,54 @@ import './ProfilePictureDialog.css';
  *
  * Props:
  * - onClose: function – called when dialog should close
- * - onFileSelect: function – receives selected image file
- * - imageSrc: string – optional image URL to display (if not provided, default image is shown)
+ * - onFileSelect: function – receives base64-encoded image after processing
+ * - onRemove: function – called when user wants to remove the profile picture
+ * - imageSrc: string – current image URL
+ * - hasCustomImage: boolean – indicates whether the image is custom or default
+ * - isUpdating: boolean – whether the dialog is currently processing (show spinner)
  */
-const ProfilePictureDialog = ({ onClose, onFileSelect, imageSrc }) => {
+const ProfilePictureDialog = ({
+  onClose,
+  onFileSelect,
+  onRemove,
+  imageSrc,
+  hasCustomImage,
+  isUpdating
+}) => {
   const fileInputRef = useRef(null);
 
-  // Determine whether the image is the default one
-  const isDefaultImage = !imageSrc || imageSrc.includes("default-profile.png");
-
-  // Trigger file input click when upload/change button is clicked
   const handleUploadClick = () => {
-    fileInputRef.current?.click();
+    if (!isUpdating) {
+      fileInputRef.current?.click();
+    }
   };
 
-  // Handle file selection
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    if (file && onFileSelect) {
-      onFileSelect(file);
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert("Please upload a valid image file.");
+      return;
+    }
+
+    const maxSizeBytes = 5 * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      alert("Image is too large. Please choose a file under 5MB.");
+      return;
+    }
+
+    try {
+      const base64 = await resizeAndConvertToBase64(file);
+      onFileSelect(base64);
+    } catch (error) {
+      console.error("Error processing image:", error);
+      alert("Failed to process image.");
     }
   };
 
   return (
     <div className="dialog-box">
-      {/* Top header: Close button and Account label */}
       <div className="dialog-header">
         <MainIconButton
           icon={<Icon name="close" />}
@@ -44,38 +68,38 @@ const ProfilePictureDialog = ({ onClose, onFileSelect, imageSrc }) => {
           className="dialog-close-btn"
         />
         <span className="dialog-label">
-          <img
-            src="/pics/gmail_logo_icon.ico"
-            alt="Gmail Logo"
-            className="gmail-icon"
-          />
+          <img src="/pics/gmail_logo_icon.ico" alt="Gmail Logo" className="gmail-icon" />
           <span>Gmail Account</span>
         </span>
       </div>
 
-      {/* Dialog title */}
       <h2 className="dialog-title">Profile picture</h2>
-
-      {/* Subtext below the title */}
       <p className="dialog-subtext">
         A picture helps people recognize you and lets you know when you’re signed in to your account
       </p>
 
-      {/* Circular profile image using reusable component */}
-      <ProfileImage
-        src={imageSrc || "/default-profile.png"}
-        size="285px"
-        className="dialog-profile-pic"
-      />
+      {/* Profile image + spinner wrapper */}
+      <div className="dialog-profile-container">
+        <ProfileImage
+          src={imageSrc}
+          size="285px"
+          className="dialog-profile-pic"
+        />
+        {isUpdating && (
+          <div className="loading-overlay">
+            <span className="loading-spinner" />
+          </div>
+        )}
+      </div>
 
-      {/* Action buttons below the image */}
       <div className="profile-actions">
-        {isDefaultImage ? (
+        {!hasCustomImage ? (
           <ProfileActionButton
             iconName="add_a_photo"
             text="Add profile picture"
             onClick={handleUploadClick}
             width="100%"
+            disabled={isUpdating}
           />
         ) : (
           <>
@@ -84,18 +108,19 @@ const ProfilePictureDialog = ({ onClose, onFileSelect, imageSrc }) => {
               text="Change"
               onClick={handleUploadClick}
               width="170px"
+              disabled={isUpdating}
             />
             <ProfileActionButton
               iconName="delete"
               text="Remove"
-              onClick={() => console.log("Remove clicked")}
+              onClick={onRemove}
               width="170px"
+              disabled={isUpdating}
             />
           </>
         )}
       </div>
 
-      {/* Hidden file input */}
       <input
         type="file"
         accept="image/*"
@@ -108,5 +133,3 @@ const ProfilePictureDialog = ({ onClose, onFileSelect, imageSrc }) => {
 };
 
 export default ProfilePictureDialog;
-
-

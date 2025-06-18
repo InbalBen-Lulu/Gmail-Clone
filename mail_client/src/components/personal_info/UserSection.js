@@ -1,26 +1,32 @@
 import './UserSection.css';
 import ChangePhotoButton from './ChangePhotoButton';
+import { EMAIL_DOMAIN } from './constants';
 
 /**
  * UserSection component
  * Displays personal and contact info of a user inside styled boxes.
  *
  * Props:
- * - user: { name, email, birthDate, gender, phone, profileImage }
+ * - user: {
+ *     userId: string,
+ *     name: string,
+ *     birthDate: string,
+ *     gender: string,
+ *     profileImage: string,
+ *     hasCustomImage: boolean
+ *   }
  */
 const UserSection = ({ user }) => {
   const {
+    userId,
     name,
-    email,
     birthDate,
-    gender,
-    phone,
-    profileImage,
+    gender
   } = user;
 
-  const handleNewImage = (file) => {
-    console.log('New image selected:', file);
-  };
+  const email = `${userId}@${EMAIL_DOMAIN}`;
+
+  const formattedBirthDate = birthDate?.split('-').reverse().join('.') || '';
 
   return (
     <section className="user-section">
@@ -42,17 +48,14 @@ const UserSection = ({ user }) => {
         </div>
 
         <div className="user-info-details">
-            {/* Row: Profile picture (with ChangePhotoButton) */}
+          {/* Row: Profile picture (with ChangePhotoButton) */}
           <div className="user-info-row full">
             <span className="user-info-label">Profile picture</span>
             <span className="user-info-value">
               Add a profile picture to personalize your account
             </span>
             <div className="profile-picture-cell">
-              <ChangePhotoButton
-                src={profileImage}
-                onFileSelect={handleNewImage}
-              />
+              <ChangePhotoButton/>
             </div>
           </div>
 
@@ -62,7 +65,7 @@ const UserSection = ({ user }) => {
             <span className="user-info-value">{name}</span>
           </div>
           <div className="user-info-row">
-            <span className="user-info-label">Birthday</span>
+            <span className="user-info-label">{formattedBirthDate}</span>
             <span className="user-info-value">{birthDate}</span>
           </div>
           <div className="user-info-row">
@@ -82,10 +85,6 @@ const UserSection = ({ user }) => {
           <div className="user-info-row">
             <span className="user-info-label">Email</span>
             <span className="user-info-value">{email}</span>
-          </div>
-          <div className="user-info-row">
-            <span className="user-info-label">Phone</span>
-            <span className="user-info-value">{phone}</span>
           </div>
         </div>
       </div>

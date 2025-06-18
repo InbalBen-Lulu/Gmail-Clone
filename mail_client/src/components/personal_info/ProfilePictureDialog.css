@@ -71,7 +71,7 @@
 
 /* Subtext under the title */
 .dialog-subtext {
-    margin-left: 0.5rem;
+  margin-left: 0.5rem;
   font-size: 0.9rem;
   color: var(--dialog-subtext);
   margin-bottom: 1.5rem;
@@ -85,7 +85,6 @@
   height: 285px;
   border-radius: 50%;
   overflow: hidden;
-  background: #78909c; 
   margin: 3rem auto 2.5rem;
   position: relative;
 }
@@ -105,5 +104,42 @@
   justify-content: center;
 }
 
+/* Overlay while loading/spinner is shown */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 285px;
+  height: 285px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
 
+/* Spinner animation */
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #ccc;
+  border-top-color: var(--primary-color, #1a73e8);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
 
+/* Keyframe for spinner animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Wrapper for the profile image including spinner overlay */
+.dialog-profile-container {
+  width: 285px;
+  height: 285px;
+  margin: 3rem auto 2.5rem;
+  position: relative;
+}

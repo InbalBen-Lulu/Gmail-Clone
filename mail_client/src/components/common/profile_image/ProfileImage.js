@@ -12,12 +12,15 @@ import './ProfileImage.css';
  * - className: optional additional CSS classes for custom styling
  */
 const ProfileImage = ({ src, alt = "profile", size = "150px", className = "" }) => {
+  const apiBase = process.env.REACT_APP_API_BASE_URL;
+  const fullSrc = src?.startsWith('/profilePics') ? `${apiBase}${src}` : src;
+
   return (
     <div
       className={`profile-image ${className}`.trim()}
       style={{ width: size, height: size }}
     >
-      <img src={src} alt={alt} />
+      <img src={fullSrc} alt={alt} />
     </div>
   );
 };
