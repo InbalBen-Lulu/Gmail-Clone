@@ -1,0 +1,43 @@
+/* Button wrapping the profile image – circular and clickable */
+.change-photo-button {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+  background-color: transparent;
+  display: inline-block;
+}
+
+/* Semi-transparent dark overlay on the bottom third of the circle */
+.image-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 33%; 
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Wrapper for the camera icon, centered horizontally at the bottom */
+.camera-icon-wrapper {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Styling for the camera icon itself */
+.camera-icon {
+  width: 20px;
+  height: 20px;
+  color: white;
+}

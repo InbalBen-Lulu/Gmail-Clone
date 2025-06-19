@@ -20,7 +20,7 @@ const tokensRoutes = require('./routes/tokenRoute');
 const labelsRoutes = require('./routes/labelRoute');
 const mailsRoutes = require('./routes/mailRoute');
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 app.use('/api/users', usersRoutes);
 app.use('/api/tokens', tokensRoutes);
 app.use('/api/labels', labelsRoutes);

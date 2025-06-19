@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Textbox from '../common/input/textBox/TextBox';
 import TextButton from '../common/button/TextButton';
-import Checkbox from '../common/Checkbox';
+import Checkbox from '../common/check_box/Checkbox';
 import { useUserService } from '../../services/userService';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';

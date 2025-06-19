@@ -34,7 +34,8 @@ function createUser({
         password,
         gender,
         birthDate,
-        profileImage
+        profileImage,
+        hasCustomImage: false
     };
 
     users.set(userId, newUser);

@@ -1,30 +1,33 @@
 import { createContext, useState, useContext, useCallback, useEffect } from 'react';
 
-// Create an authentication context
+// Create the auth context to share login/logout state across the app
 const AuthContext = createContext(null);
 
-// AuthProvider wraps the app and provides authentication state and methods
+/**
+ * AuthProvider component.
+ * Wraps the app and provides auth state and actions (login/logout).
+ */
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);         // Current user object
-  const [isLoading, setIsLoading] = useState(true); // Whether auth is initializing
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true); // true until auth check finishes
 
-  // On initial load: try to load auth state from localStorage
+  // On first load – try to restore auth state from localStorage
   useEffect(() => {
     const token = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
 
     if (token && storedUser) {
       try {
-        setUser(JSON.parse(storedUser));          // Parse user JSON
+        setUser(JSON.parse(storedUser));
       } catch (error) {
         console.error('Error parsing stored user:', error);
-        logout();                                  // Clear storage on error
+        logout();
       }
     }
-    setIsLoading(false);                           // Initialization done
+    setIsLoading(false);
   }, []);
 
-  // Login function: send credentials, store token & user if successful
+  // Log in the user – sends credentials, receives token+user
   const login = useCallback(async (userId, password) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/tokens/login`, {
@@ -33,6 +36,7 @@ export const AuthProvider = ({ children }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ userId, password }),
+        credentials: 'include'
       });
 
       const data = await response.json();
@@ -41,7 +45,6 @@ export const AuthProvider = ({ children }) => {
         throw new Error(data.error || 'Login failed');
       }
 
-      // Save auth data to localStorage
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
       setUser(data.user);
@@ -52,22 +55,22 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Logout function: clear auth data
+  // Log out the user – clear local storage and auth state
   const logout = useCallback(() => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
   }, []);
 
-  // Helper to get auth headers for API calls
+  // Build headers for authenticated API requests
   const getAuthHeaders = useCallback(() => {
     const token = localStorage.getItem('token');
     return token ? { 'Authorization': `Bearer ${token}` } : {};
   }, []);
 
-  // Context value to provide to consumers
   const value = {
     user,
+    setUser,
     isLoading,
     isAuthenticated: !!user,
     isAdmin: user?.isAdmin || false,
@@ -83,7 +86,10 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Hook to access authentication context
+/**
+ * useAuth hook.
+ * Allows components to use the auth context.
+ */
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
