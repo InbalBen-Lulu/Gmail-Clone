@@ -21,7 +21,7 @@ body.light-mode {
 
     /* Interactive background states */
     --side-item-hover-bg: #E1E3E1;          /* Background when hovering over side menu item */
-    --mail-item-bg: #F2F6FC;                /* Background for a regular mail item */
+    --mail-item-bg: #ffffff;                /* Background for a regular mail item */
     --mail-item-unread-bg: #FFFFFF;         /* Background for an unread mail item */
 
     /* Icon colors*/
@@ -35,6 +35,22 @@ body.light-mode {
 
     /* Toggle switch */
     --toggle-knob-color: #717379;           /* Color of the toggle knob (circle) */
+
+    
+    /* Mail item specific additions */
+    --mail-border-color: #e0e0e0;
+    --mail-hover-shadow: rgba(60, 64, 67, 0.15);
+    --mail-item-hover-bg: #f1f3f4;
+    --mail-time-color: #5f6368;
+    --star-icon-color: #5f6368;
+    --star-icon-active-color: #fbbc04;
+    --trash-icon-color: #5f6368;
+    --trash-icon-hover: #d93025;
+    --mail-item-hover-bg: #eef3f8;
+    --draft-label-color: #d93025;
+    --mail-separator-color: #5f6368;
+    --mail-body-color: #5f6368;
+    --mail-item-read-bg: #f2f6fc;
 }
 
 /* -----------------------------
@@ -74,6 +90,22 @@ body.dark-mode {
 
     /* Toggle switch */
     --toggle-knob-color: #afb0b3;           /* Color of the toggle knob (circle) */
+
+    /* Mail item specific additions */
+    --mail-border-color: #3a3a3a;
+    --mail-hover-shadow: rgba(255, 255, 255, 0.1);
+    --mail-item-hover-bg: #303134;
+    --mail-time-color: #a0a0a0;
+    --star-icon-color: #a0a0a0;
+    --star-icon-active-color: #fbbc04;
+    --trash-icon-color: #a0a0a0;
+    --trash-icon-hover: #ff6f6f;
+    --mail-item-hover-bg: #333333;
+    --draft-label-color: #ff6f6f;
+    --mail-separator-color: #a0a0a0;
+    --mail-body-color: #a0a0a0;
+    --mail-item-read-bg: #2c2c2c;
+
 }
 
 /* -----------------------------

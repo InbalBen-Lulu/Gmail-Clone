@@ -16,6 +16,9 @@ body {
     /* Auth colors */
     --auth-box-shadow: rgba(60, 64, 67, 0.3); /* Subtle shadow used in login/signup containers */
     
+    /* mail item colors */
+    --mail-item-shadow: rgba(60, 64, 67, 0.3); /* Subtle shadow used in mail item containers */
+    
     /* Compose Mail colors */
     --compose-box-shadow: rgba(0, 0, 0, 0.2); /* Subtle shadow used in compose container */
     --compose-title-border: #ccc;             /* Compose mail title bottom border */
