@@ -21,6 +21,7 @@ import { ReactComponent as Check } from "./check.svg";
 import { ReactComponent as Search } from "./search.svg";
 import { ReactComponent as Inbox } from "./inbox.svg";
 import { ReactComponent as Add } from "./add.svg";
+import { ReactComponent as Menu } from "./menu.svg";
 
 // Map of icon name → SVG component
 const icons = {
@@ -46,6 +47,7 @@ const icons = {
   search: Search,
   inbox: Inbox,
   add: Add,
+  menu: Menu
 };
 
 /**

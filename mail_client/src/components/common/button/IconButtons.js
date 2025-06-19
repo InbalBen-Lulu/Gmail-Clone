@@ -8,11 +8,11 @@ import Icon from "../../../assets/icons/Icon";
 export const MainIconButton = ({ icon, ariaLabel, onClick, className = "" }) => {
   return (
     <IconButton
-      icon={<span className="icon">{icon}</span>}
+      icon={icon}
       ariaLabel={ariaLabel}
       onClick={onClick}
       size="large"
-      className={className}
+      className={`main-icon-button ${className}`.trim()}
     />
   );
 };
@@ -27,7 +27,7 @@ export const SmallIconButton = ({ icon, ariaLabel, onClick, className = "" }) =>
       ariaLabel={ariaLabel}
       onClick={onClick}
       size="small"
-      className={className}
+      className={`main-icon-button ${className}`.trim()}
     />
   );
 };
