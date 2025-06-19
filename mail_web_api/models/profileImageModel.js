@@ -19,7 +19,7 @@ function saveProfileImage(user, image) {
 
     const ext = matches[1];
     const base64Data = matches[2];
-    if (base64Data.length > 6_800_000) { // ~5MB
+    if (base64Data.length > 7_000_000) { // > 5MB
         return { error: 'Image too large' };
     }
     const buffer = Buffer.from(base64Data, 'base64');

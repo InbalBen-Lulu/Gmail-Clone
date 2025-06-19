@@ -40,10 +40,20 @@ export const useUserService = () => {
    * Returns the updated image URL.
    */
   const uploadProfileImage = async (userId, imageBase64) => {
-    const response = await authFetch(`/api/users/${userId}/profile-image`, {
-      method: 'POST',
-      body: JSON.stringify({ image: imageBase64 })  // matches server expectation
-    });
+    let response;
+
+    try {
+      response = await authFetch(`/api/users/${userId}/profile-image`, {
+        method: 'POST',
+        body: JSON.stringify({ image: imageBase64 })
+      });
+    } catch (err) {
+      throw new Error('Network error while uploading image');
+    }
+
+    if (response.status === 413) {
+      throw new Error('Image is too large. Please choose a smaller file.');
+    }
 
     const data = await response.json();
 
@@ -59,9 +69,15 @@ export const useUserService = () => {
    * Returns the default image URL.
    */
   const removeProfileImage = async (userId) => {
-    const response = await authFetch(`/api/users/${userId}/profile-image`, {
-      method: 'DELETE'
-    });
+    let response;
+
+    try {
+      response = await authFetch(`/api/users/${userId}/profile-image`, {
+        method: 'DELETE'
+      });
+    } catch (err) {
+      throw new Error('Network error while removing image');
+    }
 
     const data = await response.json();
 
