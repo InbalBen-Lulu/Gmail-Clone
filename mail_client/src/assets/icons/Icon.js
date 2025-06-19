@@ -1,6 +1,7 @@
 // Import all SVGs as React components
 import { ReactComponent as AddPhoto } from "./add_a_photo.svg";
 import { ReactComponent as ArrowBack } from "./arrow_back.svg";
+import { ReactComponent as ArrowBack2 } from "./arrow_back_2.svg";
 import { ReactComponent as ArrowForward } from "./arrow_forward.svg";
 import { ReactComponent as Close } from "./close.svg";
 import { ReactComponent as Delete } from "./delete.svg";
@@ -21,11 +22,15 @@ import { ReactComponent as Check } from "./check.svg";
 import { ReactComponent as Search } from "./search.svg";
 import { ReactComponent as Inbox } from "./inbox.svg";
 import { ReactComponent as Add } from "./add.svg";
+import { ReactComponent as Report } from "./report.svg";
+import { ReactComponent as Refresh } from "./refresh.svg";
+import { ReactComponent as NotSpam } from "./not_spam.svg";
 
 // Map of icon name → SVG component
 const icons = {
   add_a_photo: AddPhoto,
   arrow_back: ArrowBack,
+  arrow_back2: ArrowBack2,
   arrow_forward: ArrowForward,
   close: Close,
   delete: Delete,
@@ -46,6 +51,9 @@ const icons = {
   search: Search,
   inbox: Inbox,
   add: Add,
+  report: Report,
+  refresh: Refresh,
+  not_spam: NotSpam
 };
 
 /**
