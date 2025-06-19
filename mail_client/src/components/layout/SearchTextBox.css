@@ -1,0 +1,74 @@
+/* Outer container for the search textbox */
+.textbox-wrapper.search {
+  display: flex;
+  align-items: center;
+  position: relative;
+  max-width: 710px;
+  width: 100%;
+  height: 48px;
+  border-radius: 30px;
+  background-color: var(--search-bar-bg);
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s, box-shadow 0.3s;
+  cursor: text;
+  box-sizing: border-box;
+}
+
+/* When the textbox is focused */
+.textbox-wrapper.search.focused {
+  background-color: white;
+  box-shadow: 0 0 0 2px var(--border-color);
+}
+
+/* Input field inside the textbox */
+.textbox-wrapper.search .textbox-input {
+  width: 100%;
+  height: 100%;
+  padding: 0 50px 0 50px;
+  border: none;
+  background: transparent;
+  font-size: 17px;
+  outline: none;
+  color: var(--text-color);
+  display: block;
+  box-sizing: border-box;
+}
+
+/* Placeholder text */
+.textbox-wrapper.search .textbox-input::placeholder {
+  color: var(--search-input-placeholder-color);
+  opacity: 1;
+}
+
+/* Placeholder when focused */
+.search-context.focused .textbox-input::placeholder {
+  color: #6F7071;
+}
+
+/* Icon container – search icon on the left */
+.search-icon {
+  position: absolute;
+  left: 6px;
+}
+
+/* Default search icon button style */
+.search-context .main-icon-button.search-button {
+  border-radius: 50%;
+  padding: 8px;
+  transition: background-color 0.2s;
+}
+
+/* Hover effect (default state) */
+.search-context .main-icon-button.search-button:hover {
+  background-color: var(--search-icon-bg-hover);
+}
+
+/* Icon color when textbox is focused */
+.search-context.focused .main-icon-button.search-button .icon {
+  color: #6F7071;
+}
+
+/* Hover effect when textbox is focused */
+.search-context.focused .main-icon-button.search-button:hover {
+  background-color: #F0F0F0 !important;
+}
