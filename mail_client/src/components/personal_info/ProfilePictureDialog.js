@@ -4,6 +4,7 @@ import { MainIconButton } from '../common/button/IconButtons';
 import { ProfileActionButton } from '../common/button/IconTextButton';
 import ProfileImage from '../common/profile_image/ProfileImage';
 import { resizeAndConvertToBase64 } from '../../utils/imageUtils';
+import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE_BYTES } from './constants';
 import './ProfilePictureDialog.css';
 
 /**
@@ -43,7 +44,12 @@ const ProfilePictureDialog = ({
       return;
     }
 
-    const maxSizeBytes = 5 * 1024 * 1024;
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      alert("Only JPG or PNG files are allowed.");
+      return;
+    }
+
+    const maxSizeBytes = MAX_IMAGE_SIZE_BYTES;
     if (file.size > maxSizeBytes) {
       alert("Image is too large. Please choose a file under 5MB.");
       return;
@@ -123,7 +129,7 @@ const ProfilePictureDialog = ({
 
       <input
         type="file"
-        accept="image/*"
+        accept={ALLOWED_IMAGE_TYPES.join(',')}
         ref={fileInputRef}
         onChange={handleFileChange}
         style={{ display: 'none' }}

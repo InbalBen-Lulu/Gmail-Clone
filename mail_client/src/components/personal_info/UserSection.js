@@ -65,8 +65,8 @@ const UserSection = ({ user }) => {
             <span className="user-info-value">{name}</span>
           </div>
           <div className="user-info-row">
-            <span className="user-info-label">{formattedBirthDate}</span>
-            <span className="user-info-value">{birthDate}</span>
+            <span className="user-info-label">Birthday</span>
+            <span className="user-info-value">{formattedBirthDate}</span>
           </div>
           <div className="user-info-row">
             <span className="user-info-label">Gender</span>
