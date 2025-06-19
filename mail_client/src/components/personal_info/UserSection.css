@@ -14,14 +14,14 @@
 }
 
 .main-page-title {
-  font-size: 1.8rem;
+  font-size: 2.1rem;
   font-weight: 500;
   color: var(--text-color);
   margin-bottom: 0.4rem;
 }
 
 .main-page-subtitle {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--dialog-subtext);
 }
 
@@ -38,7 +38,7 @@
 
 /* Box heading */
 .box-header h2 {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   font-weight: 500;
   color: var(--text-color);
   margin-top: 1.5rem;
@@ -46,7 +46,7 @@
 
 /* Optional box subtext */
 .box-header p.box-subtext {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: var(--dialog-subtext);
 }
 
@@ -79,7 +79,7 @@
 
 /* Label (left side of row) */
 .user-info-label {
-  font-size: 0.75rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--user-info-label);
   text-align: left;
@@ -87,7 +87,7 @@
 
 /* Value (right side of row) */
 .user-info-value {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 400;
   color: var(--text-color);
   text-align: left;
@@ -105,14 +105,14 @@
 
 /* Label in profile picture row */
 .user-info-row.full .user-info-label {
-  font-size: 0.75rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--user-info-label);
 }
 
 /* Subtext in profile picture row */
 .user-info-row.full .user-info-value {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: var(--dialog-subtext);
   line-height: 1.4;
   font-weight: 400;

@@ -14,7 +14,7 @@ function App() {
           <Routes>
             <Route path="/signin" element={<SigninPage />} />
             <Route path="/signup" element={<SignupPage />} />
-              <Route path="/personal-info" element={<PersonalInfoPage />} />
+            <Route path="/personal-info" element={<PersonalInfoPage />} />
             <Route path="*" element={<Navigate to="/signin" replace />} />
           </Routes>
         </Router>
