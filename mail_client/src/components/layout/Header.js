@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import GmailButton from './GmailButton';
-import SearchTextbox from './SearchTextBox';
+import SearchTextbox from './SearchTextbox';
 import { MainIconButton } from '../common/button/IconButtons';
 import Icon from '../../assets/icons/Icon';
 import ToggleThemeButton from '../common/ToggleThemeButton';
@@ -39,7 +39,7 @@ const Header = () => {
         <ToggleThemeButton />
         <button className="profile-button" onClick={() => console.log('Profile clicked')}>
           <ProfileImage
-            src="/profilePics/default.png" // ניתן להחליף לתמונה דינמית
+            src="/logo192.png"  // ניתן להחליף לתמונה דינמית
             size="35px"
           />
         </button>
