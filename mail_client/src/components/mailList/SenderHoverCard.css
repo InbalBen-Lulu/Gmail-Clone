@@ -1,0 +1,53 @@
+.sender-hover-card {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 3px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  width: 320px;
+  z-index: 999;
+}
+
+.sender-hover-top {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.sender-hover-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #ddd;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.sender-hover-info {
+  margin-left: 16px;
+}
+
+.sender-hover-name {
+  font-weight: bold;
+  font-size: 16px;
+  color: var(--black);
+}
+
+.sender-hover-email {
+  font-size: 14px;
+  color: var(--mail-body-color);
+  margin-top: 4px;
+}
+
+.sender-hover-footer {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.sender-hover-footer .btn {
+  width: 100%;
+  justify-content: center;
+}

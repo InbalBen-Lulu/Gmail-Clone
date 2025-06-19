@@ -1,0 +1,33 @@
+.menu-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: #5f6368;
+  padding: 6px 16px 4px;
+  user-select: none;
+}
+
+/* Checkbox wrapper */
+.menu-checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* Checkbox input */
+.menu-checkbox {
+  accent-color: var(--label-checkbox-checked, #1a73e8); /* Gmail blue */
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  margin: 0;
+}
+
+/* אייקונים SVG כמו הפלוס */
+.menu-icon-svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+  flex-shrink: 0;
+}
