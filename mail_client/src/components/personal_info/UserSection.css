@@ -1,0 +1,132 @@
+/* Main wrapper for user info page */
+.user-section {
+  background-color: var(--personal-info-bg);
+  padding: 2rem;
+  font-family: 'Roboto', sans-serif;
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+/* Top heading section */
+.page-header {
+  text-align: center;
+  margin: 1rem 0 3rem 0;
+}
+
+.main-page-title {
+  font-size: 2.1rem;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 0.4rem;
+}
+
+.main-page-subtitle {
+  font-size: 1rem;
+  color: var(--dialog-subtext);
+}
+
+/* General box container for sections */
+.user-info-box {
+  background-color: var(--personal-info-box-bg);
+  border: 1px solid var(--user-info-box-border);
+  border-radius: 10px;
+  margin-bottom: 2.5rem;
+  padding: 0 1.5rem;
+  box-shadow: 0 1px 2px rgba(60, 64, 67, 0.1);
+  max-width: 100%;
+}
+
+/* Box heading */
+.box-header h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-top: 1.5rem;
+}
+
+/* Optional box subtext */
+.box-header p.box-subtext {
+  font-size: 0.95rem;
+  color: var(--dialog-subtext);
+}
+
+/* Margin only when there's no subtext under heading */
+.box-header.no-subtext {
+  margin-bottom: 1.5rem; 
+}
+
+/* Container for rows inside each section */
+.user-info-details {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Default layout for a row: label + value */
+.user-info-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  align-items: center;
+  gap: 4rem;
+  padding: 0.75rem 0.2rem;
+  height: 3rem;
+  border-bottom: 1px solid var(--user-info-box-border);
+}
+
+/* Last row shouldn't have bottom border */
+.user-info-details .user-info-row:last-child {
+  border-bottom: none;
+}
+
+/* Label (left side of row) */
+.user-info-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--user-info-label);
+  text-align: left;
+}
+
+/* Value (right side of row) */
+.user-info-value {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--text-color);
+  text-align: left;
+}
+
+/* Special row layout for profile picture (3 columns) */
+.user-info-row.full {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  gap: 1rem;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0.5rem 0 2rem 0;
+}
+
+/* Label in profile picture row */
+.user-info-row.full .user-info-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--user-info-label);
+}
+
+/* Subtext in profile picture row */
+.user-info-row.full .user-info-value {
+  font-size: 0.9rem;
+  color: var(--dialog-subtext);
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+/* Container for the actual profile picture and button */
+.profile-picture-cell {
+  justify-self: end;
+  width: 70px;
+  height: 70px;
+}
+
+/* Page-level override: custom background just for this page */
+.personal-info-page {
+  background-color: var(--personal-info-bg); 
+  min-height: 100vh;        
+}

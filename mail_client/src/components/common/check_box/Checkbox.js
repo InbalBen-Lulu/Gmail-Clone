@@ -1,4 +1,4 @@
-import Icon from "../../assets/icons/Icon";
+import Icon from "../../../assets/icons/Icon";
 import "./Checkbox.css";
 
 /**

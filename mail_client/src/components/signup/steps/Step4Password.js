@@ -1,5 +1,5 @@
 import Textbox from '../../common/input/textBox/TextBox';
-import Checkbox from '../../common/Checkbox';
+import Checkbox from '../../common/check_box/Checkbox';
 import TextButton from '../../common/button/TextButton';
 import './Step4Password.css';
 import ErrorMessage from '../../common/input/ErrorMessage';
