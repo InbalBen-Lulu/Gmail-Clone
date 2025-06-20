@@ -1,6 +1,6 @@
 import { useRef, forwardRef, useState } from 'react';
-import { MainIconButton } from '../common/button/IconButtons';
-import Icon from '../../assets/icons/Icon';
+import { MainIconButton } from '../../../common/button/IconButtons';
+import Icon from '../../../../assets/icons/Icon';
 import './SearchTextbox.css';
 
 /**

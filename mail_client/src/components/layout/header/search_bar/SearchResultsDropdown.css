@@ -1,0 +1,134 @@
+/* Apply border-box to all elements for consistent sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Dropdown container for search results */
+.search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  border-top: 0.05rem solid #dbdada;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  z-index: 10;
+  max-height: 300px;
+  overflow-y: auto;
+  border-radius: 0 0 30px 30px; /* Round bottom corners */
+}
+
+/* Each result item row */
+.search-result-item {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  padding: 12px 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+  align-items: center;
+}
+
+/* Highlight on hover */
+.search-result-item:hover {
+  background-color: #f3f3f3;
+}
+
+/* Wrapper for subject and from */
+.result-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Email subject styling */
+.result-subject {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--search-text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Email sender styling */
+.result-from {
+  font-size: 12px;
+  color: #777;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Date of the email */
+.result-date {
+  font-size: 12px;
+  color: var(--search-text-color);
+  min-width: 65px;
+  text-align: right;
+  direction: ltr;
+  flex-shrink: 0;
+}
+
+/* Icon wrapper */
+.result-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-right: 1rem;
+  margin-left: 0.5rem;
+}
+
+/* Mail icon styling (white stroke and gray fill) */
+.mail-icon {
+  width: 18px;
+  height: 16px;
+  stroke: #ffffff;      /* White outline */
+  fill: #75797c;        /* Gray inner fill */
+  stroke-width: 1.2;
+}
+
+/* Message when no results found */
+.search-no-results {
+  padding: 1.2rem;
+  color: var(--input-placeholder-color);
+  font-size: 13px;
+  text-align: left;
+}
+
+/* Footer row (e.g., "All search results for...") */
+.search-show-all {
+  padding: 18px 12px;
+  font-size: 14px;
+  color: #202124;
+  background-color: white;
+  border-top: 0.05rem solid #dbdada;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  text-align: left;
+  direction: ltr;
+}
+
+/* Footer span text */
+.search-show-all span {
+  font-weight: 500;
+}
+
+/* Footer hover effect */
+.search-show-all:hover {
+  background-color: #f3f3f3;
+}
+
+/* Search icon inside footer row */
+.search-show-all .icon {
+  width: 18px;
+  height: 18px;
+  color: #5f6368;
+  vertical-align: middle;
+  margin-right: 0.9rem;
+  margin-left: 0.5rem;
+}
