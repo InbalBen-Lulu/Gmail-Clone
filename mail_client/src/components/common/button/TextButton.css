@@ -16,7 +16,7 @@
 /* Variant: Ghost button (text-only) */
 .btn.ghost {
   background-color: transparent;
-  color: var(--primary-color);
+  color: var(--primary-ghost-text-color);
   border-radius: 24px;
   padding: 0.6rem 1rem;
   font-size: 0.95rem;

@@ -1,6 +1,6 @@
-import './UserSection.css';
-import ChangePhotoButton from './ChangePhotoButton';
+import ChangePhotoButton from '../common/profile_image/ChangePhotoButton';
 import { EMAIL_DOMAIN } from './constants';
+import './UserSection.css';
 
 /**
  * UserSection component

@@ -25,8 +25,8 @@ body.light-mode {
     --mail-item-unread-bg: #FFFFFF;         /* Background for an unread mail item */
 
     /* Icon colors */
-    --main-icon-color: #444746;             /* Icon color for top bar/settings */
-    --icon-main-hover-bg: #EAEBEE;          /* Hover background for large icon buttons (e.g. top bar) */
+    --main-icon-color: #616362;             /* Icon color for top bar/settings */
+    --icon-main-hover-bg: rgba(118, 118, 119, 0.081);          /* Hover background for large icon buttons (e.g. top bar) */
     --icon-hover-bg: #EAEBEE;               /* Hover background for small icon buttons (e.g. mail row) */
 
     /* Compose button */
@@ -34,7 +34,7 @@ body.light-mode {
     --compose-button-text: #202124;         /* Compose button text color */ 
 
     /* Toggle switch */
-    --toggle-knob-color: #717379;           /* Color of the toggle knob (circle) */
+    --toggle-knob-color: #6F7071;           /* Color of the toggle knob (circle) */
 
     /* Dialog (e.g. profile picture popup) */
     --dialog-box-bg: white;                 /* Background for the dialog box */
@@ -49,6 +49,16 @@ body.light-mode {
     /* User info labels */
     --user-info-label: #555;                /* Color of user detail labels (e.g. Name, Gender) */
     --user-info-box-border: #dadce0;        /* Border color for user info box */
+
+    --signout-butoon-bg: white;
+    --signout-butoon-hover-bg: #DCE1E8;
+
+    --profile-menu-bg: #edf1f8;
+
+    --primary-ghost-hover-bg: rgba(66,133,244,0.08); /* Hover background for ghost (text-only) buttons */
+    --primary-ghost-text-color: #1E64D4;
+
+    --search-icon-bg-hover: #DCE0E8;
 }
 
 /* -----------------------------
@@ -102,7 +112,18 @@ body.dark-mode {
     /* User info labels */
     --user-info-label: #E8EAED;             /* Color of user detail labels (e.g. Name, Gender) */
     --user-info-box-border: #E8EAED;        /* Border color for user info box */
+
+    --signout-butoon-bg: #1B1B1B;
+    --signout-butoon-hover-bg: #464749;
+
+    --profile-menu-bg: #37393B;
+
+    --primary-ghost-hover-bg: rgba(111, 163, 247, 0.09);
+    --primary-ghost-text-color: #A8C7FA;
+
+    --search-icon-bg-hover: #595959;
 }
+
 
 /* -----------------------------
    Global Base Styles
