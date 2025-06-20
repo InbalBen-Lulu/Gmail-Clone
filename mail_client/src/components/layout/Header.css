@@ -19,7 +19,7 @@
   flex: 1;
   display: flex;
   justify-content: flex-start; /* במקום center */
-  margin-left: -12px; 
+  /* margin-left: -12px;  */
 }
 
 /* ===== MENU BUTTON STYLE ===== */
@@ -33,17 +33,21 @@
   justify-content: center;
 }
 
-/* ===== RESPONSIVE SEARCH SIZE ===== */
-.header-center .textbox-wrapper.search {
+/* ✅ עטיפת תיבת החיפוש והרשימה */
+.search-wrapper {
   width: 100%;
-  max-width: 720px;           /* מקסימום רוחב */
+  max-width: 720px;
   min-width: 180px;
+  position: relative;
+  box-sizing: border-box; /* חובה שיהיה */
+  padding: 0;             /* ודאי שאין padding פנימי */
+  margin: 0;
 }
 
 /* במסכים צרים – תיבה קטנה יותר */
 @media (max-width: 800px) {
-  .header-center .textbox-wrapper.search {
-    max-width: 310px; /* חצי מ-720 */
+  .search-wrapper {
+    max-width: 310px;
   }
 }
 
