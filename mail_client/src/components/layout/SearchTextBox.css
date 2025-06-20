@@ -3,7 +3,6 @@
   display: flex;
   align-items: center;
   position: relative;
-  max-width: 710px;
   width: 100%;
   height: 48px;
   border-radius: 30px;
@@ -29,7 +28,7 @@
   background: transparent;
   font-size: 17px;
   outline: none;
-  color: var(--text-color);
+  color: var(--search-text-color);
   display: block;
   box-sizing: border-box;
 }
@@ -42,7 +41,7 @@
 
 /* Placeholder when focused */
 .search-context.focused .textbox-input::placeholder {
-  color: #6F7071;
+  color: var(--placeholder-focused-color);
 }
 
 /* Icon container – search icon on the left */
@@ -64,11 +63,38 @@
 }
 
 /* Icon color when textbox is focused */
-.search-context.focused .main-icon-button.search-button .icon {
+.search-context.focused .main-icon-button .icon {
   color: #6F7071;
 }
 
 /* Hover effect when textbox is focused */
 .search-context.focused .main-icon-button.search-button:hover {
-  background-color: #F0F0F0 !important;
+  background-color: var(--search-textbox-focused-icons-hover-bg) !important;
+}
+
+.textbox-wrapper.search.focused.with-dropdown {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.clear-icon {
+  position: absolute;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.search-context .main-icon-button.clear-button {
+  border-radius: 50%;
+  padding: 8px;
+  transition: background-color 0.2s;
+}
+
+.search-context .main-icon-button.clear-button:hover {
+  background-color: var(--search-icon-bg-hover);
+}
+
+.search-context.focused .main-icon-button.clear-button:hover {
+  background-color: var(--search-textbox-focused-icons-hover-bg)!important;
 }
