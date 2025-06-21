@@ -1,7 +1,7 @@
 const { mails } = require('../storage/mailStorage');
 const { userMailStatus } = require('../storage/mailStatusStorage');
 const { userLabels } = require('../storage/labelStorage');
-const { getUserById } = require('./userModel');
+const { getPublicUserById } = require('./userModel');
 
 /**
  * Initializes sender status for a new mail.
@@ -129,7 +129,7 @@ function setSpamStatus(mailId, userId, isSpam) {
  *   - object with id, subject, body, from (name), to (userIds), labels, isStar, isDraft
  */
 function formatMailSummary(mail, viewerId) {
-    const fromUser = getUserById(mail.from);
+    const fromUser = getPublicUserById(mail.from);
     const status = getMailStatus(mail.id, viewerId);
 
     const labelList = userLabels.get(viewerId) || [];
@@ -140,11 +140,13 @@ function formatMailSummary(mail, viewerId) {
         subject: mail.subject,
         body: mail.body,
         sentAt: mail.sentAt,
-        from: fromUser.name,
+        from: fromUser,
         to: mail.to,
         labels: fullLabels,
         isStar: status?.isStar || false,
-        isDraft: status?.isDraft || false
+        isDraft: status?.isDraft || false,
+        isSpam: status?.isSpam || false,
+        type: status?.type || 'sent'
     };
 
     if (status?.type === 'received') {
@@ -160,22 +162,27 @@ function formatMailSummary(mail, viewerId) {
  */
 function getFilteredMails(userId, filterFn, offset, limit) {
     const map = userMailStatus.get(userId);
-    if (!map) return [];
+    if (!map) return { total: 0, mails: [] };
 
-    const result = [];
+    const filtered = [];
 
     for (const [mailId, status] of map.entries()) {
         const mail = mails.get(mailId);
         if (mail && filterFn(status, mail)) {
-            result.push(mail);
+            filtered.push(mail);
         }
     }
 
-    return result
-        .sort((a, b) => new Date(b.sentAt) - new Date(a.sentAt))
-        .slice(offset, offset + limit)
-        .map(mail => formatMailSummary(mail, userId));
+    const sorted = filtered.sort((a, b) => new Date(b.sentAt) - new Date(a.sentAt));
+    const sliced = sorted.slice(offset, offset + limit);
+    const formatted = sliced.map(mail => formatMailSummary(mail, userId));
+
+    return {
+        total: filtered.length,
+        mails: formatted
+    };
 }
+
 
 /**
  * Returns up to 50 non-spam received mails for the user.

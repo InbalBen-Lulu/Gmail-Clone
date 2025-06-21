@@ -28,8 +28,8 @@ function loginUser(req, res) {
 
     res.cookie('token', token, {
         httpOnly: true,
-        secure: false,
-        sameSite: 'Lax'
+        sameSite: 'lax',
+        secure: false
     });
 
     return res.status(200).json({ token, user });
@@ -40,12 +40,7 @@ function loginUser(req, res) {
  * Clear the user's authentication cookie.
  */
 function logoutUser(req, res) {
-    res.clearCookie('token', {
-        httpOnly: true,
-        secure: false,
-        sameSite: 'Strict',
-        path: '/'
-    });
+    res.clearCookie('token');
 
     return res.status(200).json();
 }

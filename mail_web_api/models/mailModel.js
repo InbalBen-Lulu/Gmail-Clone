@@ -2,7 +2,7 @@ const { mails } = require('../storage/mailStorage');
 const { userMailStatus } = require('../storage/mailStatusStorage');
 const { isContentBlacklisted } = require('../utils/mailUtils');
 const { userLabels } = require('../storage/labelStorage');
-const { getUserById } = require('./userModel');
+const { getUserById, getPublicUserById } = require('./userModel');
 const {
     initializeSenderStatus,
     initializeRecipientStatus,
@@ -97,10 +97,10 @@ function updateMail(mailId, userId, updatedFields) {
  * Formats a mail object for full view (detailed), for a specific user.
  * Displays sender’s name and profile image.
  * Returns:
- *   - object with id, subject, body, from (name), to (userIds), image, labels, isStar
+ *   - object with id, subject, body, from (name), to (userIds), image, labels, isStar, isSpam
  */
 function formatFullMail(mail, viewerId) {
-    const fromUser = getUserById(mail.from);
+    const fromUser = getPublicUserById(mail.from);
     const status = getMailStatus(mail.id, viewerId);
 
     const labelList = userLabels.get(viewerId) || [];
@@ -111,11 +111,13 @@ function formatFullMail(mail, viewerId) {
         subject: mail.subject,
         body: mail.body,
         sentAt: mail.sentAt,
-        from: fromUser.name,
+        from: fromUser,
         to: mail.to,
-        image: fromUser.profileImage,
         labels: fullLabels,
-        isStar: status?.isStar || false
+        isStar: status?.isStar || false,
+        isStar: status?.isStar || false,
+        isSpam: status?.isSpam || false,
+        type: status?.type || 'sent'
     };
 }
 
