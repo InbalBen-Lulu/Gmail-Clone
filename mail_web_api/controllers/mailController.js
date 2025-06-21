@@ -402,9 +402,13 @@ function getAllMails(req, res) {
  *   - 404 if label does not exist
  */
 function getMailsByLabel(req, res) {
-    const { labelId } = req.params;
+    let { labelId } = req.params;
     const { limit = 50, offset = 0 } = req.query;
     const userId = req.user.userId.toLowerCase();
+
+    if (labelId.startsWith('labels-')) {
+        labelId = labelId.replace('labels-', '');
+    }
 
     if (!labelExistsForUser(userId, labelId)) {
         return res.status(404).json({ error: 'Label not found' });
