@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import SignupPage from './pages/SignupPage';
 import SigninPage from './pages/SigninPage';
 import MailPage from './pages/MailPage';
+import PersonalInfoPage from './pages/PersonalInfoPage';
 import PrivateRoute from './components/common/PrivateRoute';
 
 import { AuthProvider } from './contexts/AuthContext';

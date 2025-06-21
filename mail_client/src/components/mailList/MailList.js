@@ -11,7 +11,6 @@ import { useMail } from '../../contexts/MailContext';
  */
 const MailList = ({ onClick }) => {
     const { mails } = useMail();
-    const [contextMenuMail, setContextMenuMail] = useState(null);
     const [menuPosition, setMenuPosition] = useState(null);
 
     const [contextMenuMailId, setContextMenuMailId] = useState(null);

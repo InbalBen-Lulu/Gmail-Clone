@@ -1,4 +1,5 @@
 import usePublicFetch from '../hooks/usePublicFetch';
+import useAuthFetch from '../hooks/useAuthFetch';
 
 /**
  * useUserService provides user-related API actions.
