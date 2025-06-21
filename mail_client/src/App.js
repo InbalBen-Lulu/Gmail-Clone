@@ -32,6 +32,13 @@ function App() {
                 </PrivateRoute>
               } />
 
+              {/* Protected route for personal info view */}
+              <Route path="/personal-info" element={
+                <PrivateRoute>
+                  <PersonalInfoPage />
+                </PrivateRoute>
+              } />
+
               {/* Redirect root path to signin */}
               <Route path="/" element={<Navigate to="/signin" replace />} />
 

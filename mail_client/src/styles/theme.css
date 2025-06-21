@@ -4,30 +4,32 @@
 body.light-mode {
     /* Backgrounds */
     --main-bg-color: #f8fafd;               /* Main background of the whole page */
+    --personal-info-bg: white;              /* Background of the user section */
+    --personal-info-box-bg: white;          /* Background of info boxes inside the section */
     --mail-list-bg: #ffffff;                /* Background of the mail list area */
     --search-bar-bg: #E9EEF6;               /* Background of the search bar */
     --menu-bg: #F8FAFD;                     /* Shared background for top and side menus */
     --signin-box-bg: #ffffff;               /* Background color for the signin/signup form container */
-    --signin-bg: #e8f0fe;                   /* Background color for the signin/signup */
+    --signin-bg: #e8f0fe;                   /* Background color for the signin/signup background */
     --search-background: #e9eef6;           /* Background for search bar */
-    --dropdownlist-bg: #e9eef6;           /* Background for dropdownlist */
-    --secondary-bg: #ffffff;
+    --dropdownlist-bg: #e9eef6;             /* Background for dropdown lists (e.g. gender) */
+    --secondary-bg: #ffffff;                /* Used for general secondary backgrounds */
     --compose-title-bg: #f2f6fc;                      /* Compose mail title background */
 
     /* Text colors */
     --text-color: #202124;                  /* Main text color */
     --input-placeholder-color: #6F7071;    /* Placeholder text color inside input fields */
-    --compose-title-color: #041e49;                      /* Compose mail title text color */
+    --compose-title-color: #041e49;        /* Compose mail title text color */
 
     /* Interactive background states */
     --side-item-hover-bg: #E1E3E1;          /* Background when hovering over side menu item */
     --mail-item-bg: #ffffff;                /* Background for a regular mail item */
     --mail-item-unread-bg: #FFFFFF;         /* Background for an unread mail item */
 
-    /* Icon colors*/
+    /* Icon colors */
     --main-icon-color: #444746;             /* Icon color for top bar/settings */
-    --icon-main-hover-bg: #EAEBEE;          /* Hover background for large icon buttons */
-    --icon-hover-bg: #EAEBEE;               /* Hover background for small icon buttons */
+    --icon-main-hover-bg: #EAEBEE;          /* Hover background for large icon buttons (e.g. top bar) */
+    --icon-hover-bg: #EAEBEE;               /* Hover background for small icon buttons (e.g. mail row) */
 
     /* Compose button */
     --compose-button-bg: #c2e7ff;           /* Compose button background */
@@ -35,8 +37,22 @@ body.light-mode {
 
     /* Toggle switch */
     --toggle-knob-color: #717379;           /* Color of the toggle knob (circle) */
-
     
+    /* Dialog (e.g. profile picture popup) */
+    --dialog-box-bg: white;                 /* Background for the dialog box */
+    --dialog-account-label: #5F6368;        /* Color for the Gmail Account label */
+    --dialog-title: #202124;                /* Color for the main dialog title */
+    --dialog-subtext: #555;                 /* Color for the dialog subtext */
+    
+    /* Profile actions (add/change picture buttons) */
+    --profile-action-bg: #C2E7FF;           /* Background color of 'Add profile picture' button */
+    --profile-action-color: #001D35;        /* Text/icon color of 'Add profile picture' button */
+
+    /* User info labels */
+    --user-info-label: #555;                /* Color of user detail labels (e.g. Name, Gender) */
+    --user-info-box-border: #dadce0;        /* Border color for user info box */
+
+     
     /* Mail item specific additions */
     --mail-border-color: #e0e0e0;
     --mail-hover-shadow: rgba(60, 64, 67, 0.15);
@@ -59,30 +75,32 @@ body.light-mode {
 body.dark-mode {
     /* Backgrounds */
     --main-bg-color: #111111;               /* Main background of the whole page */
+    --personal-info-bg: #2C2C2C;            /* Background of the user section */
+    --personal-info-box-bg: #111111;        /* Background of info boxes inside the section */
     --mail-list-bg: #2C2C2C;                /* Background of the mail list area */
     --search-bar-bg: #474747;               /* Background of the search bar */
     --menu-bg: #111111;                     /* Shared background for top and side menus */
     --signin-box-bg: #000000;               /* Background color for the signin/signup form container */
-    --signin-bg: #202124;                   /* Background color for the signin/signup */
+    --signin-bg: #202124;                   /* Background color for the signin/signup background */
     --search-background: #474747;           /* Background for search bar */
     --dropdownlist-bg: #474747;           /* Background for dropdownlist */
     --secondary-bg: #000000;
-    --compose-title-bg: #f2f2f2;                      /* Compose mail title background */
+    --compose-title-bg: #f2f2f2;   
 
     /* Text colors */
     --text-color: #FEFEFE;                  /* Main text color */
     --input-placeholder-color: #D0D0D0;    /* Placeholder text color inside input fields */
-    --compose-title-color: #3f5373;                      /* Compose mail title text color */
+    --compose-title-color: #3f5373;     
 
     /* Interactive background states */
     --side-item-hover-bg: #595959;          /* Background when hovering over side menu item */
     --mail-item-bg: #161616;                /* Background for a regular mail item */
     --mail-item-unread-bg: #2C2C2C;         /* Background for an unread mail item */
 
-    /* Icon colors*/
+    /* Icon colors */
     --main-icon-color: #E7E7E7;             /* Icon color for top bar/side bar */
-    --icon-main-hover-bg: #414141;          /* Hover background for large icon buttons */
-    --icon-hover-bg: #575757;               /* Hover background for small icon buttons */
+    --icon-main-hover-bg: #414141;          /* Hover background for large icon buttons (e.g. top bar) */
+    --icon-hover-bg: #575757;               /* Hover background for small icon buttons (e.g. mail row) */
 
     /* Compose button */
     --compose-button-bg: #ffffff;           /* Compose button background */
@@ -90,7 +108,22 @@ body.dark-mode {
 
     /* Toggle switch */
     --toggle-knob-color: #afb0b3;           /* Color of the toggle knob (circle) */
+    
+    /* Dialog (e.g. profile picture popup) */
+    --dialog-box-bg: #1B1B1B;               /* Background for the dialog box */
+    --dialog-account-label: #E8EAED;        /* Color for the Gmail Account label */
+    --dialog-title: #E3E3E3;                /* Color for the main dialog title */
+    --dialog-subtext: #E3E3E3;              /* Color for the dialog subtext */
 
+    /* Profile actions (add/change picture buttons) */
+    --profile-action-bg: #004A77;           /* Background color of 'Add profile picture' button */
+    --profile-action-color: #E3E3E3;        /* Text/icon color of 'Add profile picture' button */
+
+    /* User info labels */
+    --user-info-label: #E8EAED;             /* Color of user detail labels (e.g. Name, Gender) */
+    --user-info-box-border: #E8EAED;        /* Border color for user info box */
+
+    
     /* Mail item specific additions */
     --mail-border-color: #3a3a3a;
     --mail-hover-shadow: rgba(255, 255, 255, 0.1);
@@ -106,15 +139,16 @@ body.dark-mode {
     --mail-body-color: #a0a0a0;
     --mail-item-read-bg: #2c2c2c;
 
+
 }
 
 /* -----------------------------
    Global Base Styles
 ----------------------------- */
 body {
-    background-color: var(--main-bg-color);       /* Apply main background */
-    color: var(--text-color);                /* Apply main text color */
-    font-family: 'Roboto', sans-serif;       /* Base font */
+    background-color: var(--main-bg-color);     /* Apply main background */
+    color: var(--text-color);                   /* Apply main text color */
+    font-family: 'Roboto', sans-serif;          /* Base font */
     transition: background-color 0.3s, color 0.3s; /* Smooth theme transition */
-    margin: 0;                               /* Remove default margin */
+    margin: 0;                                  /* Remove default margin */
 }

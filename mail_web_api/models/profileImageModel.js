@@ -19,7 +19,7 @@ function saveProfileImage(user, image) {
 
     const ext = matches[1];
     const base64Data = matches[2];
-    if (base64Data.length > 2_000_000) { // ~1.5MB
+    if (base64Data.length > 7_000_000) { // > 5MB
         return { error: 'Image too large' };
     }
     const buffer = Buffer.from(base64Data, 'base64');
@@ -36,6 +36,7 @@ function saveProfileImage(user, image) {
     fs.writeFileSync(filePath, buffer);
 
     user.profileImage = `/profilePics/uploads/${fileName}`;
+    user.hasCustomImage = true;
 
     users.set(user.userId, user);
 
@@ -52,7 +53,8 @@ function removeProfileImage(user) {
         if (fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
     }
     user.profileImage = resolveProfileImagePath(user.userId);
-
+    user.hasCustomImage = false;
+    
     users.set(user.userId, user);
 }
 
