@@ -39,5 +39,5 @@
 .camera-icon {
   width: 20px;
   height: 20px;
-  color: white;
+  color: var(--camara-icon-color);
 }

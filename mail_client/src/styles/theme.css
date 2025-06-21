@@ -8,10 +8,8 @@ body.light-mode {
     --personal-info-box-bg: white;          /* Background of info boxes inside the section */
     --mail-list-bg: #ffffff;                /* Background of the mail list area */
     --search-bar-bg: #E9EEF6;               /* Background of the search bar */
-    --menu-bg: #F8FAFD;                     /* Shared background for top and side menus */
     --signin-box-bg: #ffffff;               /* Background color for the signin/signup form container */
     --signin-bg: #e8f0fe;                   /* Background color for the signin/signup */
-    --search-background: #e9eef6;           /* Background for search bar */
     --dropdownlist-bg: #e9eef6;             /* Background for dropdownlists */
     --secondary-bg: #ffffff;                /* Used for general secondary backgrounds */
 
@@ -59,6 +57,12 @@ body.light-mode {
     --primary-ghost-text-color: #1E64D4;
 
     --search-icon-bg-hover: #DCE0E8;
+   
+    --sidebar-item-text: #202124;
+    --sidebar-item-active: #D3E3FD;
+    --sidebar-item-hover: #EBEDF0;
+    --sidebar-icon: #444746;
+    --sidebar-icon-active: #041E49;
 }
 
 /* -----------------------------
@@ -71,10 +75,8 @@ body.dark-mode {
     --personal-info-box-bg: #111111;        /* Background of info boxes inside the section */
     --mail-list-bg: #2C2C2C;                /* Background of the mail list area */
     --search-bar-bg: #474747;               /* Background of the search bar */
-    --menu-bg: #111111;                     /* Shared background for top and side menus */
     --signin-box-bg: #000000;               /* Background color for the signin/signup form container */
     --signin-bg: #202124;                   /* Background color for the signin/signup */
-    --search-background: #474747;           /* Background for search bar */
     --dropdownlist-bg: #474747;             /* Background for dropdownlists */
     --secondary-bg: #000000;                /* Used for general secondary backgrounds */
     
@@ -122,6 +124,12 @@ body.dark-mode {
     --primary-ghost-text-color: #A8C7FA;
 
     --search-icon-bg-hover: #595959;
+
+    --sidebar-item-text: #ffffff;
+    --sidebar-item-active: #595959;
+    --sidebar-item-hover: #414141;
+    --sidebar-icon: #B8B8B8;
+    --sidebar-icon-active: #FFFFFF;
 }
 
 

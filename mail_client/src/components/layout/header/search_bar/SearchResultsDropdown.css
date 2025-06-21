@@ -9,8 +9,8 @@
   top: 100%;
   left: 0;
   width: 100%;
-  background-color: white;
-  border-top: 0.05rem solid #dbdada;
+  background-color: var(--search-textbox-focosed-bg);
+  border-top: 0.05rem solid var(--search-result-border-top);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   z-index: 10;
   max-height: 300px;
@@ -31,7 +31,7 @@
 
 /* Highlight on hover */
 .search-result-item:hover {
-  background-color: #f3f3f3;
+  background-color: var(--search-result-bg-hover);
 }
 
 /* Wrapper for subject and from */
@@ -56,7 +56,7 @@
 /* Email sender styling */
 .result-from {
   font-size: 12px;
-  color: #777;
+  color: var(--seaarch-result-from-text);
   margin-top: 2px;
   white-space: nowrap;
   overflow: hidden;
@@ -87,8 +87,8 @@
 .mail-icon {
   width: 18px;
   height: 16px;
-  stroke: #ffffff;      /* White outline */
-  fill: #75797c;        /* Gray inner fill */
+  stroke: var(--mail-icon-stroke);      /* White outline */
+  fill: var(--mail-icon-fill);          /* Gray inner fill */
   stroke-width: 1.2;
 }
 
@@ -104,9 +104,9 @@
 .search-show-all {
   padding: 18px 12px;
   font-size: 14px;
-  color: #202124;
-  background-color: white;
-  border-top: 0.05rem solid #dbdada;
+  color: var(--search-result-show-all-text);
+  background-color: var(--search-textbox-focosed-bg);
+  border-top: 0.05rem solid var(--search-result-border-top);
   cursor: pointer;
   transition: background-color 0.2s;
   text-align: left;
@@ -120,14 +120,14 @@
 
 /* Footer hover effect */
 .search-show-all:hover {
-  background-color: #f3f3f3;
+  background-color: var(--search-result-bg-hover);
 }
 
 /* Search icon inside footer row */
 .search-show-all .icon {
   width: 18px;
   height: 18px;
-  color: #5f6368;
+  color: var(--search-result-show-all-icon);
   vertical-align: middle;
   margin-right: 0.9rem;
   margin-left: 0.5rem;

@@ -67,7 +67,7 @@
 
 /* ========== Focused state of textbox ========== */
 .textbox-wrapper.search.focused {
-  background-color: white;
+  background-color: var(--search-textbox-focosed-bg);
   box-shadow: 0 0 0 2px var(--border-color);
 }
 
@@ -83,7 +83,7 @@
 
 /* Icon color on focus */
 .search-context.focused .main-icon-button .icon {
-  color: #6F7071;
+  color: var(--placeholder-focused-color);
 }
 
 /* Search button hover on focus */

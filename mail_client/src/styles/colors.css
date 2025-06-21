@@ -21,6 +21,21 @@ body {
     
     --search-icon-fill: #636364;
     --search-icon-stroke: #ffffff;
+
+    --search-textbox-focosed-bg: #ffffff;
+
+    --mail-icon-fill: #75797c;
+    --mail-icon-stroke: #ffffff;
+
+    --search-result-border-top: #dbdada;
+    --search-result-bg-hover: #f3f3f3;
+    --search-result-from-text: #777;
+    --search-result-show-all-icon: #5f6368;
+    --search-result-show-all-text: #202124;
+
+    --camara-icon-color: #ffffff;
+
+    --profile-picture-bg: #ccc;
   
     /* Shared base colors */
     --white: #ffffff;
