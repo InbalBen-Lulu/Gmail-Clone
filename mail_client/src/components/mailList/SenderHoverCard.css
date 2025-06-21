@@ -1,52 +1,59 @@
+/* Main wrapper for the sender hover card popup */
 .sender-hover-card {
   position: absolute;
   top: 100%;
   left: 0;
   margin-top: 3px;
-  background: #fff;
+  background: var(--hover-card-bg);
   border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 16px var(--hover-card-box-shadow);
   padding: 16px;
   width: 320px;
   z-index: 999;
 }
 
+/* Top row: avatar + sender info */
 .sender-hover-top {
   display: flex;
   align-items: center;
   margin-bottom: 12px;
 }
 
+/* Circular avatar image */
 .sender-hover-avatar {
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background-color: #ddd;
-  object-fit: cover;
+  background-color: var(--avatar-placeholder-bg);
   flex-shrink: 0;
 }
 
+/* Container for sender name and email */
 .sender-hover-info {
   margin-left: 16px;
 }
 
+/* Sender name text */
 .sender-hover-name {
   font-weight: bold;
   font-size: 16px;
   color: var(--black);
 }
 
+/* Sender email address text */
 .sender-hover-email {
   font-size: 14px;
   color: var(--mail-body-color);
   margin-top: 4px;
 }
 
+/* Bottom section with action button(s) */
 .sender-hover-footer {
   display: flex;
   justify-content: flex-start;
 }
 
+/* Action button in the footer */
 .sender-hover-footer .btn {
   width: 100%;
   justify-content: center;

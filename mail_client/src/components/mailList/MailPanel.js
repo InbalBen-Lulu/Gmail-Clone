@@ -1,56 +1,91 @@
-import { useState } from 'react';
 import MailList from './MailList';
 import MailDetails from './MailDetails';
 import MailToolbar from './MailToolbar';
 import { SmallIconButton } from '../common/button/IconButtons';
 import Icon from '../../assets/icons/Icon';
+import { useCompose } from '../../contexts/ComposeContext';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useMemo } from 'react';
+import { useMail } from '../../contexts/MailContext';
 
-const MailPanel = ({ mails, allLabels, onDelete, onStarToggle, onSpam }) => {
-  const [selectedMailId, setSelectedMailId] = useState(null);
+/**
+ * MailPanel is the main container for the mail content area.
+ * 
+ * - If a mail ID is in the URL and the mail exists, it shows the full mail view (MailDetails).
+ * - If a draft mail is clicked, it opens the compose window prefilled.
+ * - If no mail is selected, it displays the mail list (MailList) and a toolbar (MailToolbar).
+ * - Handles pagination, refresh, and routing.
+ */
 
-  const selectedMail = mails.find(m => m.id === selectedMailId);
+const MailPanel = () => {
+  const { openCompose } = useCompose();
+  const navigate = useNavigate();
+  const { mailId, category } = useParams();
+  const mailIdNum = Number(mailId);
 
-  // Dummy values for pagination display
-  const currentRange = `1-${Math.min(50, mails.length)}`;
-  const totalCount = mails.length;
+
+  const {
+    mails,
+    totalCount,
+    offset,
+    limit,
+    onRefresh,
+    onNextPage,
+    onPrevPage
+  } = useMail();
+
+  const selectedMail = useMemo(() => {
+    const numericId = parseInt(mailIdNum);
+    return mails.find(m => m.id === numericId);
+  }, [mailIdNum, mails]);
+
+  const handleMailClick = (mail) => {
+    if (mail.isDraft) {
+      openCompose(mail.to.join(' '), mail.subject, mail.body, true, mail.id);
+    } else {
+      navigate(`/mails/${category}/${mail.id}`);
+    }
+  };
+
+  const currentRange = `${offset + 1}-${Math.min(offset + limit, totalCount)}`;
 
   return (
     <div className="mail-panel">
-      {!selectedMail ? (
-        <>
-          <MailToolbar
-            currentRange={currentRange}
-            totalCount={totalCount}
-            onRefresh={() => alert('Refresh pressed')}
-            onPrevPage={() => alert('Previous page')}
-            onNextPage={() => alert('Next page')}
-          />
-          <MailList
-            mails={mails}
-            allLabels={allLabels}
-            onDelete={onDelete}
-            onStarToggle={onStarToggle}
-            onRightClick={(e, mailId) => e.preventDefault()}
-            onClick={setSelectedMailId}
-          />
-        </>
-      ) : (
+      {mailIdNum && !selectedMail ? (
+        <div className="empty-mail-list">Mail not found</div>
+      ) : mailIdNum && selectedMail ? (
         <>
           <div className="mail-details-topbar">
             <SmallIconButton
               icon={<Icon name="arrow-back2" />}
               ariaLabel="Back"
-              onClick={() => setSelectedMailId(null)}
+              onClick={() => navigate(`/mails/${category}`)}
             />
           </div>
           <MailDetails
             mail={selectedMail}
-            allLabels={allLabels}
-            onDelete={onDelete}
-            onStarToggle={onStarToggle}
-            onBack={() => setSelectedMailId(null)}
-            onSpam={onSpam}
+            onBack={() => navigate(`/mails/${category}`)}
           />
+        </>
+      ) : (
+        <>
+          <MailToolbar
+            currentRange={currentRange}
+            totalCount={totalCount}
+            onRefresh={onRefresh}
+            onPrevPage={onPrevPage}
+            onNextPage={onNextPage}
+          />
+          {mails.length === 0 ? (
+            <div className="empty-mail-list">No mails found</div>
+          ) : (
+            <MailList
+              onClick={(id) => {
+                const clickedMail = mails.find(m => m.id === id);
+                if (clickedMail) handleMailClick(clickedMail);
+              }}
+            />
+          )}
         </>
       )}
     </div>

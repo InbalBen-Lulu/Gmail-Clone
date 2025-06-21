@@ -1,58 +1,56 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import MailItem from './MailItem';
 import LabelContextMenu from './LabelContextMenu';
+import { useMail } from '../../contexts/MailContext';
 
 /**
- * MailList renders a list of mails, supports right-click to label each one.
- * @param {Object[]} mails - Array of mail objects.
- * @param {Object[]} allLabels - Array of all label objects { id, name, color }.
- * @param {Function} onToggleLabel - Called with (mailId, labelId) when toggling.
- * @param {Function} onDelete - Called with (mailId) on delete.
- * @param {Function} onStarToggle - Called with (mailId) on star toggle.
+ * MailList renders a list of MailItem components.
+ * Supports right-click to open a label context menu (unless the mail is spam).
+ * Props:
+ * - onClick: function to call when a mail is clicked (usually to view details).
  */
-const MailList = ({ mails, allLabels, onToggleLabel, onDelete, onStarToggle, onClick, onSpam }) => {
-  const [contextMenuMail, setContextMenuMail] = useState(null);
-  const [menuPosition, setMenuPosition] = useState(null);
+const MailList = ({ onClick }) => {
+    const { mails } = useMail();
+    const [contextMenuMail, setContextMenuMail] = useState(null);
+    const [menuPosition, setMenuPosition] = useState(null);
 
-  const handleRightClick = (e, mail) => {
-    e.preventDefault();
-    setContextMenuMail(mail);
-    setMenuPosition({ x: e.pageX, y: e.pageY });
-  };
+    const [contextMenuMailId, setContextMenuMailId] = useState(null);
 
-  const handleToggleLabel = (labelId) => {
-    if (contextMenuMail) {
-      onToggleLabel(contextMenuMail.id, labelId);
-    }
-  };
+    const handleRightClick = (e, mail) => {
+        e.preventDefault();
+        if (mail?.isSpam) return;
 
-  return (
-    <div>
-      {mails.map((mail) => (
-        <div key={mail.id} onContextMenu={(e) => handleRightClick(e, mail)}>
-          <MailItem
-            mail={mail}
-            allLabels={allLabels}
-            onDelete={onDelete}
-            onStarToggle={onStarToggle}
-            onToggleLabel={onToggleLabel}
-            onClick={onClick}
-            onSpam={onSpam}
-          />
+        setContextMenuMailId(mail.id);
+        setMenuPosition({ x: e.pageX, y: e.pageY });
+    };
+
+    const showContextMenu = !!(
+        menuPosition &&
+        contextMenuMailId !== null &&
+        !mails.find(m => m.id === contextMenuMailId)?.isSpam
+    );
+
+    return (
+        <div>
+            {mails.map((mail) => (
+                <div key={mail.id} onContextMenu={(e) => handleRightClick(e, mail)}>
+                    <MailItem mail={mail} onClick={onClick} />
+                </div>
+            ))}
+
+            {showContextMenu && (
+                <LabelContextMenu
+                    mailId={contextMenuMailId}
+                    position={menuPosition}
+                    onClose={() => {
+                        setMenuPosition(null);
+                        setContextMenuMailId(null);
+                    }}
+                />
+            )}
+
         </div>
-      ))}
-
-      {menuPosition && contextMenuMail && (
-        <LabelContextMenu
-          labels={allLabels}
-          selectedLabelIds={contextMenuMail.labelIds || []}
-          onToggleLabel={handleToggleLabel}
-          position={menuPosition}
-          onClose={() => setMenuPosition(null)}
-        />
-      )}
-    </div>
-  );
+    );
 };
 
 export default MailList;

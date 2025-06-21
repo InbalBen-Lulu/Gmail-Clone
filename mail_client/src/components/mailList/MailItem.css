@@ -1,3 +1,4 @@
+/* Mail row wrapper. Includes sender, subject, labels, time, and hover effect. */
 .mail-item {
   display: flex;
   align-items: center;
@@ -11,13 +12,15 @@
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Highlight background and show shadow on hover. */
 .mail-item:hover {
-    background-color: var(--mail-item-hover-bg);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); 
-  z-index: 1; 
+  background-color: var(--mail-item-hover-bg);
+  box-shadow: 0 2px 8px var(--mail-hover-box-shadow);
+  z-index: 1;
   position: relative;
 }
 
+/* Left section of mail row: star/sender. */
 .mail-left {
   display: flex;
   align-items: center;
@@ -26,6 +29,7 @@
   flex-shrink: 0;
 }
 
+/* Sender name styling with ellipsis overflow. */
 .mail-sender {
   font-size: 13px;
   color: var(--text-color);
@@ -36,16 +40,19 @@
   max-width: 230px;
 }
 
+/* "Draft" tag next to subject if mail is a draft. */
 .draft-label {
-  color: var(--draft-label-color, #d93025);
+  color: var(--draft-label-color);
   font-size: 13px;
   flex-shrink: 0;
 }
 
+/* Background color override for read mails. */
 .mail-item.read {
   background-color: var(--mail-item-read-bg);
 }
 
+/* Central section containing subject, labels, and preview. */
 .mail-content {
   display: flex;
   align-items: center;
@@ -54,6 +61,7 @@
   min-width: 0;
 }
 
+/* Wraps subject and label chips inside mail row. */
 .subject-labels-wrapper {
   display: flex;
   align-items: center;
@@ -64,6 +72,7 @@
   overflow: hidden;
 }
 
+/* Horizontal scroll-safe container for mail labels. */
 .labels-container {
   display: flex;
   gap: 4px;
@@ -74,19 +83,19 @@
   max-width: 100%;
 }
 
+/* LabelChip – small colored label used for displaying tag names next to mail */
 .label-chip {
   font-size: 12px;
   font-weight: 500;
   padding: 2px 8px;
   border-radius: 8px;
-  background-color: #e0e0e0;
-  color: #202124;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   flex-shrink: 0;
 }
 
+/* Ensures subject doesn't overflow; shrinks if needed. */
 .subject-container {
   flex-shrink: 0;
   min-width: max-content;
@@ -96,11 +105,13 @@
   max-width: 100%;
 }
 
+/* Subject text styling. */
 .subject {
   font-weight: 500;
   color: var(--text-color);
 }
 
+/* Container for the message preview next to subject. */
 .body-container {
   display: flex;
   align-items: center;
@@ -112,6 +123,7 @@
   margin-left: 8px;
 }
 
+/* Preview of body text after subject. */
 .body-preview {
   color: var(--mail-body-color);
   overflow: hidden;
@@ -119,12 +131,14 @@
   white-space: nowrap;
 }
 
+/* Small visual separator (e.g., dash) between subject and body. */
 .separator {
   margin-right: 4px;
-  color: var(--mail-separator-color, #aaa);
+  color: var(--mail-separator-color);
   flex-shrink: 0;
 }
 
+/* Right section of row: time and delete icon. */
 .mail-right {
   display: flex;
   align-items: center;
@@ -134,22 +148,26 @@
   position: relative;
 }
 
+/* Time display aligned to the right. Fades on hover. */
 .mail-time {
   color: var(--mail-time-color);
   font-size: 13px;
   transition: opacity 0.2s ease;
 }
 
+/* Trash icon shown on hover, hidden otherwise. */
 .trash-wrapper {
   position: absolute;
   right: 0;
   display: none;
 }
 
+/* Hides time when hovering to make room for trash icon. */
 .mail-item:hover .mail-time {
   opacity: 0;
 }
 
+/* Shows trash icon when hovering over mail row. */
 .mail-item:hover .trash-wrapper {
   display: block;
 }

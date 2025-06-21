@@ -2,37 +2,56 @@ import './MailItem.css';
 import { TrashButton, StarButton } from '../common/button/IconButtons';
 import { formatMailDate } from '../../utils/dateUtils';
 import LabelChip from './LabelChip';
+import { useMail } from '../../contexts/MailContext';
+import { useLabels } from '../../contexts/LabelContext';
 
-const MailItem = ({ mail, onDelete,  onToggleLabel, onStarToggle, allLabels, onClick, onSpam }) => {
+/**
+ * MailItem displays a single row in the mail list.
+ * Shows sender/recipient, labels, subject, body preview, timestamp, star & delete icons.
+ * Clicking opens full mail view; star and trash actions are handled independently.
+ */
+const MailItem = ({ mail: propMail, onClick }) => {
+    const { mails, deleteMail, toggleStar } = useMail();
+    const { labels: allLabels } = useLabels();
+
+    const mail = mails.find(m => m.id === propMail.id) || propMail;
+
     const {
         id,
         subject,
         body,
         sentAt,
         isStar,
-        labelIds = [],
+        labels = [],
         from,
         to = [],
         isDraft = false,
-        isSent = false,
-        isRead = false
+        isRead = false,
+        type
     } = mail;
+
     const decodedBody = decodeURIComponent(body || '');
 
-    const mailLabels = allLabels?.filter(label => labelIds.includes(label.id)) || [];
+    const labelIds = mail.labels.map(l => l.id);
+    const mailLabels = allLabels?.filter(label => labelIds.includes(label.id));
 
     const senderOrRecipient = isDraft
         ? 'Draft'
-        : isSent
+        : type === 'sent'
             ? `To: ${to.join(', ')}`
-            : from;
+            : from?.name || from?.userId || 'Unknown';
 
     return (
         <div className={`mail-item ${isRead ? 'read' : ''}`} onClick={() => onClick?.(id)}>
             {/* LEFT: Star + "Draft" , Labels*/}
             <div className="mail-left">
-                <StarButton isStarred={isStar} onClick={() => onStarToggle(id)} />
-
+                <StarButton
+                    isStarred={isStar}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        toggleStar(id);
+                    }}
+                />
                 <span className={`mail-sender ${isDraft ? 'draft-label' : ''}`}>
                     {senderOrRecipient}
                 </span>
@@ -43,7 +62,6 @@ const MailItem = ({ mail, onDelete,  onToggleLabel, onStarToggle, allLabels, onC
                     ))}
                 </div>
             </div>
-
 
             {/* CENTER: Subject, Body */}
             <div className="mail-content">
@@ -61,13 +79,16 @@ const MailItem = ({ mail, onDelete,  onToggleLabel, onStarToggle, allLabels, onC
                 )}
             </div>
 
-
-
             {/* RIGHT: Time + Trash */}
             <div className="mail-right">
                 <span className="mail-time">{formatMailDate(sentAt)}</span>
                 <div className="trash-wrapper">
-                    <TrashButton onClick={() => onDelete(mail.id)} />
+                    <TrashButton
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            deleteMail(id);
+                        }}
+                    />
                 </div>
             </div>
         </div>

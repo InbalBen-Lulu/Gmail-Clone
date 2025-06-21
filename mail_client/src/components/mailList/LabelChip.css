@@ -1,15 +1,15 @@
+/* Small, rounded badge used to display a label name */
 .label-chip {
-  display: inline-block;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 2px 8px;
-  border-radius: 8px;
-  background-color: #e0e0e0;
-  color: #202124;
-  margin-inline-end: 4px;
-  max-width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  vertical-align: middle;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 8px;
+    color: var(--black);
+    margin-inline-end: 4px;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
 }
