@@ -28,6 +28,25 @@ body {
     --scrollbar-thumb: rgba(0, 0, 0, 0.2);    /* Default scrollbar thumb */
     --scrollbar-thumb-hover: rgba(0, 0, 0, 0.4); /* Hover state scrollbar thumb */
 
+    /* Mail item colors */
+    --mail-hover-box-shadow: rgba(0, 0, 0, 0.15);  /* Shadow on mail item hover */
+    --hover-card-bg: #ffffff;                         /* Background for sender hover card */
+    --hover-card-box-shadow: rgba(0, 0, 0, 0.2); /* Shadow for hover card */
+
+    /* Context Menu Theme colors */
+    --context-menu-bg: #ffffff;                         /* Background for context menu (right-click menu) */
+    --context-menu-shadow: rgba(0, 0, 0, 0.2); /* Box shadow for context menu */
+    --menu-title-color: #5f6368;                        /* Text color for small section titles (e.g. "Label as:") */
+    --menu-item-color: #202124;                         /* Text color for menu items */
+    --menu-hover-bg: #f1f3f4;                            /* Background color on hover for menu items */
+    --menu-divider-color: #e0e0e0;                      /* Color of divider line between menu item groups */
+    --menu-checkbox-border: #5f6368;                    /* Border color of checkbox inside menu */
+    --menu-checkbox-bg: #ffffff;                        /* Background color of an unchecked checkbox */
+    --menu-checkbox-checkmark: #202124;                 /* Checkmark color when checkbox is selected */
+
+     /* Hover Card colors */
+    --avatar-placeholder-bg: #dddddd;                   /* Background color for placeholder avatar circle */
+
     /* Shared base colors */
     --white: #ffffff;
     --black: #000000;
