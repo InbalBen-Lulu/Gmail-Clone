@@ -27,6 +27,7 @@ const MailItem = ({ mail: propMail, onClick }) => {
         to = [],
         isDraft = false,
         isRead = false,
+        isSpam = false,
         type
     } = mail;
 
@@ -45,13 +46,15 @@ const MailItem = ({ mail: propMail, onClick }) => {
         <div className={`mail-item ${isRead ? 'read' : ''}`} onClick={() => onClick?.(id)}>
             {/* LEFT: Star + "Draft" , Labels*/}
             <div className="mail-left">
-                <StarButton
-                    isStarred={isStar}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        toggleStar(id);
-                    }}
-                />
+                {!isSpam && (
+                    <StarButton
+                        isStarred={isStar}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            toggleStar(id);
+                        }}
+                    />
+                )}
                 <span className={`mail-sender ${isDraft ? 'draft-label' : ''}`}>
                     {senderOrRecipient}
                 </span>
