@@ -1,11 +1,16 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import './ContextMenu.css';
 
+/**
+ * Generic context menu component.
+ * Renders a list of menu items (checkboxes, dividers, titles, regular actions).
+ * Closes automatically when clicking outside.
+ */
 const ContextMenu = ({ items, onClose }) => {
   const menuRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = (e) => {
+    const handleClickOutside = (e) => { // Close the menu if the user clicks outside of it
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         onClose();
       }
@@ -27,21 +32,24 @@ const ContextMenu = ({ items, onClose }) => {
           }
 
           return (
-            <li
-              key={i}
-              className="menu-item"
-              onClick={item.type === 'checkbox' ? undefined : item.onClick}
-            >
+            <li key={i} className="menu-item">
               {item.type === 'checkbox' ? (
-                <label className="menu-checkbox-wrapper">
+                <div className="menu-checkbox-wrapper">
                   <input
                     type="checkbox"
                     checked={item.checked}
-                    onChange={item.onClick}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      item.onClick();
+                    }}
                     className="menu-checkbox"
+                    id={`checkbox-${i}`}
                   />
-                  <span className="menu-label">{item.label}</span>
-                </label>
+
+                  <label htmlFor={`checkbox-${i}`} className="menu-label">
+                    {item.label}
+                  </label>
+                </div>
               ) : (
                 <>
                   {item.icon && <span className="menu-icon">{item.icon}</span>}

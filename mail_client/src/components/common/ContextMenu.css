@@ -2,7 +2,7 @@
   position: absolute;
   background: white;
   border-radius: 4px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 16px var(--context-menu-shadow);
   z-index: 1000;
   min-width: 180px;
   padding: 8px 0;
@@ -18,7 +18,7 @@
 .menu-title {
   font-size: 12px;
   font-weight: 500;
-  color: #5f6368;
+  color: var(--menu-title-color);
   padding: 6px 16px 4px;
   user-select: none;
 }
@@ -32,17 +32,17 @@
   cursor: pointer;
   transition: background-color 0.2s;
   font-size: 14px;
-  color: #202124;
+  color: var(--menu-item-color);
 }
 
 .menu-item:hover {
-  background-color: #f1f3f4;
+  background-color: var(--menu-hover-bg);
 }
 
 /* Divider */
 .menu-divider {
   border: none;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--menu-divider-color);
   margin: 4px 0;
 }
 
@@ -60,20 +60,21 @@
   display: block;
   flex-shrink: 0;
 }
+
 .menu-checkbox-wrapper {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 4px;                     /* מרווח עדין יותר בין תיבה לטקסט */
-  padding: 1px 2px;            /* יישור אחיד משני הצדדים כמו בג'ימייל */
+  gap: 4px;
+  padding: 1px 2px;
   transition: background-color 0.2s;
   font-size: 14px;
-  color: #202124;
+  color: var(-menu-checkbox-checkmark);
   cursor: pointer;
 }
 
 .menu-checkbox-wrapper:hover {
-  background-color: #f1f3f4;
+  background-color: var(--menu-hover-bg);
 }
 
 .menu-checkbox {
@@ -81,9 +82,9 @@
   -webkit-appearance: none;
   width: 16px;
   height: 16px;
-  border: 1px solid #5f6368;
+  border: 1px solid var(--menu-checkbox-border);
   border-radius: 2px;
-  background-color: #fff;
+  background-color: var(--menu-checkbox-bg);
   position: relative;
   cursor: pointer;
   display: inline-block;
@@ -99,7 +100,7 @@
   top: 1px;
   width: 4px;
   height: 8px;
-  border: solid #202124;
+  border: solid var(--menu-checkbox-checkmark);
   border-width: 0 1.5px 1.5px 0;
   transform: rotate(45deg);
   pointer-events: none;
