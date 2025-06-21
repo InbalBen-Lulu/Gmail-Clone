@@ -14,17 +14,20 @@ const IconButton = ({
   ariaLabel,
   size = "small",
   className = "",
+  disabled = false,
   ...rest
 }) => {
   const sizeClass = size === "large" ? "icon-large" : "icon-small";
+  const disabledClass = disabled ? "disabled" : "";
 
-  const finalClassName = `btn icon ${sizeClass} ${className}`.trim();
+  const finalClassName = `btn icon ${sizeClass} ${disabledClass} ${className}`.trim();
 
   return (
     <BaseButton
       variant="icon"
       aria-label={ariaLabel}
       className={finalClassName}
+      disabled={disabled}
       {...rest}
     >
       {icon}

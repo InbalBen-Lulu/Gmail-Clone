@@ -59,3 +59,9 @@
 .star-button .star-icon.starred {
   color: var(--star-color);
 }
+
+.btn.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
