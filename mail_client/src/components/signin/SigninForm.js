@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Textbox from '../common/input/textBox/TextBox';
 import TextButton from '../common/button/TextButton';
 import Checkbox from '../common/Checkbox';
-import { useUserService } from '../../services/userService';
+import { useUserService } from '../../services/useUserService';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -31,7 +31,7 @@ const SigninForm = () => {
     };
 
     const { fetchPublicUser } = useUserService();
-    
+
     // Submit the email and fetch public user info (e.g. name)
     const handleEmailSubmit = async () => {
         try {
@@ -49,13 +49,15 @@ const SigninForm = () => {
     };
 
     const { login } = useAuth();
-    
+
     // Submit login credentials and authenticate user
     const handleLogin = async () => {
         try {
             setPasswordError('');
-            await login(email, password);
-            // navigate('/inbox');
+            const user = await login(email, password);
+            if (user) {
+                navigate('/mails/inbox');
+            }
         } catch (err) {
             setPasswordError(err.message || 'Login failed');
         }

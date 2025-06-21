@@ -5,7 +5,7 @@ import Step3Username from './steps/Step3Username';
 import Step4Password from './steps/Step4Password';
 import { months, genders } from './steps/constants';
 import './SignupForm.css';
-import { useUserService } from '../../services/userService';
+import { useUserService } from '../../services/useUserService';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -62,9 +62,10 @@ const SignupForm = () => {
                 birthDate
             });
 
-            await login(userId, password);
-
-            // navigate('/inbox');
+            const user = await login(userId, password);
+            if (user) {
+                navigate('/mails/inbox');
+            }
         } catch (error) {
             alert(error.message || 'Signup failed');
         }
