@@ -3,38 +3,54 @@ import ComposeTextbox from './ComposeTextBox';
 import TextButton from '../common/button/TextButton';
 import { X, MinusIcon, Maximize2, Trash2 } from "lucide-react";
 import { SmallIconButton } from '../common/button/IconButtons';
-import { useMailService } from '../../services/mailService';
+import { useMailService } from '../../services/useMailService';
+import { useCompose } from '../../contexts/ComposeContext';
 
 import './ComposeForm.css';
 
 /**
  * ComposeForm renders a compose mail interface.
- * It supports minimized/expanded modes, live subject updates in the header,
- * and shows editable fields for "To", "Subject", and "Body".
- * The form can optionally be pre-filled using props.
+ * Shows fields for recipients, subject, and body with live updates.
+ * Supports minimizing, saving draft on close, and sending mails.
+ * Uses ComposeContext to prefill existing draft data when available.
  */
-const ComposeForm = ({ to = '', subject = '', body = '', onClose }) => {
-    const [toField, setToField] = useState(to);
-    const [subjectField, setSubjectField] = useState(subject);
-    const [displayedSubject, setDisplayedSubject] = useState(subject);
-    const [bodyField, setBodyField] = useState(body);
+const ComposeForm = () => {
+    const {
+        composeTo,
+        composeSubject,
+        composeBody,
+        composeId,
+        isDraft,
+        closeCompose
+    } = useCompose();
+
+    const [toField, setToField] = useState(composeTo);
+    const [subjectField, setSubjectField] = useState(composeSubject);
+    const [displayedSubject, setDisplayedSubject] = useState(composeSubject);
+    const [bodyField, setBodyField] = useState(composeBody);
     const [minimized, setMinimized] = useState(false);
 
     const { sendMail, saveDraft } = useMailService();
 
     const handleSend = async () => {
-    try {
-        const toList = toField.trim().split(/\s+/);
-        await sendMail({
-        to: toList,
-        subject: subjectField,
-        body: bodyField
-        });
-        alert('Mail sent successfully');
-        if (onClose) onClose(); // Close the form
-    } catch (err) {
-        alert('Failed to send mail: ' + err.message);
-    }
+        try {
+            const toList = toField.trim().split(/[\s,]+/)
+            const result = await sendMail({
+                id: composeId,
+                to: toList,
+                subject: subjectField,
+                body: bodyField,
+                isDraft: isDraft
+            });
+
+            closeCompose();
+
+            if (result.warning) {
+                alert(`${result.warning}\n(${result.invalidEmails?.join(', ')})`);
+            }
+        } catch (err) {
+            alert(err.message);
+        }
     };
 
     const handleDelete = () => {
@@ -42,22 +58,29 @@ const ComposeForm = ({ to = '', subject = '', body = '', onClose }) => {
         setSubjectField('');
         setBodyField('');
         setDisplayedSubject('');
-        onClose?.(); // Close form after deleting
+        closeCompose();
     };
 
     const handleClose = async () => {
-    try {
-        const toList = toField.trim().split(/\s+/);
-        await saveDraft({
-        to: toList,
-        subject: subjectField,
-        body: bodyField
-        });
-        alert('Draft saved');
-        if (onClose) onClose();
-    } catch (err) {
-        alert('Failed to save draft: ' + err.message);
-    }
+        try {
+            const isEmpty =
+                !toField.trim() &&
+                !subjectField.trim() &&
+                !bodyField.trim();
+
+            if (!isEmpty) {
+                const toList = toField.trim().split(/\s+/);
+                await saveDraft({
+                    to: toList,
+                    subject: subjectField,
+                    body: bodyField
+                });
+            }
+
+            closeCompose();
+        } catch (err) {
+            alert('Failed to save draft: ' + err.message);
+        }
     };
 
     return (
@@ -80,7 +103,6 @@ const ComposeForm = ({ to = '', subject = '', body = '', onClose }) => {
                 <span className="header-title">
                     {displayedSubject.trim() ? displayedSubject : 'New Message'}
                 </span>
-
             </div>
 
             {!minimized && (
