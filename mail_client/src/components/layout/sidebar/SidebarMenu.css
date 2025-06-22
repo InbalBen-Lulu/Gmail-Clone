@@ -19,3 +19,24 @@
   padding: 0.5rem 0.75rem;
   height: 100%;
 }
+
+/* Labels section header (title + add button) */
+.labels-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+  padding: 4px 16px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--sidebar-item-title, #202124);
+}
+
+.labels-title {
+  pointer-events: none;
+}
+
+.labels-header .btn.icon {
+  width: 34px;
+  height: 34px;
+}
