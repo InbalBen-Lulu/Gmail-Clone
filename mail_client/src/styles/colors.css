@@ -1,46 +1,63 @@
 body {
-    /* Button colors */
-    --primary-color: #1E64D4;               /* Primary button background */
-    --primary-hover: #3775d9;               /* Hover state for primary button */
-    --icon-light-gray: #898686;             /* Light gray for small icons */
+  /* -----------------------------
+     Base Colors
+  ----------------------------- */
+  --white: #ffffff;                         /* Global white color */
+  --black: #000000;                         /* Global black color */
+  --gray-light: #e9ecef;                    /* Light gray for borders/backgrounds */
+  --gray-dark: #343a40;                     /* Dark gray for text, borders */
+  --danger-color: #c5362c;                  /* Red for errors or danger states */
 
-    /* Checkbox colors */
-    --checkbox-bg: var(--white);              /* Background color of unchecked checkbox */
-    --checkbox-border: #585858;             /* Border color of the checkbox */
-    --checkbox-checkmark: #333333;          /* Color of the checkmark (✓) when checked */     
+  /* -----------------------------
+     Primary Button
+  ----------------------------- */
+  --primary-color: #1E64D4;                 /* Primary button background */
+  --primary-hover: #3775d9;                 /* Hover state for primary button */
+  --disable-button-bg: #f1f3f4;             /* Disabled button background */
+  --disable-button-text: #9aa0a6;           /* Disabled button text color */
 
-    /* Icon colors */
-    --star-color: #F4B400;                  /* Color for starred icons (e.g. favorites) */
+  /* -----------------------------
+     Icons
+  ----------------------------- */
+  --icon-light-gray: #898686;               /* Light gray for small icons */
+  --star-color: #F4B400;                    /* Starred item (e.g., favorite) */
+  --camara-icon-color: #ffffff;             /* Camera icon color */
+  --mail-icon-fill: #75797c;                /* Fill color for mail icon */
+  --mail-icon-stroke: #ffffff;              /* Stroke color for mail icon */
+  --search-icon-fill: #636364;              /* Fill color for search icon */
+  --search-icon-stroke: #ffffff;            /* Stroke color for search icon */
 
-    /* Shadow for signin/signup box */
-    --auth-box-shadow: rgba(60, 64, 67, 0.3); /* Subtle shadow used in login/signup containers */
+  /* -----------------------------
+     Checkbox
+  ----------------------------- */
+  --checkbox-bg: var(--white);              /* Checkbox background when unchecked */
+  --checkbox-border: #585858;               /* Border color of checkbox */
+  --checkbox-checkmark: #333333;            /* Checkmark color when checked */
 
-    --search-text-color: #000000;
-    --placeholder-focused-color: #6F7071;
-    --search-textbox-focused-icons-hover-bg: #F0F0F0;
-    
-    --search-icon-fill: #636364;
-    --search-icon-stroke: #ffffff;
+  /* -----------------------------
+     Auth Forms
+  ----------------------------- */
+  --auth-box-shadow: rgba(60, 64, 67, 0.3);  /* Box shadow for signin/signup containers */
 
-    --search-textbox-focosed-bg: #ffffff;
+  /* -----------------------------
+     Search Textbox
+  ----------------------------- */
+  --search-text-color: #000000;             /* Text color inside search box */
+  --placeholder-focused-color: #6F7071;     /* Placeholder color when focused */
+  --search-textbox-focused-icons-hover-bg: #F0F0F0; /* Hover background for icons inside focused search bar */
+  --search-textbox-focosed-bg: #ffffff;     /* Background of search bar when focused */
 
-    --mail-icon-fill: #75797c;
-    --mail-icon-stroke: #ffffff;
+  /* -----------------------------
+     Search Result Dropdown
+  ----------------------------- */
+  --search-result-border-top: #dbdada;      /* Top border between results */
+  --search-result-bg-hover: #f3f3f3;        /* Background when hovering a search result */
+  --search-result-from-text: #777;          /* Color for 'from' text in search result */
+  --search-result-show-all-icon: #5f6368;   /* Icon color in 'Show all results' button */
+  --search-result-show-all-text: #202124;   /* Text color in 'Show all results' */
 
-    --search-result-border-top: #dbdada;
-    --search-result-bg-hover: #f3f3f3;
-    --search-result-from-text: #777;
-    --search-result-show-all-icon: #5f6368;
-    --search-result-show-all-text: #202124;
-
-    --camara-icon-color: #ffffff;
-
-    --profile-picture-bg: #ccc;
-  
-    /* Shared base colors */
-    --white: #ffffff;
-    --black: #000000;
-    --gray-light: #e9ecef;                  /* Light gray for backgrounds, borders, etc. */
-    --gray-dark: #343a40;                   /* Dark gray for text, borders, etc. */
-    --danger-color:#c5362c;
+  /* -----------------------------
+     Profile Picture
+  ----------------------------- */
+  --profile-picture-bg: #ccc;               /* Background color for default profile picture */
 }

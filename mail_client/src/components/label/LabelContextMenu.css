@@ -1,0 +1,62 @@
+/* Wrapper for a menu item with a nested submenu */
+.submenu-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: relative; /* Allows positioning of the nested submenu */
+}
+
+/* Right-facing arrow indicating there's a submenu */
+.submenu-arrow {
+  margin-left: auto;         /* Pushes the arrow to the far right */
+  padding-left: 100px;       /* Optional spacing for alignment */
+  font-size: 12px;
+  color: var(--dialog-account-label); /* Subtle gray */
+}
+
+/* Submenu container */
+.color-submenu {
+  position: absolute;
+  top: 0;
+  left: 100%;                /* Appears to the right of the parent item */
+  margin-left: -4px;         /* Slight overlap for smooth transition */
+  background: var(--dialog-box-bg); /* Theme-based background */
+  border: 1px solid var(--context-menu-border);
+  border-radius: 8px;
+  box-shadow: var(--context-menu-shadow); /* Soft shadow for elevation */
+  padding: 10px;
+  z-index: 1001;
+  min-width: 140px;
+}
+
+/* Grid layout for color options */
+.label-color-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 equal columns */
+  gap: 8px;
+  padding-bottom: 8px;
+}
+
+/* Individual color selection circle */
+.color-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--color-circle-border);
+  cursor: pointer;
+}
+
+/* Optional row to remove the selected label color */
+.remove-color-option {
+  font-size: 13px;
+  text-align: center;
+  padding: 6px 8px;
+  border-top: 1px solid var(--divider-color);
+  color: var(--dialog-subtext); /* Subdued text */
+  cursor: pointer;
+}
+
+.remove-color-option:hover {
+  background-color: var(--menu-item-hover-bg); /* Highlight on hover */
+}
