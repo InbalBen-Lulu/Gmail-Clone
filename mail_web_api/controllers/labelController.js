@@ -1,5 +1,4 @@
 const labelModel = require('../models/labelModel');
-const { isValidHexColor } = require('../utils/validation');
 
 /**
  * GET /api/labels
@@ -113,10 +112,6 @@ function setLabelColor(req, res) {
 
     if (isNaN(labelId)) {
         return res.status(404).json({ error: 'Label not found' });
-    }
-
-    if (!isValidHexColor(color)) {
-        return res.status(400).json({ error: 'Invalid color format. Must be 6-digit hex (e.g., #AABBCC)' });
     }
 
     const result = labelModel.setLabelColor(req.user.userId.toLowerCase(), labelId, color);
