@@ -1,9 +1,5 @@
-import { useCallback } from 'react';
 import useAuthFetch from '../hooks/useAuthFetch';
 
-/**
- * Provides mail-related API operations: sending, fetching, searching, etc.
- */
 export const useMailService = () => {
   const authFetch = useAuthFetch();
 
@@ -105,6 +101,7 @@ export const useMailService = () => {
       method: 'PATCH'
     });
 
+
     if (response.status === 204) return;
 
     const errorData = await response.json();
@@ -127,27 +124,6 @@ export const useMailService = () => {
     throw new Error(errorData.error || 'Failed to update spam status');
   };
 
-  /**
-   * Searches mails by a query string (up to 5 results).
-   */
-  const searchMails = useCallback(async (query) => {
-    if (!query?.trim()) return [];
-
-    try {
-      const response = await authFetch(`/api/mails/search-${encodeURIComponent(query.trim())}`);
-      if (!response.ok) {
-        console.warn(`Search failed with status ${response.status}`);
-        return [];
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (err) {
-      console.error('Search request failed:', err.message || err);
-      return [];
-    }
-  }, [authFetch]);
-
   return {
     fetchMails,
     sendMail,
@@ -155,7 +131,6 @@ export const useMailService = () => {
     fetchMailById,
     deleteMail,
     toggleStar,
-    setSpamStatus,
-    searchMails
+    setSpamStatus
   };
 };

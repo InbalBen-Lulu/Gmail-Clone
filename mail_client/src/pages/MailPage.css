@@ -1,0 +1,27 @@
+/* Wrapper for the entire mail page – includes sidebar and content */
+.mail-page-wrapper {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.mail-sidebar-space {
+    width: 260px;
+    min-width: 200px;
+}
+
+/* Main content area for mail list or mail details */
+.mail-content-area {
+    flex: 1;
+    padding-left: 1.5rem;
+    padding-right: 0;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    display: flex;
+    height: 100%;
+    min-height: 0;
+}

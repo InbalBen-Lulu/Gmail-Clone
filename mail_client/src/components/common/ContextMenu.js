@@ -1,28 +1,64 @@
+import { useRef, useEffect } from 'react';
 import './ContextMenu.css';
 
 /**
- * ContextMenu – renders a dropdown menu with custom items.
- *
- * Props:
- * - items: array of menu items or dividers
- *   Each item: { label: string, onClick: function, icon?: JSX } or { type: 'divider' }
- * - onClose: optional function to call when the menu should close
+ * Generic context menu component.
+ * Renders a list of menu items (checkboxes, dividers, titles, regular actions).
+ * Closes automatically when clicking outside.
  */
 const ContextMenu = ({ items, onClose }) => {
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => { // Close the menu if the user clicks outside of it
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        onClose();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [onClose]);
+
   return (
-    <div className="context-menu">
+    <div className="context-menu" ref={menuRef}>
       <ul className="menu-list">
-        {items.map((item, i) => (
-          item.type === 'divider' ? (
-            <hr key={i} className="menu-divider" />
-          ) : (
-            <li key={i} className="menu-item" onClick={item.onClick}>
-              {/* Render icon only if provided */}
-              {item.icon && <span className="menu-icon">{item.icon}</span>}
-              <span className="menu-label">{item.label}</span>
+        {items.map((item, i) => {
+          if (item.type === 'divider') {
+            return <hr key={i} className="menu-divider" />;
+          }
+
+          if (item.type === 'title') {
+            return <div key={i} className="menu-title">{item.label}</div>;
+          }
+
+          return (
+            <li key={i} className="menu-item">
+              {item.type === 'checkbox' ? (
+                <div className="menu-checkbox-wrapper">
+                  <input
+                    type="checkbox"
+                    checked={item.checked}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      item.onClick();
+                    }}
+                    className="menu-checkbox"
+                    id={`checkbox-${i}`}
+                  />
+
+                  <label htmlFor={`checkbox-${i}`} className="menu-label">
+                    {item.label}
+                  </label>
+                </div>
+              ) : (
+                <>
+                  {item.icon && <span className="menu-icon">{item.icon}</span>}
+                  <span className="menu-label">{item.label}</span>
+                </>
+              )}
             </li>
-          )
-        ))}
+          );
+        })}
       </ul>
     </div>
   );

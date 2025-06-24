@@ -15,23 +15,14 @@ body.light-mode {
     --dialog-box-bg: white;                      /* Background for dialog popups */
     --profile-menu-bg: #edf1f8;                  /* Profile menu background */
 
-    /* --- Text Colors --- */
-    --text-color: #202124;                       /* Main text color */
-    --input-placeholder-color: #6F7071;          /* Input placeholder color */
-    --dialog-title: #202124;                     /* Dialog title text */
-    --dialog-subtext: #555;                      /* Dialog subtitle/description */
-    --dialog-account-label: #5F6368;             /* Dialog Gmail account label */
-    --user-info-label: #555;                     /* Labels inside profile info */
-    --compose-button-text: #202124;              /* Text inside Compose button */
+    /* Text colors */
+    --text-color: #202124;                  /* Main text color */
+    --input-placeholder-color: #6F7071;     /* Placeholder text color inside input fields */
 
-    /* --- Button / Action Colors --- */
-    --compose-button-bg: #c2e7ff;                /* Background for Compose button */
-    --profile-action-bg: #C2E7FF;                /* Background for profile action buttons */
-    --profile-action-color: #001D35;             /* Text/icon color for profile action */
-    --signout-button-bg: white;                  /* Sign out button background */
-    --signout-button-hover-bg: #DCE1E8;          /* Hover for sign out button */
-    --primary-ghost-text-color: #1E64D4;         /* Text color for ghost buttons */
-    --primary-ghost-hover-bg: rgba(66,133,244,0.08); /* Hover for ghost buttons */
+    /* Interactive background states */
+    --side-item-hover-bg: #E1E3E1;          /* Background when hovering over side menu item */
+    --mail-item-bg: #F2F6FC;                /* Background for a regular mail item */
+    --mail-item-unread-bg: #FFFFFF;         /* Background for an unread mail item */
 
     /* --- Icons & Hover States --- */
     --main-icon-color: #616362;                  /* Icon color in top bar */
@@ -43,26 +34,41 @@ body.light-mode {
     --mail-item-bg: #F2F6FC;                     /* Background for read mail */
     --mail-item-unread-bg: #FFFFFF;              /* Background for unread mail */
 
-    /* --- Sidebar & Labels --- */
-    --side-item-hover-bg: #E1E3E1;               /* Sidebar item hover */
-    --sidebar-item-text: #202124;                /* Sidebar item text */
-    --sidebar-item-active: #D3E3FD;              /* Active sidebar item background */
-    --sidebar-item-hover: #EBEDF0;               /* Hover background for sidebar */
-    --sidebar-icon: #444746;                     /* Sidebar icon color */
-    --sidebar-icon-active: #041E49;              /* Active icon color in sidebar */
-    --label-item-more-hover: rgba(194, 192, 192, 0.237); /* Hover for more icon on labels */
+    /* Toggle switch */
+    --toggle-knob-color: #717379;           /* Color of the toggle knob (circle) */
 
-    /* --- Toggles --- */
-    --toggle-knob-color: #6F7071;                /* Toggle switch knob color */
+    /* Dialog (e.g. profile picture popup) */
+    --dialog-box-bg: white;                 /* Background for the dialog box */
+    --dialog-account-label: #5F6368;        /* Color for the Gmail Account label */
+    --dialog-title: #202124;                /* Color for the main dialog title */
+    --dialog-subtext: #555;                 /* Color for the dialog subtext */
+    
+    /* Profile actions (add/change picture buttons) */
+    --profile-action-bg: #C2E7FF;           /* Background color of 'Add profile picture' button */
+    --profile-action-color: #001D35;        /* Text/icon color of 'Add profile picture' button */
 
-    /* --- Menus & Submenus --- */
-    --context-menu-border: #ddd;                     /* Border around context menus */
-    --context-menu-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* Box shadow for submenus */
-    --menu-item-hover-bg: #f1f3f4;                   /* Hover background for menu items */
-    --color-circle-border: #ccc;                     /* Border color around color dots */
-    --divider-color: #eee;                           /* Divider line in menus */
+    /* User info labels */
+    --user-info-label: #555;                /* Color of user detail labels (e.g. Name, Gender) */
+    --user-info-box-border: #dadce0;        /* Border color for user info box */
 
-    --logo-button-text-color: #444746;               /* Text color for the logo button */
+
+    --compose-title-bg: #f2f6fc;                      /* Compose mail title background */
+    --compose-title-color: #041e49;        /* Compose mail title text color */
+
+    /* Mail item specific additions */
+    --mail-border-color: #e0e0e0;
+    --mail-hover-shadow: rgba(60, 64, 67, 0.15);
+    --mail-item-hover-bg: #f1f3f4;
+    --mail-time-color: #5f6368;
+    --star-icon-color: #5f6368;
+    --star-icon-active-color: #fbbc04;
+    --trash-icon-color: #5f6368;
+    --trash-icon-hover: #d93025;
+    --mail-item-hover-bg: #eef3f8;
+    --draft-label-color: #d93025;
+    --mail-separator-color: #5f6368;
+    --mail-body-color: #5f6368;
+    --mail-item-read-bg: #f2f6fc;
 }
 
 
@@ -70,27 +76,22 @@ body.light-mode {
    Dark Mode Theme Variables
 ----------------------------- */
 body.dark-mode {
-    /* --- Backgrounds --- */
-    --main-bg-color: #111111;                      /* Main page background */
-    --secondary-bg: #2C2C2C;                       /* Generic secondary background */
-    --personal-info-bg: #111111;                   /* Background for personal info section */
-    --personal-info-box-bg: #2C2C2C;               /* Background for info boxes */
-    --mail-list-bg: #2C2C2C;                       /* Mail list panel background */
-    --search-bar-bg: #474747;                      /* Background for the search bar */
-    --signin-box-bg: #000000;                      /* Container background for auth forms */
-    --signin-bg: #202124;                          /* Page background for signin/signup */
-    --dropdownlist-bg: #474747;                    /* Background for dropdown lists */
-    --dialog-box-bg: #1B1B1B;                      /* Background for dialog popups */
-    --profile-menu-bg: #37393B;                    /* Profile menu background */
-
-    /* --- Text Colors --- */
-    --text-color: #FEFEFE;                         /* Main text color */
-    --input-placeholder-color: #D0D0D0;            /* Input placeholder color */
-    --dialog-title: #E3E3E3;                       /* Dialog title text */
-    --dialog-subtext: #E3E3E3;                     /* Dialog subtitle/description */
-    --dialog-account-label: #E8EAED;               /* Dialog Gmail account label */
-    --user-info-label: #E8EAED;                    /* Labels inside profile info */
-    --compose-button-text: #5F6368;                /* Text inside Compose button */
+    /* Backgrounds */
+    --main-bg-color: #111111;               /* Main background of the whole page */
+    --personal-info-bg: #2C2C2C;            /* Background of the user section */
+    --personal-info-box-bg: #111111;        /* Background of info boxes inside the section */
+    --mail-list-bg: #2C2C2C;                /* Background of the mail list area */
+    --search-bar-bg: #474747;               /* Background of the search bar */
+    --menu-bg: #111111;                     /* Shared background for top and side menus */
+    --signin-box-bg: #000000;               /* Background color for the signin/signup form container */
+    --signin-bg: #202124;                   /* Background color for the signin/signup background */
+    --search-background: #474747;           /* Background for search bar */
+    --dropdownlist-bg: #474747;             /* Background for dropdown lists (e.g. gender) */
+    --secondary-bg: #000000;                /* Used for general secondary backgrounds */
+    
+    /* Text colors */
+    --text-color: #FEFEFE;                  /* Main text color */
+    --input-placeholder-color: #D0D0D0;     /* Placeholder text color inside input fields */
 
     /* --- Button / Action Colors --- */
     --compose-button-bg: #ffffff;                  /* Background for Compose button */
@@ -111,26 +112,40 @@ body.dark-mode {
     --mail-item-bg: #161616;                       /* Background for read mail */
     --mail-item-unread-bg: #2C2C2C;                /* Background for unread mail */
 
-    /* --- Sidebar & Labels --- */
-    --side-item-hover-bg: #595959;                 /* Sidebar item hover */
-    --sidebar-item-text: #ffffff;                  /* Sidebar item text */
-    --sidebar-item-active: #595959;                /* Active sidebar item background */
-    --sidebar-item-hover: #414141;                 /* Hover background for sidebar */
-    --sidebar-icon: #B8B8B8;                       /* Sidebar icon color */
-    --sidebar-icon-active: #FFFFFF;                /* Active icon color in sidebar */
-    --label-item-more-hover: #3F3F3F;              /* Hover for more icon on labels */
+    /* Toggle switch */
+    --toggle-knob-color: #afb0b3;           /* Color of the toggle knob (circle) */
 
-    /* --- Toggles --- */
-    --toggle-knob-color: #afb0b3;                  /* Toggle switch knob color */
+    /* Dialog (e.g. profile picture popup) */
+    --dialog-box-bg: #1B1B1B;               /* Background for the dialog box */
+    --dialog-account-label: #E8EAED;        /* Color for the Gmail Account label */
+    --dialog-title: #E3E3E3;                /* Color for the main dialog title */
+    --dialog-subtext: #E3E3E3;              /* Color for the dialog subtext */
 
-    /* --- Menus & Submenus --- */
-    --context-menu-border: #444;                   /* Border around context menus */
-    --context-menu-shadow: 0 4px 16px rgba(0, 0, 0, 0.6); /* Box shadow for submenus */
-    --menu-item-hover-bg: #333;                    /* Hover background for menu items */
-    --color-circle-border: #666;                   /* Border color around color dots */
-    --divider-color: #555;                         /* Divider line in menus */
+    /* Profile actions (add/change picture buttons) */
+    --profile-action-bg: #004A77;           /* Background color of 'Add profile picture' button */
+    --profile-action-color: #E3E3E3;        /* Text/icon color of 'Add profile picture' button */
 
-    --logo-button-text-color: #DDDDDD;             /* Text color for the logo button */
+    /* User info labels */
+    --user-info-label: #E8EAED;             /* Color of user detail labels (e.g. Name, Gender) */
+    --user-info-box-border: #E8EAED;        /* Border color for user info box */
+
+    --compose-title-bg: #f2f2f2;
+    --compose-title-color: #3f5373; 
+
+    /* Mail item specific additions */
+    --mail-border-color: #3a3a3a;
+    --mail-hover-shadow: rgba(255, 255, 255, 0.1);
+    --mail-item-hover-bg: #303134;
+    --mail-time-color: #a0a0a0;
+    --star-icon-color: #a0a0a0;
+    --star-icon-active-color: #fbbc04;
+    --trash-icon-color: #a0a0a0;
+    --trash-icon-hover: #ff6f6f;
+    --mail-item-hover-bg: #333333;
+    --draft-label-color: #ff6f6f;
+    --mail-separator-color: #a0a0a0;
+    --mail-body-color: #a0a0a0;
+    --mail-item-read-bg: #2c2c2c;
 }
 
 

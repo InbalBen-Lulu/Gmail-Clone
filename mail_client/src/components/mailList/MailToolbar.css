@@ -1,0 +1,24 @@
+/* Container for the toolbar at the top of the mail list */
+.mail-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--mail-border-color);
+  background-color: var(--secondary-bg);
+  width: 100%;
+  box-sizing: border-box; 
+}
+
+.mail-toolbar-left,
+.mail-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Displays the current mail range (e.g. "1–50 of 234") */
+.mail-toolbar-range {
+  font-size: 13px;
+  color: var(--text-color);
+}

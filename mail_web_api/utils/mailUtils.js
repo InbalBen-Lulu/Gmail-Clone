@@ -10,7 +10,7 @@ const { checkUrlsAgainstBlacklist } = require('../models/blackListModel');
  *   - { validRecipients: number[], responseMeta: object }
  *   - null if no valid recipients and mail is not a draft
  */
-function processRecipients(to, isDraft, res) {
+function processRecipients(to, isDraft, res, fromUserId) {
     const validRecipients = [];
     const invalidRecipients = [];
 
@@ -23,16 +23,22 @@ function processRecipients(to, isDraft, res) {
         const userId = getUserIdFromEmail(email);
         const user = getUserById(userId);
 
-        if (user) {
-            validRecipients.push(userId);
-        } else {
+        if (!user) {
             invalidRecipients.push(email);
+            continue;
         }
+
+        if (userId === fromUserId) {
+            invalidRecipients.push(email);
+            continue;
+        }
+
+        validRecipients.push(userId);
     }
 
     if (!isDraft && validRecipients.length === 0) {
         res.status(400).json({
-            error: 'Mail was not sent. None of the recipients exist.',
+            error: 'Mail was not sent. None of the recipients exist (or you tried to send to yourself).',
             invalidEmails: invalidRecipients
         });
         return null;
@@ -40,12 +46,13 @@ function processRecipients(to, isDraft, res) {
 
     const responseMeta = {};
     if (invalidRecipients.length > 0) {
-        responseMeta.warning = 'Mail was not sent to some addresses because they do not exist';
+        responseMeta.warning = 'Mail was not sent to some addresses because they do not exist or were invalid';
         responseMeta.invalidEmails = invalidRecipients;
     }
 
     return { validRecipients, responseMeta };
 }
+
 
 /**
  * Checks if any word in the subject or body is blacklisted.

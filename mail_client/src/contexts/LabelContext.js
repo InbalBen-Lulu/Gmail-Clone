@@ -26,6 +26,10 @@ export const LabelProvider = ({ children }) => {
     );
 };
 
+/**
+ * Returns the label context.
+ * Must be used within a LabelProvider.
+ */
 export const useLabels = () => {
     const context = useContext(LabelContext);
     if (!context) throw new Error('useLabels must be used within a LabelProvider');

@@ -31,7 +31,7 @@ const SigninForm = () => {
     };
 
     const { fetchPublicUser } = useUserService();
-    
+
     // Submit the email and fetch public user info (e.g. name)
     const handleEmailSubmit = async () => {
         try {
@@ -49,7 +49,7 @@ const SigninForm = () => {
     };
 
     const { login } = useAuth();
-    
+
     // Submit login credentials and authenticate user
     const handleLogin = async () => {
         try {

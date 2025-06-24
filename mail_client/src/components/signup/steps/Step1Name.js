@@ -4,7 +4,7 @@ import TextButton from '../../common/button/TextButton';
 
 /**
  * Step 1: Collects user's first and last name.
- * Validates that first name is not empty before proceeding.
+ * Validates that both first and last names are not empty before proceeding.
  */
 const Step1Name = ({
     firstName,
@@ -13,16 +13,34 @@ const Step1Name = ({
     setLastName,
     firstNameError,
     setFirstNameError,
+    lastNameError,
+    setLastNameError,
     onNext
 }) => {
     const [firstNameTouched, setFirstNameTouched] = useState(false);
+    const [lastNameTouched, setLastNameTouched] = useState(false);
 
     const handleNext = () => {
         setFirstNameTouched(true);
+        setLastNameTouched(true);
+
+        let hasError = false;
+
         if (!firstName.trim()) {
             setFirstNameError('First name is required');
+            hasError = true;
         } else {
             setFirstNameError('');
+        }
+
+        if (!lastName.trim()) {
+            setLastNameError('Last name is required');
+            hasError = true;
+        } else {
+            setLastNameError('');
+        }
+
+        if (!hasError) {
             onNext();
         }
     };
@@ -41,10 +59,14 @@ const Step1Name = ({
                 autoFocusOnError
             />
             <Textbox
-                label="Last name (optional)"
+                label="Last name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
+                onBlur={() => setLastNameTouched(true)}
                 variant='floating'
+                isInvalid={!!lastNameError}
+                isValid={lastNameTouched && !!lastName.trim() && !lastNameError}
+                errorMessage={lastNameError}
                 autoFocusOnError
             />
             <div className="button-row">

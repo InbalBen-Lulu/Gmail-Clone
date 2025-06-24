@@ -1,0 +1,134 @@
+ /* Container for full mail content */
+ .mail-details {
+     background: var(--white);
+     color: var(--black);
+     padding: 24px 32px;
+     width: 100%;
+     height: 100%;
+     box-sizing: border-box;
+     flex: 1;
+     min-height: 0;
+     display: flex;
+    flex-direction: column;
+ }
+
+ /* Top row with back button and actions */
+ .mail-details-topbar {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+ }
+
+ /* Action buttons like spam, delete etc. */
+ .mail-details-actions {
+     display: flex;
+     align-items: center;
+     gap: 12px;
+ }
+
+ /* Row containing subject and labels */
+ .mail-details-subject-row {
+     display: flex;
+     align-items: center;
+     gap: 12px;
+     flex-wrap: wrap;
+     margin-top: 24px;
+ }
+
+ /* Main subject text of the mail */
+ .mail-details-subject {
+     font-size: 1.8rem;
+     font-weight: bold;
+     margin: 0;
+     color: var(--black);
+     display: inline;
+ }
+
+ /* Container for label chips next to subject */
+ .mail-details-labels {
+     display: flex;
+     gap: 6px;
+     align-items: flex-end;
+     flex-wrap: wrap;
+ }
+
+ /* Row with sender info and send time */
+ .mail-details-meta {
+     display: flex;
+     align-items: flex-start;
+     gap: 16px;
+     margin-top: 16px;
+ }
+
+ /* Circular sender profile image */
+ .profile-image {
+     width: 40px;
+     height: 40px;
+     border-radius: 50%;
+     object-fit: cover;
+     flex-shrink: 0;
+ }
+
+ /* Sent time display on the far right */
+ .mail-details-date {
+     margin-left: auto;
+     font-size: 13px;
+     color: var(--mail-time-color);
+ }
+
+ /* Main mail content styling */
+ .mail-details-body {
+     margin-top: 24px;
+     line-height: 1.6;
+     font-size: 15px;
+     white-space: pre-line;
+ }
+
+ /* Wrapper for sender image and hover card */
+ .profile-wrapper {
+     position: relative;
+     display: inline-block;
+ }
+
+ /* Card shown on hover near the profile image */
+ .hover-card-wrapper {
+     position: absolute;
+     top: 100%;
+     left: 100%;
+     margin-top: 2px;
+     margin-left: 2px;
+     z-index: 999;
+ }
+
+ /* "To" field – who the mail was sent to */
+ .mail-details-to {
+     font-size: 13px;
+     color: var(--mail-body-color);
+ }
+
+ /* Sender’s name and email stacked vertically */
+ .mail-details-sender-info {
+     display: flex;
+     flex-direction: column;
+     gap: 4px;
+ }
+
+ /* Row for name and additional sender info */
+ .sender-name-row {
+     display: flex;
+     align-items: center;
+     gap: 6px;
+     flex-wrap: wrap;
+ }
+
+ /* Bolded sender name */
+ .sender-name {
+     font-weight: bold;
+     color: var(--black);
+ }
+
+ /* Lighter colored sender email */
+ .sender-email {
+     color: var(--mail-body-color);
+     font-size: 13px;
+ }

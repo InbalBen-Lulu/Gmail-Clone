@@ -45,7 +45,7 @@ const Step3Username = ({
                 name="gmail"
                 value={gmail}
                 onChange={(e) => setGmail(e.target.value)}
-                suffix="@gmail.com"
+                suffix="@mailme.com"
                 variant='floating'
                 isInvalid={!!gmailError}
                 isValid={!gmailError}

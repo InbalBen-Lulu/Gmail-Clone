@@ -1,0 +1,47 @@
+/* mail-panel: Main container for the entire mail view (list or details) */
+.mail-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Reusable topbar style (used in toolbar or inside MailDetails) */
+.topbar {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  height: 48px;
+  flex-shrink: 0;
+  width: 100%; 
+}
+
+/* Scrollable mail list */
+.mail-panel .mail-list {
+  overflow-y: auto;
+  flex: 1;
+  padding: 0;
+}
+
+/* Scrollable mail details */
+.mail-panel .mail-details {
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+}
+
+/* Empty state (shown when no mails are found) */
+.empty-mail-list {
+  color: var(--text-color);
+  font-size: 16px;
+  text-align: center;
+  padding: 32px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
