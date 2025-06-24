@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import ComposeTextbox from './ComposeTextBox';
 import TextButton from '../common/button/TextButton';
-import { X, MinusIcon, Maximize2, Trash2 } from "lucide-react";
+import Icon from "../../assets/icons/Icon";
 import { SmallIconButton } from '../common/button/IconButtons';
 import { useMailService } from '../../services/useMailService';
 import { useCompose } from '../../contexts/ComposeContext';
@@ -87,13 +87,13 @@ const ComposeForm = () => {
         <div className={`compose-mail ${minimized ? 'minimized' : ''}`}>
             <div className="compose-header">
                 <div className="header-buttons">
-                    <SmallIconButton icon={<X size={16} strokeWidth={1.5} color='var(--compose-icon-color)' />} ariaLabel="Close" onClick={handleClose} />
+                    <SmallIconButton icon={<Icon name="close" size={16} strokeWidth={1.5} color='var(--compose-icon-color)' />} ariaLabel="Close" onClick={handleClose} />
                     <SmallIconButton
                         icon={
                             minimized ? (
-                                <Maximize2 size={16} strokeWidth={1.5} color='var(--compose-icon-color)' />
+                                <Icon name="open_in_full" size={16} strokeWidth={1.5} color='var(--compose-icon-color)' />
                             ) : (
-                                <MinusIcon size={16} strokeWidth={1.5} color='var(--compose-icon-color)' />
+                                <Icon name="remove" size={16} strokeWidth={1.5} color='var(--compose-icon-color)' />
                             )
                         }
                         ariaLabel={minimized ? "Expand" : "Minimize"}
@@ -136,7 +136,7 @@ const ComposeForm = () => {
                         <TextButton variant="primary" onClick={handleSend}>
                             Send
                         </TextButton>
-                        <SmallIconButton icon={<Trash2 size={16} strokeWidth={1.5} color='var(--compose-icon-color)' />} ariaLabel="Delete" onClick={handleDelete} />
+                        <SmallIconButton icon={<Icon name="delete" size={16} strokeWidth={1.5} color='var(--compose-icon-color)' />} ariaLabel="Delete" onClick={handleDelete} />
                     </div>
                 </>
             )}
