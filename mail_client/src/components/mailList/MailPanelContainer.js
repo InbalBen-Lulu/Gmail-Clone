@@ -33,7 +33,6 @@ const MailPanelContainer = () => {
     }, [category, refreshLabels]);
 
     return (
-        // <div style={{ padding: '1rem', background: '#121212', minHeight: '100vh' }}>
         <div>
             <MailPanel />
         </div>
