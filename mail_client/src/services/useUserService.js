@@ -21,7 +21,7 @@ export const useUserService = () => {
 
   /**
    * Sends a request to create a new user with the provided information.
-   * If the request fails, throws an error with the relevant message.
+   * Returns an object with status and data or throws error if response not ok.
    */
   const createUser = async ({ userId, name, password, gender, birthDate }) => {
     const response = await publicFetch('/api/users', {
@@ -29,10 +29,15 @@ export const useUserService = () => {
       body: JSON.stringify({ userId, name, password, gender, birthDate })
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to create user');
+      const error = new Error(data.error || 'Failed to create user');
+      error.status = response.status;
+      throw error;
     }
+
+    return { status: response.status, data };
   };
 
   /**

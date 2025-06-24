@@ -1,6 +1,6 @@
 import Textbox from '../../common/input/textBox/TextBox';
 import TextButton from '../../common/button/TextButton';
-import { useUserService } from '../../../services/userService';
+import { useUserService } from '../../../services/useUserService';
 
 
 /**
@@ -45,7 +45,7 @@ const Step3Username = ({
                 name="gmail"
                 value={gmail}
                 onChange={(e) => setGmail(e.target.value)}
-                suffix="@gmail.com"
+                suffix="@mailme.com"
                 variant='floating'
                 isInvalid={!!gmailError}
                 isValid={!gmailError}

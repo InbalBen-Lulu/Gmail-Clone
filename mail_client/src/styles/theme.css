@@ -14,14 +14,16 @@ body.light-mode {
     --search-background: #e9eef6;           /* Background for search bar */
     --dropdownlist-bg: #e9eef6;             /* Background for dropdown lists (e.g. gender) */
     --secondary-bg: #ffffff;                /* Used for general secondary backgrounds */
+    --compose-title-bg: #f2f6fc;                      /* Compose mail title background */
 
     /* Text colors */
     --text-color: #202124;                  /* Main text color */
-    --input-placeholder-color: #6F7071;     /* Placeholder text color inside input fields */
+    --input-placeholder-color: #6F7071;    /* Placeholder text color inside input fields */
+    --compose-title-color: #041e49;        /* Compose mail title text color */
 
     /* Interactive background states */
     --side-item-hover-bg: #E1E3E1;          /* Background when hovering over side menu item */
-    --mail-item-bg: #F2F6FC;                /* Background for a regular mail item */
+    --mail-item-bg: #ffffff;                /* Background for a regular mail item */
     --mail-item-unread-bg: #FFFFFF;         /* Background for an unread mail item */
 
     /* Icon colors */
@@ -35,7 +37,7 @@ body.light-mode {
 
     /* Toggle switch */
     --toggle-knob-color: #717379;           /* Color of the toggle knob (circle) */
-
+    
     /* Dialog (e.g. profile picture popup) */
     --dialog-box-bg: white;                 /* Background for the dialog box */
     --dialog-account-label: #5F6368;        /* Color for the Gmail Account label */
@@ -49,6 +51,22 @@ body.light-mode {
     /* User info labels */
     --user-info-label: #555;                /* Color of user detail labels (e.g. Name, Gender) */
     --user-info-box-border: #dadce0;        /* Border color for user info box */
+
+     
+    /* Mail item specific additions */
+    --mail-border-color: #e0e0e0;
+    --mail-hover-shadow: rgba(60, 64, 67, 0.15);
+    --mail-item-hover-bg: #f1f3f4;
+    --mail-time-color: #5f6368;
+    --star-icon-color: #5f6368;
+    --star-icon-active-color: #fbbc04;
+    --trash-icon-color: #5f6368;
+    --trash-icon-hover: #d93025;
+    --mail-item-hover-bg: #eef3f8;
+    --draft-label-color: #d93025;
+    --mail-separator-color: #5f6368;
+    --mail-body-color: #5f6368;
+    --mail-item-read-bg: #f2f6fc;
 }
 
 /* -----------------------------
@@ -65,12 +83,14 @@ body.dark-mode {
     --signin-box-bg: #000000;               /* Background color for the signin/signup form container */
     --signin-bg: #202124;                   /* Background color for the signin/signup background */
     --search-background: #474747;           /* Background for search bar */
-    --dropdownlist-bg: #474747;             /* Background for dropdown lists (e.g. gender) */
-    --secondary-bg: #000000;                /* Used for general secondary backgrounds */
-    
+    --dropdownlist-bg: #474747;           /* Background for dropdownlist */
+    --secondary-bg: #000000;
+    --compose-title-bg: #f2f2f2;   
+
     /* Text colors */
     --text-color: #FEFEFE;                  /* Main text color */
-    --input-placeholder-color: #D0D0D0;     /* Placeholder text color inside input fields */
+    --input-placeholder-color: #D0D0D0;    /* Placeholder text color inside input fields */
+    --compose-title-color: #3f5373;     
 
     /* Interactive background states */
     --side-item-hover-bg: #595959;          /* Background when hovering over side menu item */
@@ -88,7 +108,7 @@ body.dark-mode {
 
     /* Toggle switch */
     --toggle-knob-color: #afb0b3;           /* Color of the toggle knob (circle) */
-
+    
     /* Dialog (e.g. profile picture popup) */
     --dialog-box-bg: #1B1B1B;               /* Background for the dialog box */
     --dialog-account-label: #E8EAED;        /* Color for the Gmail Account label */
@@ -102,6 +122,24 @@ body.dark-mode {
     /* User info labels */
     --user-info-label: #E8EAED;             /* Color of user detail labels (e.g. Name, Gender) */
     --user-info-box-border: #E8EAED;        /* Border color for user info box */
+
+    
+    /* Mail item specific additions */
+    --mail-border-color: #3a3a3a;
+    --mail-hover-shadow: rgba(255, 255, 255, 0.1);
+    --mail-item-hover-bg: #303134;
+    --mail-time-color: #a0a0a0;
+    --star-icon-color: #a0a0a0;
+    --star-icon-active-color: #fbbc04;
+    --trash-icon-color: #a0a0a0;
+    --trash-icon-hover: #ff6f6f;
+    --mail-item-hover-bg: #333333;
+    --draft-label-color: #ff6f6f;
+    --mail-separator-color: #a0a0a0;
+    --mail-body-color: #a0a0a0;
+    --mail-item-read-bg: #2c2c2c;
+
+
 }
 
 /* -----------------------------

@@ -3,9 +3,10 @@ import Step1Name from './steps/Step1Name';
 import Step2Birth from './steps/Step2Birth';
 import Step3Username from './steps/Step3Username';
 import Step4Password from './steps/Step4Password';
+import Step5Photo from './steps/Step5Photo';
 import { months, genders } from './steps/constants';
 import './SignupForm.css';
-import { useUserService } from '../../services/userService';
+import { useUserService } from '../../services/useUserService';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -35,6 +36,7 @@ const SignupForm = () => {
 
     // Validation error messages
     const [firstNameError, setFirstNameError] = useState('');
+    const [lastNameError, setLastNameError] = useState('');
     const [monthError, setMonthError] = useState('');
     const [dayError, setDayError] = useState('');
     const [yearError, setYearError] = useState('');
@@ -62,9 +64,11 @@ const SignupForm = () => {
                 birthDate
             });
 
-            await login(userId, password);
-
-            // navigate('/inbox');
+            const user = await login(userId, password);
+            if (user) {
+                // navigate('/mails/inbox');
+                setStep(5)
+            }
         } catch (error) {
             alert(error.message || 'Signup failed');
         }
@@ -81,12 +85,14 @@ const SignupForm = () => {
                         {step === 2 && 'Basic information'}
                         {step === 3 && 'How you’ll sign in'}
                         {step === 4 && 'Create a strong password'}
+                        {step === 5 && 'Add a profile picture'}
                     </h2>
                     <p className="signup-subtext">
                         {step === 1 && 'Enter your name'}
                         {step === 2 && 'Enter your birthday and gender'}
                         {step === 3 && 'Create a Gmail address for signing in to your Google Account'}
                         {step === 4 && 'Create a strong password with a mix of letters, numbers and symbols'}
+                        {step === 5 && 'This photo will show up on your profile and in your emails'}
                     </p>
                 </div>
 
@@ -99,6 +105,8 @@ const SignupForm = () => {
                             setLastName={setLastName}
                             firstNameError={firstNameError}
                             setFirstNameError={setFirstNameError}
+                            lastNameError={lastNameError}
+                            setLastNameError={setLastNameError}
                             onNext={() => setStep(2)}
                         />
                     )}
@@ -149,8 +157,12 @@ const SignupForm = () => {
                             confirmError={confirmError}
                             setPasswordError={setPasswordError}
                             setConfirmError={setConfirmError}
-                            onNext={handleSignupSubmit}
+                            onNext={() => setStep(5)}
                         />
+                    )}
+
+                    {step === 5 && (
+                        <Step5Photo/>
                     )}
                 </div>
             </div>

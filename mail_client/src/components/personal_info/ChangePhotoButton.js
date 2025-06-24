@@ -3,7 +3,7 @@ import Icon from '../../assets/icons/Icon';
 import ProfileImage from '../common/profile_image/ProfileImage';
 import ProfilePictureDialog from './ProfilePictureDialog';
 import Overlay from '../overlay/Overlay';
-import { useUserService } from '../../services/userService';
+import { useUserService } from '../../services/useUserService';
 import { useAuth } from '../../contexts/AuthContext';
 import './ChangePhotoButton.css';
 

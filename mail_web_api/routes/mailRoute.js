@@ -25,9 +25,9 @@ router.get('/sent', mailController.getSentMails);
 router.get('/drafts', mailController.getDraftMails);
 router.get('/spam', mailController.getSpamMails);
 router.get('/starred', mailController.getStarredMails);
-router.get('/labels/:labelId', mailController.getMailsByLabel);
+router.get('/labels-:labelId', mailController.getMailsByLabel);
 
-router.get('/search/:query', mailController.searchMails);
+router.get('/search-:query', mailController.searchMails);
 
 router.route('/:id')
     .get(mailController.getMailById)

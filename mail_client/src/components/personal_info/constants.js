@@ -6,4 +6,4 @@ export const ALLOWED_IMAGE_TYPES = [
   'image/webp'
 ];
 
-export const EMAIL_DOMAIN = 'gmail.com';
+export const EMAIL_DOMAIN = 'mailme.com';

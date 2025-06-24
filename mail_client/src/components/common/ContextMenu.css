@@ -1,10 +1,10 @@
 .context-menu {
   position: absolute;
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  box-shadow: 0 4px 16px var(--context-menu-shadow);
   z-index: 1000;
-  min-width: 220px;
+  min-width: 180px;
   padding: 8px 0;
 }
 
@@ -14,6 +14,16 @@
   padding: 0;
 }
 
+/* Title like "Label as:" */
+.menu-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--menu-title-color);
+  padding: 6px 16px 4px;
+  user-select: none;
+}
+
+/* Each item */
 .menu-item {
   display: flex;
   align-items: center;
@@ -22,39 +32,76 @@
   cursor: pointer;
   transition: background-color 0.2s;
   font-size: 14px;
-  color: #202124;
+  color: var(--menu-item-color);
 }
 
 .menu-item:hover {
-  background-color: #f1f3f4;
+  background-color: var(--menu-hover-bg);
 }
 
+/* Divider */
+.menu-divider {
+  border: none;
+  border-top: 1px solid var(--menu-divider-color);
+  margin: 4px 0;
+}
+
+/* Icon slot */
 .menu-icon {
   width: 24px;
   display: flex;
   justify-content: center;
 }
 
-.menu-divider {
-  border: none;
-  border-top: 1px solid #e0e0e0;
-  margin: 4px 0;
+/* Icon image like add.svg */
+.menu-icon-svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+  flex-shrink: 0;
 }
 
-.context-area {
+.menu-checkbox-wrapper {
   display: flex;
-  gap: 32px;
-  padding: 32px;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  padding: 1px 2px;
+  transition: background-color 0.2s;
+  font-size: 14px;
+  color: var(-menu-checkbox-checkmark);
+  cursor: pointer;
 }
 
-.context-box {
-  padding: 24px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: white;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-  cursor: context-menu;
+.menu-checkbox-wrapper:hover {
+  background-color: var(--menu-hover-bg);
+}
+
+.menu-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--menu-checkbox-border);
+  border-radius: 2px;
+  background-color: var(--menu-checkbox-bg);
   position: relative;
-  min-width: 200px;
-  text-align: center;
+  cursor: pointer;
+  display: inline-block;
+  margin: 0;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.menu-checkbox:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid var(--menu-checkbox-checkmark);
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+  pointer-events: none;
 }
