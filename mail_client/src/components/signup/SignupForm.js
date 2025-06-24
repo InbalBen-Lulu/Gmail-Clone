@@ -36,6 +36,7 @@ const SignupForm = () => {
 
     // Validation error messages
     const [firstNameError, setFirstNameError] = useState('');
+    const [lastNameError, setLastNameError] = useState('');
     const [monthError, setMonthError] = useState('');
     const [dayError, setDayError] = useState('');
     const [yearError, setYearError] = useState('');
@@ -104,6 +105,8 @@ const SignupForm = () => {
                             setLastName={setLastName}
                             firstNameError={firstNameError}
                             setFirstNameError={setFirstNameError}
+                            lastNameError={lastNameError}
+                            setLastNameError={setLastNameError}
                             onNext={() => setStep(2)}
                         />
                     )}
