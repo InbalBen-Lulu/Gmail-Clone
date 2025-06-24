@@ -12,7 +12,7 @@
   margin-left: auto;         /* Pushes the arrow to the far right */
   padding-left: 100px;       /* Optional spacing for alignment */
   font-size: 12px;
-  color: var(--dialog-account-label); /* Subtle gray */
+  color: var(--label-context-menu-arrow); /* Subtle gray */
 }
 
 /* Submenu container */
@@ -57,6 +57,7 @@
   cursor: pointer;
 }
 
+/* Hover effect for the remove color option */
 .remove-color-option:hover {
   background-color: var(--menu-item-hover-bg); /* Highlight on hover */
 }

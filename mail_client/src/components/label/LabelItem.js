@@ -1,128 +1,36 @@
-
-
-// import { useState, useRef, useEffect } from "react";
-// import { useLabelService } from '../../services/useLabelService';
-// import { MdLabel } from "react-icons/md";
-// import {SmallIconButton} from "../common/button/IconButtons";
-// import Icon from "../../assets/icons/Icon";
-// import LabelDialog from "./LabelDialog";
-// import LabelContextMenu from "./LabelContextMenu";
-// import "./LabelItem.css";
-
-// const LabelItem = ({ label, color, isActive, onClick }) => {
-//   const [showMenu, setShowMenu] = useState(false);
-//   const [showEditDialog, setShowEditDialog] = useState(false);
-//   const menuRef = useRef(null);
-//   const { createLabel } = useLabelService();
-//   const closeMenu = () => setShowMenu(false);
-  
-//   const handleMoreClick = (e) => {
-//     e.stopPropagation();
-//     setShowMenu((prev) => !prev);
-//   };
-
-//   useEffect(() => {
-//     const handleClickOutside = (e) => {
-//       if (menuRef.current && !menuRef.current.contains(e.target)) {
-//         closeMenu();
-//       }
-//     };
-
-//     if (showMenu) {
-//       document.addEventListener("mousedown", handleClickOutside);
-//     } else {
-//       document.removeEventListener("mousedown", handleClickOutside);
-//     }
-
-//     return () => document.removeEventListener("mousedown", handleClickOutside);
-//   }, [showMenu]);
-
-//   const handleEdit = () => {
-//     closeMenu();
-//     setShowEditDialog(true);
-//   };
-
-//   const handleRemove = () => {
-//     closeMenu();
-//     console.log("Remove label:", label);
-//   };
-
-//   const handleSetColor = (newColor) => {
-//     closeMenu();
-//     console.log("Set color for", label, "=>", newColor || "none");
-//     // TODO: עדכון צבע בלייבלים כשנחבר לשרת
-//   };
-
-//   return (
-//     <>
-//       <div className={`label-item ${isActive ? "active" : ""}`} onClick={onClick}>
-//         <MdLabel className="label-icon" style={{ color }} />
-//         <span className="label-name">{label}</span>
-
-//         <div className="more-button-wrapper" ref={menuRef}>
-//           <SmallIconButton
-//             icon={<Icon name="more" />}
-//             ariaLabel="More options"
-//             size="small"
-//             className="more-button"
-//             onClick={handleMoreClick}
-//           />
-//           {showMenu && (
-//             <LabelContextMenu
-//               onEdit={handleEdit}
-//               onRemove={handleRemove}
-//               onSetColor={handleSetColor}
-//               onClose={closeMenu}
-//             />
-//           )}
-//         </div>
-//       </div>
-
-//       {showEditDialog && (
-//         <LabelDialog
-//           mode="edit"
-//           initialName={label}
-//           onCancel={() => setShowEditDialog(false)}
-//           onCreate={(newName) => {
-//             console.log("Saved label as:", newName);
-//             setShowEditDialog(false);
-//           }}
-//         />
-//       )}
-//     </>
-//   );
-// };
-
-// export default LabelItem;
 import { useState, useRef, useEffect } from "react";
 import { MdLabel } from "react-icons/md";
 import { SmallIconButton } from "../common/button/IconButtons";
 import Icon from "../../assets/icons/Icon";
 import LabelDialog from "./LabelDialog";
-import LabelContextMenu from "./LabelContextMenu";
+import LabelContextMenu from "./label_context_menu/LabelContextMenu";
 import { useLabelService } from "../../services/useLabelService";
 import { useLabels } from "../../contexts/LabelContext";
 import "./LabelItem.css";
 
+/**
+ * LabelItem – represents a single label item in the sidebar with edit/delete/color options.
+ *
+ * Props:
+ * - label: string – the label name
+ * - color: string – the color of the label
+ * - id: number – the label ID
+ * - isActive: boolean – whether this label is currently selected
+ * - onClick: function – called when clicking the label item
+ */
 const LabelItem = ({ label, color, id, isActive, onClick }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const menuRef = useRef(null);
 
   const { renameLabel, deleteLabel, setLabelColor, resetLabelColor } = useLabelService();
-  const { refreshLabels } = useLabels();
+  const { labels, refreshLabels } = useLabels();
 
-  const handleMoreClick = (e) => {
-    e.stopPropagation();
-    setShowMenu((prev) => !prev);
-  };
-
-  const closeMenu = () => setShowMenu(false);
-
+  // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
-        closeMenu();
+        setShowMenu(false);
       }
     };
 
@@ -135,11 +43,31 @@ const LabelItem = ({ label, color, id, isActive, onClick }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showMenu]);
 
+  const closeMenu = () => setShowMenu(false);
+
+  /**
+   * Toggles the visibility of the label's context menu (3-dot icon).
+   * Stops event from bubbling up to prevent triggering parent click.
+   */
+  const handleMoreClick = (e) => {
+    e.stopPropagation();
+    setShowMenu((prev) => !prev);
+  };
+
+  /**
+   * Opens the label edit dialog and closes the context menu.
+   */
   const handleEdit = () => {
     closeMenu();
     setShowEditDialog(true);
   };
 
+  /**
+   * Handles renaming the label to a new name.
+   * Calls backend service, refreshes labels, and closes the dialog.
+   *
+   * @param {string} newName – The updated label name
+   */
   const handleRename = async (newName) => {
     try {
       await renameLabel(id, newName);
@@ -151,6 +79,10 @@ const LabelItem = ({ label, color, id, isActive, onClick }) => {
     }
   };
 
+  /**
+   * Deletes the label from the system.
+   * Closes the context menu and refreshes the label list.
+   */
   const handleRemove = async () => {
     closeMenu();
     try {
@@ -161,6 +93,12 @@ const LabelItem = ({ label, color, id, isActive, onClick }) => {
     }
   };
 
+  /**
+   * Updates the label's color.
+   * If newColor is null, the label color will be reset to default.
+   *
+   * @param {string|null} newColor – The new color hex code or null
+   */
   const handleSetColor = async (newColor) => {
     closeMenu();
     try {
@@ -177,7 +115,13 @@ const LabelItem = ({ label, color, id, isActive, onClick }) => {
 
   return (
     <>
-      <div className={`label-item ${isActive ? "active" : ""}`} onClick={onClick}>
+      <div
+        className={`label-item ${isActive ? "active" : ""}`}
+        onClick={() => {
+          closeMenu();   // Close any open menu when label is clicked
+          onClick();     // Navigate to label
+        }}
+      >
         <MdLabel className="label-icon" style={{ color }} />
         <span className="label-name">{label}</span>
 
@@ -186,9 +130,10 @@ const LabelItem = ({ label, color, id, isActive, onClick }) => {
             icon={<Icon name="more" />}
             ariaLabel="More options"
             size="small"
-            className="more-button"
+            className={`more-button ${showMenu ? "pressed" : ""}`}
             onClick={handleMoreClick}
           />
+
           {showMenu && (
             <LabelContextMenu
               onEdit={handleEdit}
@@ -204,6 +149,9 @@ const LabelItem = ({ label, color, id, isActive, onClick }) => {
         <LabelDialog
           mode="edit"
           initialName={label}
+          existingLabels={labels
+            .map((l) => l.name)
+            .filter((name) => name !== label)} // prevent self-comparison
           onCancel={() => setShowEditDialog(false)}
           onCreate={handleRename}
         />
