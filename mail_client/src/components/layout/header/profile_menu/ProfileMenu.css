@@ -63,7 +63,7 @@
   margin-top: 20px;
   width: 100%;
   color: var(--text-color); 
-  background-color: var(--signout-butoon-bg);
+  background-color: var(--signout-button-bg);
   border: none;
   border-radius: 18px;
   padding: 12px 20px;
@@ -77,7 +77,7 @@
 
 /* Hover effect for the sign out button */
 .signout-button:hover {
-  background-color: var(--signout-butoon-hover-bg);
+  background-color: var(--signout-button-hover-bg);
 }
 
 /* Text styling inside the sign out button */
