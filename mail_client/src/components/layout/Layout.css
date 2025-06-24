@@ -1,0 +1,21 @@
+/* Main container for the entire app layout (fills full height) */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Wrapper for the main horizontal layout (sidebar + content) */
+.layout-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Main content area (right side of the layout) */
+.layout-content {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  background-color: var(--background-color);
+}

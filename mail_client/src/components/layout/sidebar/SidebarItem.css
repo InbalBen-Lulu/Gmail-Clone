@@ -1,3 +1,4 @@
+/* Container for each clickable item in the sidebar */
 .sidebar-item {
   display: flex;
   align-items: center;
@@ -14,29 +15,35 @@
   height: 32px;
 }
 
+/* Hover effect for sidebar item */
 .sidebar-item:hover {
   background-color: var(--sidebar-item-hover);
 }
 
+/* Background color when the sidebar item is active (selected) */
 .sidebar-item.active {
   background-color: var(--sidebar-item-active);
 }
 
+/* Icon inside each sidebar item */
 .sidebar-icon {
   font-size: 1.2rem;
   color: var(--sidebar-icon);
 }
 
+/* Icon color when the item is active */
 .sidebar-item.active .sidebar-icon {
   color: var(--sidebar-icon-active);
 }
 
+/* Text label inside each sidebar item */
 .sidebar-label {
   flex: 1;
   font-size: 0.9rem;
   font-weight: 500;
 }
 
+/* Font weight adjustment for active label */
 .sidebar-item.active .sidebar-label {
   font-weight: 600;
 }
