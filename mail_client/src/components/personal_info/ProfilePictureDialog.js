@@ -75,7 +75,7 @@ const ProfilePictureDialog = ({
         />
         <span className="dialog-label">
           <img src="/pics/gmail_logo_icon.ico" alt="Gmail Logo" className="gmail-icon" />
-          <span>Gmail Account</span>
+          <span>MailMe Account</span>
         </span>
       </div>
 
