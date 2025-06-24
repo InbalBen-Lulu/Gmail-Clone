@@ -3,11 +3,13 @@ import Step1Name from './steps/Step1Name';
 import Step2Birth from './steps/Step2Birth';
 import Step3Username from './steps/Step3Username';
 import Step4Password from './steps/Step4Password';
+import Step5Photo from './steps/Step5Photo';
 import { months, genders } from './steps/constants';
 import './SignupForm.css';
-import { useUserService } from '../../services/userService';
+import { useUserService } from '../../services/useUserService';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import MailMeLogo from '../common/logo/MailMeLogo';
 
 /**
  * SignupForm handles a 4-step account creation form:
@@ -15,6 +17,7 @@ import { useAuth } from '../../contexts/AuthContext';
  * Step 2 – User selects birthday and gender
  * Step 3 – User selects Gmail address
  * Step 4 – User creates a password
+ * Step 5 – (Optional) User uploads a profile picture
  * 
  * Each step has local state and validation errors.
  */
@@ -62,9 +65,11 @@ const SignupForm = () => {
                 birthDate
             });
 
-            await login(userId, password);
+            const user = await login(userId, password);
+            if (user) {
+                setStep(5)
+            }
 
-            // navigate('/inbox');
         } catch (error) {
             alert(error.message || 'Signup failed');
         }
@@ -75,18 +80,20 @@ const SignupForm = () => {
         <div className="signup-wrapper">
             <div className="signup-container">
                 <div className="signup-left">
-                    <img src="/pics/google-g-icon.png" alt="Google logo" className="google-logo" />
+                    <MailMeLogo />
                     <h2 className="signup-title">
                         {step === 1 && 'Create a Google Account'}
                         {step === 2 && 'Basic information'}
                         {step === 3 && 'How you’ll sign in'}
                         {step === 4 && 'Create a strong password'}
+                        {step === 5 && 'Add a profile picture'}
                     </h2>
                     <p className="signup-subtext">
                         {step === 1 && 'Enter your name'}
                         {step === 2 && 'Enter your birthday and gender'}
                         {step === 3 && 'Create a Gmail address for signing in to your Google Account'}
                         {step === 4 && 'Create a strong password with a mix of letters, numbers and symbols'}
+                        {step === 5 && 'This photo will show up on your profile and in your emails'}
                     </p>
                 </div>
 
@@ -152,6 +159,11 @@ const SignupForm = () => {
                             onNext={handleSignupSubmit}
                         />
                     )}
+
+                    {step === 5 && (
+                        <Step5Photo/>
+                    )}
+
                 </div>
             </div>
         </div>

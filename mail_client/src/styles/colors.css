@@ -1,63 +1,107 @@
 body {
-  /* -----------------------------
-     Base Colors
-  ----------------------------- */
-  --white: #ffffff;                         /* Global white color */
-  --black: #000000;                         /* Global black color */
-  --gray-light: #e9ecef;                    /* Light gray for borders/backgrounds */
-  --gray-dark: #343a40;                     /* Dark gray for text, borders */
-  --danger-color: #c5362c;                  /* Red for errors or danger states */
+   /* -----------------------------
+      Base Colors
+   ----------------------------- */
+   --white: #ffffff;                         /* Global white color */
+   --black: #000000;                         /* Global black color */
+   --gray-light: #e9ecef;                    /* Light gray for borders/backgrounds */
+   --gray-dark: #343a40;                     /* Dark gray for text, borders */
+   --danger-color: #c5362c;                  /* Red for errors or danger states */
 
-  /* -----------------------------
-     Primary Button
-  ----------------------------- */
-  --primary-color: #1E64D4;                 /* Primary button background */
-  --primary-hover: #3775d9;                 /* Hover state for primary button */
-  --disable-button-bg: #f1f3f4;             /* Disabled button background */
-  --disable-button-text: #9aa0a6;           /* Disabled button text color */
+   /* -----------------------------
+      Primary Button
+   ----------------------------- */
+   --primary-color: #1E64D4;                 /* Primary button background */
+   --primary-hover: #3775d9;                 /* Hover state for primary button */
+   --disable-button-bg: #f1f3f4;             /* Disabled button background */
+   --disable-button-text: #9aa0a6;           /* Disabled button text color */
 
-  /* -----------------------------
-     Icons
-  ----------------------------- */
-  --icon-light-gray: #898686;               /* Light gray for small icons */
-  --star-color: #F4B400;                    /* Starred item (e.g., favorite) */
-  --camara-icon-color: #ffffff;             /* Camera icon color */
-  --mail-icon-fill: #75797c;                /* Fill color for mail icon */
-  --mail-icon-stroke: #ffffff;              /* Stroke color for mail icon */
-  --search-icon-fill: #636364;              /* Fill color for search icon */
-  --search-icon-stroke: #ffffff;            /* Stroke color for search icon */
+   /* -----------------------------
+      Icons
+   ----------------------------- */
+   --icon-light-gray: #898686;               /* Light gray for small icons */
+   --star-color: #F4B400;                    /* Starred item (e.g., favorite) */
+   --camara-icon-color: #ffffff;             /* Camera icon color */
+   --mail-icon-fill: #75797c;                /* Fill color for mail icon */
+   --mail-icon-stroke: #ffffff;              /* Stroke color for mail icon */
+   --search-icon-fill: #636364;              /* Fill color for search icon */
+   --search-icon-stroke: #ffffff;            /* Stroke color for search icon */
+   --logo--icon: #e91e63;                    /* Logo icon color */
 
-  /* -----------------------------
-     Checkbox
-  ----------------------------- */
-  --checkbox-bg: var(--white);              /* Checkbox background when unchecked */
-  --checkbox-border: #585858;               /* Border color of checkbox */
-  --checkbox-checkmark: #333333;            /* Checkmark color when checked */
+   /* -----------------------------
+      Checkbox
+   ----------------------------- */
+   --checkbox-bg: var(--white);              /* Checkbox background when unchecked */
+   --checkbox-border: #585858;               /* Border color of checkbox */
+   --checkbox-checkmark: #333333;            /* Checkmark color when checked */
 
-  /* -----------------------------
-     Auth Forms
-  ----------------------------- */
-  --auth-box-shadow: rgba(60, 64, 67, 0.3);  /* Box shadow for signin/signup containers */
+   /* -----------------------------
+      Auth Forms
+   ----------------------------- */
+   --auth-box-shadow: rgba(60, 64, 67, 0.3);  /* Box shadow for signin/signup containers */
 
-  /* -----------------------------
-     Search Textbox
-  ----------------------------- */
-  --search-text-color: #000000;             /* Text color inside search box */
-  --placeholder-focused-color: #6F7071;     /* Placeholder color when focused */
-  --search-textbox-focused-icons-hover-bg: #F0F0F0; /* Hover background for icons inside focused search bar */
-  --search-textbox-focosed-bg: #ffffff;     /* Background of search bar when focused */
+   /* -----------------------------
+      Search Textbox
+   ----------------------------- */
+   --search-text-color: #000000;             /* Text color inside search box */
+   --placeholder-focused-color: #6F7071;     /* Placeholder color when focused */
+   --search-textbox-focused-icons-hover-bg: #F0F0F0; /* Hover background for icons inside focused search bar */
+   --search-textbox-focosed-bg: #ffffff;     /* Background of search bar when focused */
 
-  /* -----------------------------
-     Search Result Dropdown
-  ----------------------------- */
-  --search-result-border-top: #dbdada;      /* Top border between results */
-  --search-result-bg-hover: #f3f3f3;        /* Background when hovering a search result */
-  --search-result-from-text: #777;          /* Color for 'from' text in search result */
-  --search-result-show-all-icon: #5f6368;   /* Icon color in 'Show all results' button */
-  --search-result-show-all-text: #202124;   /* Text color in 'Show all results' */
+   /* -----------------------------
+      Search Result Dropdown
+   ----------------------------- */
+   --search-result-border-top: #dbdada;      /* Top border between results */
+   --search-result-bg-hover: #f3f3f3;        /* Background when hovering a search result */
+   --search-result-from-text: #777;          /* Color for 'from' text in search result */
+   --search-result-show-all-icon: #5f6368;   /* Icon color in 'Show all results' button */
+   --search-result-show-all-text: #202124;   /* Text color in 'Show all results' */
+   --search-no-result-text: #6F7071;         /* Text color when no search results */
+   
+   /* -----------------------------
+      Profile Picture
+   ----------------------------- */
+   --profile-picture-bg: #ccc;                /* Background color for default profile picture */
 
-  /* -----------------------------
-     Profile Picture
-  ----------------------------- */
-  --profile-picture-bg: #ccc;               /* Background color for default profile picture */
+   /* mail item colors */
+   --mail-item-shadow: rgba(60, 64, 67, 0.3); /* Subtle shadow used in mail item containers */
+
+   /* Compose Mail colors */
+   --compose-box-shadow: rgba(0, 0, 0, 0.2); /* Subtle shadow used in compose container */
+   --compose-title-border: #ccc;             /* Compose mail title bottom border */
+   --compose-icon-color: #444746;            /* Color used for icons in compose header (e.g. close, minimize) */
+
+   /* Scrollbar colors */
+   --scrollbar-thumb: rgba(0, 0, 0, 0.2);    /* Default scrollbar thumb */
+   --scrollbar-thumb-hover: rgba(0, 0, 0, 0.4); /* Hover state scrollbar thumb */
+
+   /* Mail item colors */
+   --mail-hover-box-shadow: rgba(0, 0, 0, 0.15);  /* Shadow on mail item hover */
+   
+   
+   /* -----------------------------
+     Hover Card
+   ----------------------------- */
+   --hover-card-bg: #ffffff;                         /* Background for sender hover card */
+   --hover-card-box-shadow: rgba(0, 0, 0, 0.2); /* Shadow for hover card */
+
+   /* -----------------------------
+      Context Menu Theme
+   ----------------------------- */
+   --context-menu-bg: #ffffff;                         /* Background for context menu (right-click menu) */
+   --context-menu-shadow: rgba(0, 0, 0, 0.2); /* Box shadow for context menu */
+   --menu-title-color: #5f6368;                        /* Text color for small section titles (e.g. "Label as:") */
+   --menu-item-color: #202124;                         /* Text color for menu items */
+   --menu-hover-bg: #f1f3f4;                            /* Background color on hover for menu items */
+   --menu-divider-color: #e0e0e0;                      /* Color of divider line between menu item groups */
+   --menu-checkbox-border: #5f6368;                    /* Border color of checkbox inside menu */
+   --menu-checkbox-bg: #ffffff;                        /* Background color of an unchecked checkbox */
+   --menu-checkbox-checkmark: #202124;                 /* Checkmark color when checkbox is selected */
+
+   /* Hover Card colors */
+   --avatar-placeholder-bg: #dddddd;                    /* Background color for placeholder avatar circle */
+
+   --user-info-box-border: #dadce0;                     /* Border color for user info boxes */
+
+   --label-context-menu-arrow: #5f6368;                 /* Arrow icon color in label context menu */
 }

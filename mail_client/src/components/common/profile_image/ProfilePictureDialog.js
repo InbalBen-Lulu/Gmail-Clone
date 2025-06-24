@@ -1,8 +1,9 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import Icon from '../../../assets/icons/Icon';
 import { MainIconButton } from '../button/IconButtons';
 import { ProfileActionButton } from '../button/IconTextButton';
 import ProfileImage from './ProfileImage';
+import ErrorMessage from '../input/ErrorMessage';
 import { resizeAndConvertToBase64 } from '../../../utils/imageUtils';
 import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE_BYTES } from '../../personal_info/constants';
 import './ProfilePictureDialog.css';
@@ -28,9 +29,11 @@ const ProfilePictureDialog = ({
   isUpdating
 }) => {
   const fileInputRef = useRef(null);
+  const [error, setError] = useState('');
 
   /**
-   * Triggers the hidden file input (if not currently updating)
+   * Opens the file input dialog to select an image.
+   * Only triggers if the dialog is not currently updating.
    */
   const handleUploadClick = () => {
     if (!isUpdating) {
@@ -39,40 +42,45 @@ const ProfilePictureDialog = ({
   };
 
   /**
-   * Validates the selected file, resizes and converts it to base64, then passes to parent
+   * Handles file selection from the file input.
+   * Validates the file type and size, resizes and converts it to base64,
+   * and passes the result to the parent component.
+   *
+   * @param {Event} e - file input change event
    */
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      alert("Please upload a valid image file.");
+      setError("Please upload a valid image file.");
       return;
     }
 
     if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-      alert("Only JPG or PNG files are allowed.");
+      setError("Only JPG or PNG files are allowed.");
       return;
     }
 
     const maxSizeBytes = MAX_IMAGE_SIZE_BYTES;
     if (file.size > maxSizeBytes) {
-      alert("Image is too large. Please choose a file under 5MB.");
+      setError("Image is too large. Please choose a file under 5MB.");
       return;
     }
 
     try {
       const base64 = await resizeAndConvertToBase64(file);
       onFileSelect(base64);
+      setError('');
     } catch (error) {
       console.error("Error processing image:", error);
-      alert("Failed to process image.");
+      setError("Failed to process image.");
     }
   };
 
   return (
     <div className="dialog-box">
-      {/* Dialog header with close button and Gmail branding */}
+      {/* Dialog header with close button and MailMe branding */}
       <div className="dialog-header">
         <MainIconButton
           icon={<Icon name="close" />}
@@ -81,8 +89,8 @@ const ProfilePictureDialog = ({
           className="dialog-close-btn"
         />
         <span className="dialog-label">
-          <img src="/pics/gmail_logo_icon.ico" alt="Gmail Logo" className="gmail-icon" />
-          <span>Gmail Account</span>
+          <img src="/pics/mail_icon.png" alt="MailMe Logo" className="mailme-icon" />
+          <span>MailMe Account</span>
         </span>
       </div>
 
@@ -96,7 +104,7 @@ const ProfilePictureDialog = ({
       <div className="dialog-profile-container">
         <ProfileImage
           src={imageSrc}
-          size="295px"
+          size="285px"
           className="dialog-profile-pic"
         />
         {isUpdating && (
@@ -105,6 +113,8 @@ const ProfilePictureDialog = ({
           </div>
         )}
       </div>
+
+      <ErrorMessage message={error} />
 
       {/* Action buttons – conditional on whether a custom image exists */}
       <div className="profile-actions">

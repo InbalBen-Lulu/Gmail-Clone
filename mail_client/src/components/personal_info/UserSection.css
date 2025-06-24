@@ -31,7 +31,7 @@
   border: 1px solid var(--user-info-box-border);
   border-radius: 10px;
   margin-bottom: 2.5rem;
-  padding: 0 1.5rem;
+  padding: 1.5rem 1.5rem;
   box-shadow: 0 1px 2px rgba(60, 64, 67, 0.1);
   max-width: 100%;
 }
@@ -52,13 +52,14 @@
 
 /* Margin only when there's no subtext under heading */
 .box-header.no-subtext {
-  margin-bottom: 1.5rem; 
+  margin-bottom: 1.5rem;
 }
 
 /* Container for rows inside each section */
 .user-info-details {
   display: flex;
   flex-direction: column;
+  padding: 0.5rem 0;
 }
 
 /* Default layout for a row: label + value */
@@ -68,7 +69,7 @@
   align-items: center;
   gap: 4rem;
   padding: 0.75rem 0.2rem;
-  height: 3rem;
+  height: 4rem;
   border-bottom: 1px solid var(--user-info-box-border);
 }
 
@@ -93,40 +94,34 @@
   text-align: left;
 }
 
-/* Special row layout for profile picture (3 columns) */
-.user-info-row.full {
+/* Row for profile picture: label, text, and button */
+.user-info-row.profile-picture-row {
   display: grid;
-  grid-template-columns: 1fr 2fr auto;
-  gap: 1rem;
+  grid-template-columns: 180px 1fr 80px;
   align-items: center;
-  border-bottom: 1px solid #e0e0e0;
-  padding: 0.5rem 0 2rem 0;
+  gap: 2rem;
+  padding: 0.75rem 0.2rem;
+  border: none;
+  height: auto;
+  border-bottom: 1px solid var(--user-info-box-border);
 }
 
-/* Label in profile picture row */
-.user-info-row.full .user-info-label {
+/* Subtext under profile picture label */
+.user-profile-subtext {
   font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--user-info-label);
-}
-
-/* Subtext in profile picture row */
-.user-info-row.full .user-info-value {
-  font-size: 0.9rem;
   color: var(--dialog-subtext);
-  line-height: 1.4;
-  font-weight: 400;
+  text-align: left;
 }
 
-/* Container for the actual profile picture and button */
-.profile-picture-cell {
-  justify-self: end;
-  width: 70px;
-  height: 70px;
+/* Container for the profile picture button */
+.user-profile-button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
-/* Page-level override: custom background just for this page */
+/* Page-wide background override */
 .personal-info-page {
-  background-color: var(--personal-info-bg); 
-  min-height: 100vh;        
+  background-color: var(--personal-info-bg);
+  min-height: 100vh;
 }

@@ -1,6 +1,6 @@
 import Textbox from '../../common/input/textBox/TextBox';
 import TextButton from '../../common/button/TextButton';
-import { useUserService } from '../../../services/userService';
+import { useUserService } from '../../../services/useUserService';
 
 
 /**

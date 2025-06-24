@@ -20,7 +20,7 @@ export const MainIconButton = ({ icon, ariaLabel, onClick, className = "" }) => 
 /**
  * Small icon button – used in lists, inline actions, etc.
  */
-export const SmallIconButton = ({ icon, ariaLabel, onClick, className = "" }) => {
+export const SmallIconButton = ({ icon, ariaLabel, onClick, className = "", disabled = false }) => {
   return (
     <IconButton
       icon={icon}
@@ -28,6 +28,7 @@ export const SmallIconButton = ({ icon, ariaLabel, onClick, className = "" }) =>
       onClick={onClick}
       size="small"
       className={`main-icon-button ${className}`.trim()}
+      disabled={disabled}
     />
   );
 };

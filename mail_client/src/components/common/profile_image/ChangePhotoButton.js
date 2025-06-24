@@ -3,7 +3,7 @@ import Icon from '../../../assets/icons/Icon';
 import ProfileImage from './ProfileImage';
 import ProfilePictureDialog from './ProfilePictureDialog';
 import Overlay from '../../overlay/Overlay';
-import { useUserService } from '../../../services/userService';
+import { useUserService } from '../../../services/useUserService';
 import { useAuth } from '../../../contexts/AuthContext';
 import './ChangePhotoButton.css';
 
@@ -19,7 +19,6 @@ import './ChangePhotoButton.css';
 const ChangePhotoButton = ({ alt = "profile", size = "70" }) => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-
   const { uploadProfileImage, removeProfileImage } = useUserService();
   const { user, setUser } = useAuth();
 
@@ -32,17 +31,27 @@ const ChangePhotoButton = ({ alt = "profile", size = "70" }) => {
     }
   }, []);
 
-  // Opens the profile picture dialog
+  /**
+   * Opens the profile picture dialog.
+   */
   const handleClick = () => {
     setDialogOpen(true);
   };
 
-  // Closes the dialog
+  /**
+   * Closes the profile picture dialog.
+   */
   const handleCloseDialog = () => {
     setDialogOpen(false);
   };
 
-  // Handles file selection and uploads the new image
+  /**
+   * Handles the upload of a new profile image.
+   * Encodes the image, uploads it to the server, updates user state,
+   * and forces a reload to reflect the change.
+   *
+   * @param {string} base64Image - base64 encoded image string
+   */
   const handleFileChange = async (base64Image) => {
     setIsUpdating(true);
     try {
@@ -59,7 +68,10 @@ const ChangePhotoButton = ({ alt = "profile", size = "70" }) => {
     }
   };
 
-  // Handles removal of the current profile image
+  /**
+   * Handles removal of the user's custom profile image.
+   * Sends request to server and updates user state accordingly.
+   */
   const handleRemoveImage = async () => {
     setIsUpdating(true);
     try {

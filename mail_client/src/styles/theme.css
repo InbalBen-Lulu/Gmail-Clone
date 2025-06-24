@@ -28,8 +28,8 @@ body.light-mode {
     --compose-button-bg: #c2e7ff;                /* Background for Compose button */
     --profile-action-bg: #C2E7FF;                /* Background for profile action buttons */
     --profile-action-color: #001D35;             /* Text/icon color for profile action */
-    --signout-butoon-bg: white;                  /* Sign out button background */
-    --signout-butoon-hover-bg: #DCE1E8;          /* Hover for sign out button */
+    --signout-button-bg: white;                  /* Sign out button background */
+    --signout-button-hover-bg: #DCE1E8;          /* Hover for sign out button */
     --primary-ghost-text-color: #1E64D4;         /* Text color for ghost buttons */
     --primary-ghost-hover-bg: rgba(66,133,244,0.08); /* Hover for ghost buttons */
 
@@ -62,7 +62,7 @@ body.light-mode {
     --color-circle-border: #ccc;                     /* Border color around color dots */
     --divider-color: #eee;                           /* Divider line in menus */
 
-
+    --logo-button-text-color: #444746;               /* Text color for the logo button */
 }
 
 
@@ -72,9 +72,9 @@ body.light-mode {
 body.dark-mode {
     /* --- Backgrounds --- */
     --main-bg-color: #111111;                      /* Main page background */
-    --secondary-bg: #000000;                       /* Generic secondary background */
-    --personal-info-bg: #2C2C2C;                   /* Background for personal info section */
-    --personal-info-box-bg: #111111;               /* Background for info boxes */
+    --secondary-bg: #2C2C2C;                       /* Generic secondary background */
+    --personal-info-bg: #111111;                   /* Background for personal info section */
+    --personal-info-box-bg: #2C2C2C;               /* Background for info boxes */
     --mail-list-bg: #2C2C2C;                       /* Mail list panel background */
     --search-bar-bg: #474747;                      /* Background for the search bar */
     --signin-box-bg: #000000;                      /* Container background for auth forms */
@@ -96,8 +96,8 @@ body.dark-mode {
     --compose-button-bg: #ffffff;                  /* Background for Compose button */
     --profile-action-bg: #004A77;                  /* Background for profile action buttons */
     --profile-action-color: #E3E3E3;               /* Text/icon color for profile action */
-    --signout-butoon-bg: #1B1B1B;                  /* Sign out button background */
-    --signout-butoon-hover-bg: #464749;            /* Hover for sign out button */
+    --signout-button-bg: #1B1B1B;                  /* Sign out button background */
+    --signout-button-hover-bg: #464749;            /* Hover for sign out button */
     --primary-ghost-text-color: #A8C7FA;           /* Text color for ghost buttons */
     --primary-ghost-hover-bg: rgba(111, 163, 247, 0.09); /* Hover for ghost buttons */
 
@@ -129,6 +129,8 @@ body.dark-mode {
     --menu-item-hover-bg: #333;                    /* Hover background for menu items */
     --color-circle-border: #666;                   /* Border color around color dots */
     --divider-color: #555;                         /* Divider line in menus */
+
+    --logo-button-text-color: #DDDDDD;             /* Text color for the logo button */
 }
 
 

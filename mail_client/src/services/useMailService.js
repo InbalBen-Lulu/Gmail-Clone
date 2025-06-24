@@ -134,7 +134,7 @@ export const useMailService = () => {
     if (!query?.trim()) return [];
 
     try {
-      const response = await authFetch(`/api/mails/search/${encodeURIComponent(query.trim())}`);
+      const response = await authFetch(`/api/mails/search-${encodeURIComponent(query.trim())}`);
       if (!response.ok) {
         console.warn(`Search failed with status ${response.status}`);
         return [];

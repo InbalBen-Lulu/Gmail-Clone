@@ -1,5 +1,7 @@
 import { useAuth } from '../contexts/AuthContext';
 import UserSection from '../components/personal_info/UserSection';
+import Header from '../components/layout/header/Header';
+import './PersonalInfoPage.css';
 
 /**
  * PersonalInfoPage
@@ -22,6 +24,14 @@ const PersonalInfoPage = () => {
   // Main content – user's personal info section
   return (
     <div className="personal-info-page">
+      {/* Header without search or menu button */}
+      <Header
+        showSearch={false}
+        showMenuButton={false}
+        background="var(--personal-info-bg)"
+      />
+
+      {/* User info section */}
       <UserSection user={user} />
     </div>
   );

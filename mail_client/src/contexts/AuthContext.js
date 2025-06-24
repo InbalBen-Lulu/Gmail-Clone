@@ -11,6 +11,13 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // true until auth check finishes
 
+  // Log out the user – clear local storage and auth state
+  const logout = useCallback(() => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
+  }, []);
+
   // On first load – try to restore auth state from localStorage
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -53,13 +60,6 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       throw new Error(error.message || 'Login failed');
     }
-  }, []);
-
-  // Log out the user – clear local storage and auth state
-  const logout = useCallback(() => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUser(null);
   }, []);
 
   // Build headers for authenticated API requests

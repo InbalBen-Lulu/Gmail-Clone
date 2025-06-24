@@ -76,3 +76,10 @@
   pointer-events: none;
 }
 
+/* Style the Compose button specifically when disabled */
+.btn.icon-text.compose:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
