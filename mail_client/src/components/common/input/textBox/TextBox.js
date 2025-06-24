@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, forwardRef } from 'react';
 import './TextBox.css';
-import { MdError } from 'react-icons/md';
 import ErrorMessage from '../ErrorMessage';
 
 /**
@@ -24,7 +23,6 @@ const Textbox = forwardRef(({
 }, ref) => {
     const [isFocused, setIsFocused] = useState(false);
     const hasValue = !!value && value.trim().length > 0;
-    const isTextarea = variant === 'compose body';
 
     const internalRef = useRef();
     const inputRef = ref || internalRef;

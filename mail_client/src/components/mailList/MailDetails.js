@@ -3,7 +3,7 @@ import { TrashButton, StarButton, SmallIconButton } from '../common/button/IconB
 import Icon from "../../assets/icons/Icon";
 import LabelChip from './LabelChip';
 import { formatMailDate } from '../../utils/dateUtils';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import SenderHoverCard from './SenderHoverCard';
 import { useCompose } from '../../contexts/ComposeContext';
 import { useMail } from '../../contexts/MailContext';
@@ -21,7 +21,6 @@ const MailDetails = ({ mail, onBack }) => {
     const { openCompose } = useCompose();
     const { toggleStar, deleteMail, setSpamStatus } = useMail();
     const { labels: allLabels } = useLabels();
-    const [localIsSpam, setLocalIsSpam] = useState(false);
 
     const {
         id,
@@ -35,10 +34,6 @@ const MailDetails = ({ mail, onBack }) => {
         to = [],
         isSpam
     } = mail;
-
-    useEffect(() => {
-        setLocalIsSpam(isSpam);
-    }, [isSpam]);
 
     const decodedBody = decodeURIComponent(body || '');
     const labelIds = labels.map(l => l.id);
@@ -59,7 +54,6 @@ const MailDetails = ({ mail, onBack }) => {
 
     const handleSpamToggle = async () => {
         await setSpamStatus(id, !isSpam);
-        setLocalIsSpam(!isSpam);
     };
 
     return (

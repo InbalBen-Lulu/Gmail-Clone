@@ -17,7 +17,7 @@ export const LabelProvider = ({ children }) => {
         } catch (err) {
             console.error('Failed to fetch labels:', err);
         }
-    }, []);
+    }, [fetchLabels]);
 
     return (
         <LabelContext.Provider value={{ labels, refreshLabels }}>

@@ -51,7 +51,8 @@ export const MailProvider = ({ children }) => {
         } catch (err) {
             console.error('Failed to fetch mails:', err);
         }
-    }, []);
+    }, [fetchMails, fetchMailById]);
+
 
     // Refreshes a specific mail by ID
     const refreshMail = async (mailId) => {

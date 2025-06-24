@@ -22,7 +22,6 @@ const MailItem = ({ mail: propMail, onClick }) => {
         body,
         sentAt,
         isStar,
-        labels = [],
         from,
         to = [],
         isDraft = false,

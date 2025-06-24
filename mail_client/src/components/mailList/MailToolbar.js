@@ -16,7 +16,7 @@ import { useSearchParams, useParams } from 'react-router-dom';
 
 const MailToolbar = () => {
   const { totalCount } = useMail();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const setSearchParams = useSearchParams()[1];
   const { offset, limit, loadMails } = useMail();
   const { category } = useParams();
 
