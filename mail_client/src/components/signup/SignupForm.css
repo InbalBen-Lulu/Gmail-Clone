@@ -29,12 +29,6 @@
   justify-content: flex-start; 
 }
 
-/* Google logo */
-.google-logo {
-  width: 48px;
-  margin-bottom: 0rem;
-}
-
 /* Title */
 .signup-title {
   font-size: 36px;
