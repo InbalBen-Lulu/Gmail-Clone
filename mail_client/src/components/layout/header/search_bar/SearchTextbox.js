@@ -19,11 +19,17 @@ const SearchTextbox = forwardRef(({ value, onChange, onFocus, onBlur, hasDropdow
 
   const [isFocused, setIsFocused] = useState(false);
 
+  /**
+   * Handles input focus event, sets internal focus state and calls external onFocus if provided.
+   */
   const handleFocus = (e) => {
     setIsFocused(true);
     if (onFocus) onFocus(e);
   };
 
+  /**
+   * Handles input blur event, resets internal focus state and calls external onBlur if provided.
+   */
   const handleBlur = (e) => {
     setIsFocused(false);
     if (onBlur) onBlur(e);

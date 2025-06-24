@@ -1,54 +1,72 @@
 import { useState, useEffect, useRef } from 'react';
-import GmailButton from './gmail_button/GmailButton';
+import LogoButton from './logo_button/LogoButton';
 import SearchTextbox from './search_bar/SearchTextbox';
 import SearchResultsDropdown from './search_bar/SearchResultsDropdown';
 import { MainIconButton } from '../../common/button/IconButtons';
 import Icon from '../../../assets/icons/Icon';
 import ToggleThemeButton from '../../common/ToggleThemeButton';
 import ProfileImage from '../../common/profile_image/ProfileImage';
-import useMailService from '../../../services/useMailService';
 import ProfileMenu from './profile_menu/ProfileMenu';
+import { useMailService } from '../../../services/useMailService';
+import { useAuth } from '../../../contexts/AuthContext';
 import './Header.css';
 
 /**
- * Header component – Gmail-style top bar with menu icon, logo and search box.
+ * Header component – Gmail-style top bar with optional menu button, search bar and theme toggle.
+ *
+ * Props:
+ * - onToggleSidebar: function – called when menu button is clicked
+ * - showSearch: boolean – whether to show the search bar (default: true)
+ * - showMenuButton: boolean – whether to show the left menu button (default: true)
+ * - background: string – optional background color (e.g. "white", "#f2f2f2")
  */
-const Header = () => {
+const Header = ({
+  onToggleSidebar,
+  showSearch = true,
+  showMenuButton = true,
+  background
+}) => {
+  const { user } = useAuth();
   const [searchText, setSearchText] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-
   const profileMenuRef = useRef(null);
+  const { searchMails } = useMailService();
 
-  const searchMails = useMailService();
-
+  /**
+   * Handles input change in the search bar.
+   * Updates search text and retrieves top 5 matching mail results.
+   * 
+   * @param {object} e - Input change event
+   */
   const handleChange = async (e) => {
     const value = e.target.value;
     setSearchText(value);
+
+    if (!value) {
+      setSearchResults([]);
+      return;
+    }
 
     const results = await searchMails(value);
     setSearchResults(results.slice(0, 5));
   };
 
+  // Determines if the search dropdown should be visible
   const hasDropdown = isFocused && searchText.length > 0;
 
   useEffect(() => {
+    // Closes the profile menu if user clicks outside of it
     const handleClickOutside = (e) => {
-      if (
-        profileMenuRef.current &&
-        !profileMenuRef.current.contains(e.target)
-      ) {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(e.target)) {
         setIsProfileOpen(false);
       }
     };
 
     if (isProfileOpen) {
       document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
     }
-
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -56,48 +74,57 @@ const Header = () => {
 
   return (
     <>
-      <header className="app-header">
-        {/* Left: menu + Gmail logo */}
+      <header
+        className="app-header"
+        style={background ? { backgroundColor: background } : {}}
+      >
+        {/* Left: menu + logo */}
         <div className="header-left">
-          <MainIconButton
-            icon={<Icon name="menu" />}
-            ariaLabel="Open menu"
-            className="menu-button"
-            onClick={() => console.log('Menu clicked')}
-          />
-          <GmailButton />
+          {showMenuButton && (
+            <MainIconButton
+              icon={<Icon name="menu" />}
+              ariaLabel="Toggle menu"
+              className="menu-button"
+              onClick={onToggleSidebar}
+            />
+          )}
+          <LogoButton />
         </div>
 
-        {/* Center: search + dropdown */}
-        <div className="header-center">
-          <div className="search-wrapper">
-            <SearchTextbox
-              value={searchText}
-              onChange={handleChange}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setTimeout(() => setIsFocused(false), 150)}
-              hasDropdown={hasDropdown}
-            />
-            <SearchResultsDropdown
-              results={searchResults}
-              visible={hasDropdown}
-              searchText={searchText}
-            />
+        {/* Center: search box */}
+        {showSearch && (
+          <div className="header-center">
+            <div className="search-wrapper">
+              <SearchTextbox
+                value={searchText}
+                onChange={handleChange}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setTimeout(() => setIsFocused(false), 150)}
+                hasDropdown={hasDropdown}
+              />
+              <SearchResultsDropdown
+                results={searchResults}
+                visible={hasDropdown}
+                searchText={searchText}
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Right: theme toggle + profile image */}
         <div className="header-right">
           <ToggleThemeButton />
-          <button
-            className="profile-button"
-            onClick={() => setIsProfileOpen(prev => !prev)}
-          >
-            <ProfileImage
-              src="/logo192.png"
-              size="35px"
-            />
-          </button>
+          {user && (
+            <button
+              className="profile-button"
+              onClick={() => setIsProfileOpen(prev => !prev)}
+            >
+              <ProfileImage
+                src={user.profileImage}
+                size="35px"
+              />
+            </button>
+          )}
         </div>
       </header>
 
@@ -112,3 +139,4 @@ const Header = () => {
 };
 
 export default Header;
+
