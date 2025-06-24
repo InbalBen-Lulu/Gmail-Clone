@@ -161,16 +161,17 @@ async function sendDraft(mailId, userId, updatedFields) {
  * Searches for mails visible to the user, containing the query string.
  * Results are sorted by send date (descending).
  * Returns:
+ *   - total mails count
  *   - list of formatted mail summaries
  */
 function searchMails(userId, query, limit = 5, offset = 0) {
     const statusMap = userMailStatus.get(userId);
-    if (!statusMap) return [];
+    if (!statusMap) return { total: 0, mails: [] };
 
     const q = String(query || '').trim().toLowerCase();
-    if (!q) return [];
+    if (!q) return { total: 0, mails: [] };
 
-    return [...statusMap.entries()]
+    const matched = [...statusMap.entries()]
         .map(([id]) => mails.get(id))
         .filter(Boolean)
         .filter(mail => {
@@ -185,10 +186,18 @@ function searchMails(userId, query, limit = 5, offset = 0) {
 
             return subjectMatch || bodyMatch || toMatch || fromMatch || fromNameMatch;
         })
-        .sort((a, b) => new Date(b.sentAt) - new Date(a.sentAt))
+        .sort((a, b) => new Date(b.sentAt) - new Date(a.sentAt));
+
+    const paginated = matched
         .slice(offset, offset + limit)
-        .map(mail => formatMailSummary(mail, userId));
+        .map(mail => formatMailSummary(mail, userId));
+
+    return {
+        total: matched.length,
+        mails: paginated
+    };
 }
+
 
 module.exports = {
     createMail,

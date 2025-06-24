@@ -170,14 +170,18 @@ async function sendDraftMail(req, res) {
 }
 
 /**
- * GET /api/mails/search/:query
+ * GET /api/mails/search-:query
  * Searches accessible mails by query string in subject/body.
  * Returns:
  *   - 200 with array of mail summaries
  *   - 400 if query is empty
  */
 function searchMails(req, res) {
-    const query = req.params.query?.trim();
+    let query = req.params.query?.trim();
+    if (query.startsWith('search-')) {
+        query = query.replace('search-', '');
+    }
+
     const { limit = 5, offset = 0 } = req.query;
 
     if (!query) {
