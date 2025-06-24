@@ -54,6 +54,7 @@ const MailDetails = ({ mail, onBack }) => {
 
     const handleSpamToggle = async () => {
         await setSpamStatus(id, !isSpam);
+        onBack(); // Navigate back after marking as spam
     };
 
     return (
@@ -72,7 +73,10 @@ const MailDetails = ({ mail, onBack }) => {
                         />
                     )}
 
-                    <StarButton isStarred={isStar} onClick={() => toggleStar(id)} />
+                    {!isSpam && (
+                        <StarButton isStarred={isStar} onClick={() => toggleStar(id)} />
+                    )}
+
                     <TrashButton onClick={() => deleteMail(id)} />
                 </div>
             </div>

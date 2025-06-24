@@ -3,62 +3,45 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: var(--mail-bg);
-  border-left: 1px solid var(--gray-light);
-  border-right: 1px solid var(--gray-light);
   overflow: hidden;
+  flex: 1;
+  min-height: 0;
 }
 
-/* mail-toolbar: Top toolbar shown above the mail list */
-.mail-toolbar {
+/* Reusable topbar style (used in toolbar or inside MailDetails) */
+.topbar {
   display: flex;
   align-items: center;
   padding: 12px 16px;
-  border-bottom: 1px solid var(--gray-light);
-  background-color: var(--secondary-bg);
+  height: 48px;
+  flex-shrink: 0;
+  width: 100%; 
 }
 
-/* mail-toolbar .title: Title inside the toolbar */
-.mail-toolbar .title {
-  font-size: 1rem;
-  font-weight: bold;
-  color: var(--primary-text);
-}
-
-/* mail-details-topbar: Toolbar shown at the top of the mail details view */
-.mail-details-topbar {
-  display: flex;
-  align-items: center;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--gray-light);
-  background-color: var(--secondary-bg);
-}
-
-/* mail-list and mail-details: Scrollable area inside the panel */
-.mail-panel .mail-list,
-.mail-panel .mail-details {
+/* Scrollable mail list */
+.mail-panel .mail-list {
   overflow-y: auto;
   flex: 1;
   padding: 0;
 }
 
-/* mail-panel scrollbar: Custom scrollbar styling */
-.mail-panel::-webkit-scrollbar {
-  width: 8px;
+/* Scrollable mail details */
+.mail-panel .mail-details {
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
 }
 
-/* scrollbar-thumb: Styling for the draggable scrollbar thumb */
-.mail-panel::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb);
-  border-radius: 4px;
-}
-
-/* Empty state message shown when no mails are found */
+/* Empty state (shown when no mails are found) */
 .empty-mail-list {
   color: var(--text-color);
   font-size: 16px;
   text-align: center;
-  margin-top: auto;
-  margin-bottom: auto;
-  align-self: center;
+  padding: 32px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

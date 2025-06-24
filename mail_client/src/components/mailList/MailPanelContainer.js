@@ -3,6 +3,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import MailPanel from './MailPanel';
 import { useMail } from '../../contexts/MailContext';
 import { useLabels } from '../../contexts/LabelContext';
+import './MailPanelContainer.css';
 
 /**
  * MailPanel is the main container for the mail content area.
@@ -26,14 +27,15 @@ const MailPanelContainer = () => {
 
     useEffect(() => {
         loadMails(offset, limit, category, mailIdNum);
-    }, [offset, limit, category, mailIdNum, loadMails]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [offset, limit, category, mailIdNum]);
 
     useEffect(() => {
         refreshLabels();
     }, [category, refreshLabels]);
 
     return (
-        <div>
+        <div className="mail-panel-container">
             <MailPanel />
         </div>
     );

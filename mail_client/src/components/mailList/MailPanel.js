@@ -1,12 +1,11 @@
 import MailList from './MailList';
 import MailDetails from './MailDetails';
 import MailToolbar from './MailToolbar';
-import { SmallIconButton } from '../common/button/IconButtons';
-import Icon from '../../assets/icons/Icon';
 import { useCompose } from '../../contexts/ComposeContext';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMemo } from 'react';
 import { useMail } from '../../contexts/MailContext';
+import './MailPanel.css';
 
 /**
  * MailPanel is the main container for the mail content area.
@@ -16,13 +15,11 @@ import { useMail } from '../../contexts/MailContext';
  * - If no mail is selected, it displays the mail list (MailList) and a toolbar (MailToolbar).
  * - Handles pagination, refresh, and routing.
  */
-
 const MailPanel = () => {
   const { openCompose } = useCompose();
   const navigate = useNavigate();
   const { mailId, category } = useParams();
   const mailIdNum = Number(mailId);
-
 
   const {
     mails,
@@ -35,8 +32,7 @@ const MailPanel = () => {
   } = useMail();
 
   const selectedMail = useMemo(() => {
-    const numericId = parseInt(mailIdNum);
-    return mails.find(m => m.id === numericId);
+    return mails.find(m => m.id === mailIdNum);
   }, [mailIdNum, mails]);
 
   const handleMailClick = (mail) => {
@@ -55,13 +51,6 @@ const MailPanel = () => {
         <div className="empty-mail-list">Mail not found</div>
       ) : mailIdNum && selectedMail ? (
         <>
-          <div className="mail-details-topbar">
-            <SmallIconButton
-              icon={<Icon name="arrow-back2" />}
-              ariaLabel="Back"
-              onClick={() => navigate(`/mails/${category}`)}
-            />
-          </div>
           <MailDetails
             mail={selectedMail}
             onBack={() => navigate(`/mails/${category}`)}
