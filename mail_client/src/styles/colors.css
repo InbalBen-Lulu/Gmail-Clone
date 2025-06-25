@@ -89,7 +89,7 @@ body {
       Context Menu Theme
    ----------------------------- */
    --context-menu-bg: #ffffff;                         /* Background for context menu (right-click menu) */
-   --context-menu-shadow: rgba(0, 0, 0, 0.2); /* Box shadow for context menu */
+   --context-menu-shadow: rgba(0, 0, 0, 0.2);          /* Box shadow for context menu */
    --menu-title-color: #5f6368;                        /* Text color for small section titles (e.g. "Label as:") */
    --menu-item-color: #202124;                         /* Text color for menu items */
    --menu-hover-bg: #f1f3f4;                            /* Background color on hover for menu items */
