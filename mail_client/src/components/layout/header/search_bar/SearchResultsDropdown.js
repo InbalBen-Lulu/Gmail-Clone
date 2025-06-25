@@ -1,7 +1,7 @@
 import { FiMail } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import Icon from '../../../../assets/icons/Icon';
-// import { formatMailDate } from '../../../../utils/emailUtils';
+import { formatMailDate } from '../../../../utils/dateUtils';
 import './SearchResultsDropdown.css';
 
 /**
@@ -49,8 +49,7 @@ const SearchResultsDropdown = ({ results, visible, searchText }) => {
             key={mail.id}
             onClick={() => handleResultClick(mail.id)}
           >
-            <div className="result-date">{mail.date}</div>
-            {/* <div className="result-date">{formatMailDate(mail.sentAt)}</div> */}
+            <div className="result-date">{formatMailDate(mail.sentAt)}</div>
             <div className="result-content">
               <div className="result-subject">{mail.subject}</div>
               <div className="result-from">{mail.from.name}</div>

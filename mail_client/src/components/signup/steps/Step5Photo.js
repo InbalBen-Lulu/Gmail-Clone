@@ -6,14 +6,6 @@ import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE_BYTES } from '../../personal_info/c
 import { useUserService } from '../../../services/useUserService';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { useRef, useState } from 'react';
-import ProfileImage from '../../common/profile_image/ProfileImage';
-import TextButton from '../../common/button/TextButton';
-import { resizeAndConvertToBase64 } from '../../../utils/imageUtils';
-import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE_BYTES } from '../../personal_info/constants';
-import { useUserService } from '../../../services/useUserService';
-import { useAuth } from '../../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
 
 /**
  * Step5Photo component – last signup step for uploading a profile image.

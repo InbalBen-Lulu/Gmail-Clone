@@ -40,7 +40,7 @@ const SidebarMenu = () => {
     { id: 'starred', label: 'Starred', filledIcon: <MdStar />, outlineIcon: <MdStarBorder /> },
     { id: 'sent', label: 'Sent', filledIcon: <MdSend />, outlineIcon: <MdOutlineSend /> },
     { id: 'drafts', label: 'Drafts', filledIcon: <MdInsertDriveFile />, outlineIcon: <MdOutlineInsertDriveFile /> },
-    { id: 'allmail', label: 'All Mail', filledIcon: <MdMail />, outlineIcon: <MdOutlineMail /> },
+    { id: 'allmails', label: 'All Mail', filledIcon: <MdMail />, outlineIcon: <MdOutlineMail /> },
     { id: 'spam', label: 'Spam', filledIcon: <MdReport />, outlineIcon: <MdOutlineReport /> },
   ];
 

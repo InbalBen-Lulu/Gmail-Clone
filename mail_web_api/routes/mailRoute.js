@@ -19,7 +19,7 @@ router.post('/:id/labels', mailController.addLabelToMail);
 router.delete('/:id/labels', mailController.removeLabelFromMail);
 
 // Route: Filtered mail views
-router.get('/allmail', mailController.getAllMails);
+router.get('/allmails', mailController.getAllMails);
 router.get('/inbox', mailController.getInboxMails);
 router.get('/sent', mailController.getSentMails);
 router.get('/drafts', mailController.getDraftMails);

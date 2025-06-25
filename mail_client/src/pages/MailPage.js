@@ -3,6 +3,7 @@ import ComposeForm from '../components/composeMail/ComposeForm';
 import { ComposeProvider, useCompose } from '../contexts/ComposeContext';
 import { MailProvider } from '../contexts/MailContext';
 import { LabelProvider } from '../contexts/LabelContext';
+import Layout from '../components/layout/Layout';
 import './MailPage.css';
 
 /**
@@ -27,13 +28,15 @@ const MailPageContent = () => {
  * MailPage wraps the content in ComposeProvider, LabelProvider and MailProvider.
  */
 const MailPage = () => (
-  <ComposeProvider>
-    <LabelProvider>
+  <LabelProvider>
+    <ComposeProvider>
       <MailProvider>
-        <MailPageContent />
+        <Layout>
+          <MailPageContent />
+        </Layout>
       </MailProvider>
-    </LabelProvider>
-  </ComposeProvider>
+    </ComposeProvider>
+  </LabelProvider>
 );
 
 export default MailPage;

@@ -4,10 +4,8 @@ import Step2Birth from './steps/Step2Birth';
 import Step3Username from './steps/Step3Username';
 import Step4Password from './steps/Step4Password';
 import Step5Photo from './steps/Step5Photo';
-import Step5Photo from './steps/Step5Photo';
 import { months, genders } from './steps/constants';
 import './SignupForm.css';
-import { useUserService } from '../../services/useUserService';
 import { useUserService } from '../../services/useUserService';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
@@ -85,11 +83,10 @@ const SignupForm = () => {
                 <div className="signup-left">
                     <MailMeLogo />
                     <h2 className="signup-title">
-                        {step === 1 && 'Create a Google Account'}
+                        {step === 1 && 'Create an Account'}
                         {step === 2 && 'Basic information'}
                         {step === 3 && 'How you’ll sign in'}
                         {step === 4 && 'Create a strong password'}
-                        {step === 5 && 'Add a profile picture'}
                         {step === 5 && 'Add a profile picture'}
                     </h2>
                     <p className="signup-subtext">
@@ -97,7 +94,6 @@ const SignupForm = () => {
                         {step === 2 && 'Enter your birthday and gender'}
                         {step === 3 && 'Create a Gmail address for signing in to your Google Account'}
                         {step === 4 && 'Create a strong password with a mix of letters, numbers and symbols'}
-                        {step === 5 && 'This photo will show up on your profile and in your emails'}
                         {step === 5 && 'This photo will show up on your profile and in your emails'}
                     </p>
                 </div>
@@ -163,7 +159,7 @@ const SignupForm = () => {
                             confirmError={confirmError}
                             setPasswordError={setPasswordError}
                             setConfirmError={setConfirmError}
-                            onNext={() => setStep(5)}
+                            onNext={handleSignupSubmit}
                         />
                     )}
 

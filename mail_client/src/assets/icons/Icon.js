@@ -27,6 +27,7 @@ import { ReactComponent as Refresh } from "./refresh.svg";
 import { ReactComponent as NotSpam } from "./not_spam.svg";
 import { ReactComponent as OpenInFull } from "./open_in_full.svg";
 import { ReactComponent as Remove } from "./remove.svg";
+import { ReactComponent as Menu } from "./menu.svg";
 
 // Map of icon name → SVG component
 const icons = {
@@ -57,7 +58,8 @@ const icons = {
   refresh: Refresh,
   not_spam: NotSpam,
   open_in_full: OpenInFull,
-  remove: Remove
+  remove: Remove,
+  menu: Menu
 };
 
 /**

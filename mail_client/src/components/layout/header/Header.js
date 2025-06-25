@@ -32,7 +32,7 @@ const Header = ({
   const [isFocused, setIsFocused] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileMenuRef = useRef(null);
-  const { searchMails } = useMailService();
+  const { fetchMails } = useMailService();
 
   /**
    * Handles input change in the search bar.
@@ -49,8 +49,13 @@ const Header = ({
       return;
     }
 
-    const results = await searchMails(value);
-    setSearchResults(results.slice(0, 5));
+    try {
+      const { mails } = await fetchMails(0, 5, `search-${value}`);
+      setSearchResults(mails);
+    } catch (err) {
+      console.error('Failed to fetch search results:', err.message);
+      setSearchResults([]);
+    }
   };
 
   // Determines if the search dropdown should be visible
