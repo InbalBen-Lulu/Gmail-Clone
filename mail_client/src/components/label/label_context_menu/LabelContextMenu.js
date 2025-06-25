@@ -12,15 +12,20 @@ import "./LabelContextMenu.css";
  * - onSetColor: function(color: string | null) – called with selected color or null to reset
  * - onClose: function – called to close the context menu
  */
-const LabelContextMenu = ({ onEdit, onRemove, onSetColor, onClose }) => {
+const LabelContextMenu = ({ onEdit, onRemove, onSetColor, onClose, contextRef }) => {
   const [showColorSubmenu, setShowColorSubmenu] = useState(false);
   const wrapperRef = useRef(null);
 
-  // Close menu if clicking outside
+  // Close context menu only if user clicks outside both the menu and the 3-dot icon button
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
-        onClose(); // Close entire menu
+      const clickedOutsideMenu =
+        wrapperRef.current && !wrapperRef.current.contains(e.target);
+      const clickedOutsideButton =
+        contextRef?.current && !contextRef.current.contains(e.target);
+
+      if (clickedOutsideMenu && clickedOutsideButton) {
+        onClose(); // Close only if click is outside both
       }
     };
 
@@ -28,7 +33,7 @@ const LabelContextMenu = ({ onEdit, onRemove, onSetColor, onClose }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [onClose]);
+  }, [onClose, contextRef]);
 
   const renderColorSubmenu = () => (
     <div className="color-submenu">

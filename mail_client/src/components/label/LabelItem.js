@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef} from "react";
 import { MdLabel } from "react-icons/md";
 import { SmallIconButton } from "../common/button/IconButtons";
 import Icon from "../../assets/icons/Icon";
@@ -25,23 +25,6 @@ const LabelItem = ({ label, color, id, isActive, onClick }) => {
 
   const { renameLabel, deleteLabel, setLabelColor, resetLabelColor } = useLabelService();
   const { labels, refreshLabels } = useLabels();
-
-  // Close menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setShowMenu(false);
-      }
-    };
-
-    if (showMenu) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showMenu]);
 
   const closeMenu = () => setShowMenu(false);
 
@@ -140,6 +123,7 @@ const LabelItem = ({ label, color, id, isActive, onClick }) => {
               onRemove={handleRemove}
               onSetColor={handleSetColor}
               onClose={closeMenu}
+              contextRef={menuRef}
             />
           )}
         </div>
