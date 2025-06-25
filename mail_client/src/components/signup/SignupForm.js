@@ -81,7 +81,7 @@ const SignupForm = () => {
                 <div className="signup-left">
                     <img src="/pics/google-g-icon.png" alt="Google logo" className="google-logo" />
                     <h2 className="signup-title">
-                        {step === 1 && 'Create a Google Account'}
+                        {step === 1 && 'Create a MailMe Account'}
                         {step === 2 && 'Basic information'}
                         {step === 3 && 'How you’ll sign in'}
                         {step === 4 && 'Create a strong password'}
@@ -90,7 +90,7 @@ const SignupForm = () => {
                     <p className="signup-subtext">
                         {step === 1 && 'Enter your name'}
                         {step === 2 && 'Enter your birthday and gender'}
-                        {step === 3 && 'Create a Gmail address for signing in to your Google Account'}
+                        {step === 3 && 'Create a MailMe address for signing in to your MailMe Account'}
                         {step === 4 && 'Create a strong password with a mix of letters, numbers and symbols'}
                         {step === 5 && 'This photo will show up on your profile and in your emails'}
                     </p>
