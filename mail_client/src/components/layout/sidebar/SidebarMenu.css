@@ -3,8 +3,8 @@
   display: flex;
   flex-direction: column;
   gap: 0; 
-  /* padding: 8px 0; */
-  width: 240px;
+  width: 255px;
+  margin-right: 10px;
 }
 
 /* Container for the Compose button */
@@ -12,11 +12,12 @@
   margin-top: 10px;
   margin-bottom: 18px;
   margin-left: 7px;
+  margin-right: 2px;
 }
 
 /* Optional container styling for the sidebar block */
 .sidebar-container {
-  background-color: var(--sidebar-bg, transparent);
+  background-color: var(--main-bg-color, transparent);
   padding: 0.5rem 0.75rem;
   height: 100%;
 }

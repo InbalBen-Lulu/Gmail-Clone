@@ -21,7 +21,9 @@
   background-color: var(--compose-button-bg);
   color: var(--compose-button-text);
   border-radius: 16px;
-  padding: 0.9rem 1.2rem;
+  padding: 0.9rem 0;
+  padding-left: 1.2rem;
+  padding-right: 1.4rem;
   font-size: 0.95rem;
   width: 138px;
   height: 56px;

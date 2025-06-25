@@ -42,7 +42,10 @@ const MailItem = ({ mail: propMail, onClick }) => {
             : from?.name || from?.userId || 'Unknown';
 
     return (
-        <div className={`mail-item ${isRead ? 'read' : ''}`} onClick={() => onClick?.(id)}>
+        <div
+          className={`mail-item ${isRead || type === 'sent' ? 'read' : 'unread'}`}
+          onClick={() => onClick?.(id)}
+        >
             {/* LEFT: Star + "Draft" , Labels*/}
             <div className="mail-left">
                 {!isSpam && (

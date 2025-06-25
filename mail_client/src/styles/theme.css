@@ -23,7 +23,7 @@ body.light-mode {
 
     /* Interactive background states */
     --side-item-hover-bg: #E1E3E1;          /* Background when hovering over side menu item */
-    --mail-item-bg: #ffffff;                /* Background for a regular mail item */
+    --mail-item-bg: #f2f6fc;                /* Background for a regular mail item */
     --mail-item-unread-bg: #FFFFFF;         /* Background for an unread mail item */
 
     /* Icon colors */
@@ -88,6 +88,8 @@ body.light-mode {
     --divider-color: #eee;                           /* Divider line in menus */
 
     --label-item-more-hover: rgba(194, 192, 192, 0.237); /* Hover for more icon on labels */
+
+    --logo-button-text-color: #444746;
 }
 
 /* -----------------------------
@@ -98,7 +100,7 @@ body.dark-mode {
     --main-bg-color: #111111;               /* Main background of the whole page */
     --personal-info-bg: #111111;            /* Background of the user section */
     --personal-info-box-bg: #2C2C2C;        /* Background of info boxes inside the section */
-    --mail-list-bg: #2C2C2C;                /* Background of the mail list area */
+    --mail-list-bg: rgba(51, 51, 51, 0.8);                /* Background of the mail list area */
     --search-bar-bg: #474747;               /* Background of the search bar */
     --menu-bg: #111111;                     /* Shared background for top and side menus */
     --signin-box-bg: #000000;               /* Background color for the signin/signup form container */
@@ -116,7 +118,7 @@ body.dark-mode {
     /* Interactive background states */
     --side-item-hover-bg: #595959;          /* Background when hovering over side menu item */
     --mail-item-bg: #161616;                /* Background for a regular mail item */
-    --mail-item-unread-bg: #2C2C2C;         /* Background for an unread mail item */
+    --mail-item-unread-bg: rgba(51, 51, 51, 0.8);         /* Background for an unread mail item */
 
     /* Icon colors */
     --main-icon-color: #E7E7E7;             /* Icon color for top bar/side bar */
@@ -157,7 +159,7 @@ body.dark-mode {
     --draft-label-color: #ff6f6f;
     --mail-separator-color: #a0a0a0;
     --mail-body-color: #a0a0a0;
-    --mail-item-read-bg: #2c2c2c;
+    --mail-item-read-bg: #161616; 
 
     --profile-menu-bg: #282A2C;
     --signout-button-bg: #1B1B1B;
@@ -181,7 +183,7 @@ body.dark-mode {
     --divider-color: #555;                         /* Divider line in menus */
 
     --label-item-more-hover: #3F3F3F;              /* Hover for more icon on labels */
-
+    --logo-button-text-color: #ffffff;
 }
 
 /* -----------------------------

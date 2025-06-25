@@ -75,7 +75,7 @@ const SidebarMenu = () => {
    * @param {object} label - Label object with id and name
    */
   const handleClickLabel = (label) => {
-    setActiveItem(`label-${label.id}`); 
+    setActiveItem(`labels-${label.id}`); 
     navigate(`/mails/labels-${label.id}`);
   };
 
@@ -136,7 +136,7 @@ const SidebarMenu = () => {
           id={label.id}
           label={label.name}
           color={label.color}
-          isActive={activeItem === `label-${label.id}`}
+          isActive={activeItem === `labels-${label.id}`}
           onClick={() => handleClickLabel(label)}
         />
       ))}

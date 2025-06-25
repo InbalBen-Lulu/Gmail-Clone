@@ -4,6 +4,7 @@ import ChangePhotoButton from '../../../common/profile_image/ChangePhotoButton';
 import TextButton from '../../../common/button/TextButton';
 import Icon from '../../../../assets/icons/Icon';
 import { MainIconButton } from '../../../common/button/IconButtons';
+import { EMAIL_DOMAIN } from '../../../personal_info/constants';
 import './ProfileMenu.css';
 
 /**
@@ -13,6 +14,7 @@ import './ProfileMenu.css';
 const ProfileMenu = ({ onClose }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const email = `${user.userId}@${EMAIL_DOMAIN}`;
 
   /**
    * Navigates to the personal info page and closes the profile menu.
@@ -41,7 +43,7 @@ const ProfileMenu = ({ onClose }) => {
       />
 
       {/* Email and profile picture */}
-      <p className="email">{user.email}</p>
+      <p className="email">{email}</p>
       <div className="profile-image-wrapper">
         <ChangePhotoButton image={user.profileImage} size="95px" />
       </div>

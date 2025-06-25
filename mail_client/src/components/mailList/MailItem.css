@@ -12,6 +12,17 @@
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Background for unread mails */
+.mail-item.unread {
+  background-color: var(--mail-item-unread-bg);
+}
+
+/* Make sender name and subject bold for unread mails */
+.mail-item.unread .mail-sender,
+.mail-item.unread .subject {
+  font-weight: 600;
+}
+
 /* Highlight background and show shadow on hover. */
 .mail-item:hover {
   background-color: var(--mail-item-hover-bg);
@@ -49,7 +60,7 @@
 
 /* Background color override for read mails. */
 .mail-item.read {
-  background-color: var(--mail-item-read-bg);
+  background-color: var(--mail-item-bg);
 }
 
 /* Central section containing subject, labels, and preview. */

@@ -15,7 +15,6 @@
 /* Main content area (right side of the layout) */
 .layout-content {
   flex: 1;
-  padding: 1rem;
   overflow-y: auto;
   background-color: var(--background-color);
 }

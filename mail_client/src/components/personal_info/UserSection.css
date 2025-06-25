@@ -1,7 +1,7 @@
 /* Main wrapper for user info page */
 .user-section {
   background-color: var(--personal-info-bg);
-  padding: 2rem;
+  padding: 1rem;
   font-family: 'Roboto', sans-serif;
   max-width: 850px;
   margin: 0 auto;
@@ -10,7 +10,7 @@
 /* Top heading section */
 .page-header {
   text-align: center;
-  margin: 1rem 0 3rem 0;
+  margin-bottom: 3rem;
 }
 
 .main-page-title {
