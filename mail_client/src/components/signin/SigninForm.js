@@ -74,7 +74,7 @@ const SigninForm = () => {
                     </h2>
                     {step === 1 && (
                         <p className="signin-subtext">
-                            with your Google Account to continue to Gmail.
+                            with your Google Account to continue to MailMe.
                         </p>
                     )}
                 </div>
