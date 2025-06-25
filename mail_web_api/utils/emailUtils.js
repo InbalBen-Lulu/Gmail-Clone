@@ -11,19 +11,19 @@ function getEmailFromUserId(userId) {
 }
 
 /**
- * Extracts the userId from a full email address.
+ * Extracts the userId from a full email address,
+ * but only if it belongs to the system's mail domain.
  * Example: "EXAMPLE@mailme.com" ➝ "EXAMPLE"
+ *          "user@gmail.com" ➝ null
  * @param {string} email 
  * @returns {string|null}
  */
 function getUserIdFromEmail(email) {
-    if (typeof email !== 'string') return email;
-
-    const index = email.indexOf('@');
-    if (index === -1) {
-        return email; 
+    if (!isValidSystemEmail(email)) {
+        return null;
     }
 
+    const index = email.indexOf('@');
     return email.slice(0, index); 
 }
 

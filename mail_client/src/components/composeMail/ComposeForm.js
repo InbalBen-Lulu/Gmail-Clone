@@ -30,7 +30,7 @@ const ComposeForm = () => {
     const [bodyField, setBodyField] = useState(composeBody);
     const [minimized, setMinimized] = useState(false);
 
-    const { sendMail, saveDraft } = useMailService();
+    const { sendMail, saveDraft, updateDraft } = useMailService();
 
     const handleSend = async () => {
         try {
@@ -63,13 +63,19 @@ const ComposeForm = () => {
 
     const handleClose = async () => {
         try {
+            const toList = toField.trim().split(/\s+/);
             const isEmpty =
                 !toField.trim() &&
                 !subjectField.trim() &&
                 !bodyField.trim();
 
-            if (!isEmpty) {
-                const toList = toField.trim().split(/\s+/);
+            if (isDraft && composeId) {
+                await updateDraft(composeId, {
+                    to: toList,
+                    subject: subjectField,
+                    body: bodyField
+                });
+            } else if (!isEmpty) {
                 await saveDraft({
                     to: toList,
                     subject: subjectField,
@@ -82,6 +88,7 @@ const ComposeForm = () => {
             alert('Failed to save draft: ' + err.message);
         }
     };
+
 
     return (
         <div className={`compose-mail ${minimized ? 'minimized' : ''}`}>

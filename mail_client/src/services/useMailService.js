@@ -65,6 +65,24 @@ export const useMailService = () => {
     return await response.json(); // { id, ...responseMeta }
   };
 
+
+  /**
+ * Updates an existing draft mail.
+ */
+  const updateDraft = async (mailId, { to, subject, body }) => {
+    const response = await authFetch(`/api/mails/${mailId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ to, subject, body })
+    });
+
+    if (response.status === 204) return; // success, no content
+
+    const errorData = await response.json();
+    throw new Error(errorData.error || 'Failed to update draft');
+  };
+
+
   /**
    * Fetches a mail by ID.
    */
@@ -128,6 +146,7 @@ export const useMailService = () => {
     fetchMails,
     sendMail,
     saveDraft,
+    updateDraft,
     fetchMailById,
     deleteMail,
     toggleStar,
