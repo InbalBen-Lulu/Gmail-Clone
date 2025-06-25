@@ -89,7 +89,6 @@ const LabelDialog = ({
             setError('');
             clearExternalError();
           }}
-          maxLength={20}
         />
 
         {/* Inline error below the input */}
