@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ContextMenu from '../common/ContextMenu';
-import LabelDialog from '../label/LabelDialog'; 
+import LabelDialog from '../label/LabelDialog';
 import { useMail } from '../../contexts/MailContext';
 import { useLabels } from '../../contexts/LabelContext';
 
@@ -16,8 +16,45 @@ const LabelContextMenu = ({ mailId, position, onClose }) => {
 
   const [showDialog, setShowDialog] = useState(false);
   const [dialogError, setDialogError] = useState('');
+  const [adjustedPos, setAdjustedPos] = useState(position);
 
+  const menuRef = useRef(null);
   const mail = mails.find(m => m.id === mailId);
+
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      if (!menuRef.current) return;
+
+      const menuRect = menuRef.current.getBoundingClientRect();
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+
+      let newX = position.x;
+      let newY = position.y;
+
+      if (position.x + menuRect.width > screenWidth) {
+        newX = Math.max(0, screenWidth - menuRect.width - 8);
+      }
+
+      const fitsBelow = position.y + menuRect.height <= screenHeight;
+      const fitsAbove = position.y >= menuRect.height;
+
+      if (!fitsBelow && fitsAbove) {
+        newY = position.y - menuRect.height;
+      }
+
+      if (!fitsBelow && !fitsAbove) {
+        newY = screenHeight - menuRect.height;
+      }
+
+      setAdjustedPos({ x: newX, y: newY });
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [position]);
+
+
 
   const selectedLabelIds = Array.isArray(mail?.labels)
     ? mail.labels.map(l => l.id)
@@ -54,17 +91,25 @@ const LabelContextMenu = ({ mailId, position, onClose }) => {
     {
       label: 'Create new',
       onClick: () => {
-        onClose();         
-        setShowDialog(true); 
+        onClose();
+        setShowDialog(true);
       },
     },
   ];
 
   return (
     <>
-      <div style={{ position: 'absolute', top: position.y, left: position.x }}>
-        <ContextMenu items={items} onClose={onClose} />
+      <div
+        style={{
+          position: 'absolute',
+          top: `${adjustedPos.y}px`,
+          left: `${adjustedPos.x}px`,
+          zIndex: 9999
+        }}
+      >
+        <ContextMenu ref={menuRef} items={items} onClose={onClose} />
       </div>
+
 
       {showDialog && (
         <LabelDialog
