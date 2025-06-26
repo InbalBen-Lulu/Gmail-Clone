@@ -104,6 +104,7 @@ const MailDetails = ({ mail, onBack }) => {
                         src={from?.profileImage || '/assets/default-avatar.png'}
                         alt={from?.name || 'Sender'}
                         size="40px"
+                        className="mail-profile-image"
                     />
 
                     {showCard && (

@@ -16,7 +16,7 @@
 /* Variant: Ghost button (text-only) */
 .btn.ghost {
   background-color: transparent;
-  color: var(--primary-color);
+  color: var(--primary-ghost-text-color);
   border-radius: 24px;
   padding: 0.6rem 1rem;
   font-size: 0.95rem;
@@ -25,4 +25,20 @@
 
 .btn.ghost:hover {
   background-color: var(--primary-ghost-hover-bg);
+}
+
+/* Disabled state (shared for all variants) */
+.btn.disabled,
+.btn:disabled {
+  background-color: var(--disable-button-bg); /* light gray background */
+  color: var(--disable-button-text); /* dark gray text */
+  cursor: not-allowed;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+/* Prevent hover effect when disabled */
+.btn.disabled:hover,
+.btn:disabled:hover {
+  background-color: var(--disable-button-bg);
 }

@@ -1,0 +1,22 @@
+/* flex row with icon and text */
+.mailme-logo {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: "Arial", sans-serif;
+}
+
+/* sets icon size */ 
+.mailme-logo-icon {
+  width: 63px;
+  height: 46px;
+}
+
+/* large bold label with theme color */ 
+.mailme-logo-text {
+  font-size: 50px;
+  font-weight: bold;
+  color: var(--logo-button-text-color);
+  border-radius: 8px;
+}
+

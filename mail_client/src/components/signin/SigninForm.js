@@ -5,7 +5,7 @@ import Checkbox from '../common/check_box/Checkbox';
 import { useUserService } from '../../services/useUserService';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-
+import MailMeLogo from '../common/logo/MailMeLogo';
 import "./SigninForm.css";
 
 /**
@@ -68,7 +68,7 @@ const SigninForm = () => {
             <div className="signin-container">
                 {/* Left section */}
                 <div className="signin-left">
-                    <img src="/pics/google-g-icon.png" alt="Google logo" className="google-logo" />
+                    <MailMeLogo />
                     <h2 className="signin-title">
                         {step === 1 ? 'Sign in' : `Hi ${name}`}
                     </h2>

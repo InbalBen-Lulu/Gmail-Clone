@@ -1,0 +1,64 @@
+/* Dialog container for editing/creating a label */
+.new-label-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 435px;
+  transform: translate(-50%, -50%);
+  background-color: var(--dialog-box-bg);
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Dialog title text */
+.dialog-title {
+  margin-top: 0;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+/* Dialog subtitle/description */
+.dialog-subtitle {
+  font-size: 0.95rem;
+  color: var(--dialog-subtext);
+  margin: 0 0 0.6rem 0;
+}
+
+/* Full-width textbox wrapper override (if used) */
+.textbox-wrapper.full-width {
+  width: 500px !important;
+  box-sizing: border-box;
+}
+
+/* Button container at the bottom of the dialog */
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* Input field for label name */
+.simple-textbox {
+  width: 95%;
+  height: 34px;
+  padding: 10px 14px;
+  font-size: 17px;
+  border: 1px solid var(--gray-dark);
+  border-radius: 4px;
+  background-color: var(--secondary-bg);
+  color: var(--text-color);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 2px;
+}
+
+/* Focused input field state */
+.simple-textbox:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-hover);
+}

@@ -1,0 +1,9 @@
+/* Override header layout inside personal info page – space between left and right sides */
+.personal-info-page .app-header {
+  justify-content: space-between !important; 
+}
+
+/* Align right-side header content (like profile image) to the far right */
+.personal-info-page .header-right {
+  margin-left: auto;
+}

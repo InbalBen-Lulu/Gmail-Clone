@@ -1,6 +1,6 @@
-import './UserSection.css';
-import ChangePhotoButton from './ChangePhotoButton';
+import ChangePhotoButton from '../common/profile_image/ChangePhotoButton';
 import { EMAIL_DOMAIN } from './constants';
+import './UserSection.css';
 
 /**
  * UserSection component
@@ -25,7 +25,6 @@ const UserSection = ({ user }) => {
   } = user;
 
   const email = `${userId}@${EMAIL_DOMAIN}`;
-
   const formattedBirthDate = birthDate?.split('-').reverse().join('.') || '';
 
   return (
@@ -34,7 +33,7 @@ const UserSection = ({ user }) => {
       <div className="page-header">
         <h1 className="main-page-title">Personal info</h1>
         <p className="main-page-subtitle">
-          Info about you and your preferences across Google services
+          Info about you
         </p>
       </div>
 
@@ -48,14 +47,14 @@ const UserSection = ({ user }) => {
         </div>
 
         <div className="user-info-details">
-          {/* Row: Profile picture (with ChangePhotoButton) */}
-          <div className="user-info-row full">
-            <span className="user-info-label">Profile picture</span>
-            <span className="user-info-value">
+          {/* Row: Profile picture – label, subtext, and image button */}
+          <div className="user-info-row profile-picture-row">
+            <div className="user-info-label">Profile picture</div>
+            <div className="user-profile-subtext">
               Add a profile picture to personalize your account
-            </span>
-            <div className="profile-picture-cell">
-              <ChangePhotoButton/>
+            </div>
+            <div className="user-profile-button">
+              <ChangePhotoButton size={80} />
             </div>
           </div>
 

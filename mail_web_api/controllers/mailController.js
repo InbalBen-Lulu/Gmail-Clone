@@ -21,6 +21,11 @@ async function createMail(req, res) {
     const userId = req.user.userId.toLowerCase();
 
     const result = processRecipients(to, isDraft, res, userId);
+
+    if (!result) {
+        return res.status(500).json({ error: 'Unexpected error occurred while creating mail' });
+    }
+    
     if (result.error) {
         mailModel.deleteMail(mailId, userId);
         return res.status(result.status || 400).json({

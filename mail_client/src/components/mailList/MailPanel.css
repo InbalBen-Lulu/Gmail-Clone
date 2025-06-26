@@ -1,11 +1,14 @@
 /* mail-panel: Main container for the entire mail view (list or details) */
 .mail-panel {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
   flex: 1;
   min-height: 0;
+  background-color: var(--mail-list-bg);
 }
 
 /* Reusable topbar style (used in toolbar or inside MailDetails) */

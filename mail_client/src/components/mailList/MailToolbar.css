@@ -5,7 +5,7 @@
   justify-content: space-between;
   padding: 8px 16px;
   border-bottom: 1px solid var(--mail-border-color);
-  background-color: var(--secondary-bg);
+  background-color: var(--mail-list-bg);
   width: 100%;
   box-sizing: border-box; 
 }

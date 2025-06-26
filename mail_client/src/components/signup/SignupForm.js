@@ -9,6 +9,7 @@ import './SignupForm.css';
 import { useUserService } from '../../services/useUserService';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import MailMeLogo from '../common/logo/MailMeLogo';
 
 /**
  * SignupForm handles a 4-step account creation form:
@@ -16,6 +17,7 @@ import { useAuth } from '../../contexts/AuthContext';
  * Step 2 – User selects birthday and gender
  * Step 3 – User selects Gmail address
  * Step 4 – User creates a password
+ * Step 5 – (Optional) User uploads a profile picture
  * 
  * Each step has local state and validation errors.
  */
@@ -66,9 +68,9 @@ const SignupForm = () => {
 
             const user = await login(userId, password);
             if (user) {
-                // navigate('/mails/inbox');
                 setStep(5)
             }
+
         } catch (error) {
             alert(error.message || 'Signup failed');
         }
@@ -79,7 +81,7 @@ const SignupForm = () => {
         <div className="signup-wrapper">
             <div className="signup-container">
                 <div className="signup-left">
-                    <img src="/pics/google-g-icon.png" alt="Google logo" className="google-logo" />
+                    <MailMeLogo />
                     <h2 className="signup-title">
                         {step === 1 && 'Create a MailMe Account'}
                         {step === 2 && 'Basic information'}
@@ -157,13 +159,14 @@ const SignupForm = () => {
                             confirmError={confirmError}
                             setPasswordError={setPasswordError}
                             setConfirmError={setConfirmError}
-                            onNext={() => setStep(5)}
+                            onNext={handleSignupSubmit}
                         />
                     )}
 
                     {step === 5 && (
                         <Step5Photo/>
                     )}
+
                 </div>
             </div>
         </div>

@@ -1,0 +1,98 @@
+/* ========== Main wrapper for the search textbox ========== */
+.textbox-wrapper.search {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  height: 48px;
+  border-radius: 30px;
+  background-color: var(--search-bar-bg);
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s, box-shadow 0.3s;
+  cursor: text;
+  box-sizing: border-box;
+}
+
+/* ========== Input field ========== */
+.textbox-wrapper.search .textbox-input {
+  width: 100%;
+  height: 100%;
+  padding: 0 50px 0 50px; /* space for icons */
+  border: none;
+  background: transparent;
+  font-size: 17px;
+  outline: none;
+  color: var(--text-color); 
+  display: block;
+  box-sizing: border-box;
+}
+
+/* Placeholder style (default) */
+.textbox-wrapper.search .textbox-input::placeholder {
+  color: var(--input-placeholder-color);
+  opacity: 1;
+}
+
+/* ========== Left search icon ========== */
+.search-icon {
+  position: absolute;
+  left: 6px;
+}
+
+/* Icon button style */
+.search-context .main-icon-button {
+  border-radius: 50%;
+  padding: 8px;
+  transition: background-color 0.2s;
+}
+
+/* Hover on default icon */
+.search-context .main-icon-button:hover {
+  background-color: var(--search-icon-bg-hover);
+}
+
+/* ========== Right clear icon ========== */
+.clear-icon {
+  position: absolute;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+/* Clear button hover on focus */
+.search-context.focused .main-icon-button.clear-button:hover {
+  background-color: var(--search-textbox-focused-icons-hover-bg)!important;
+}
+
+/* ========== Focused state of textbox ========== */
+.textbox-wrapper.search.focused {
+  background-color: var(--search-textbox-focosed-bg);
+  box-shadow: 0 0 0 2px var(--border-color);
+}
+
+/* Text color when focused */
+.textbox-wrapper.search.focused .textbox-input {
+  color: var(--search-text-color);
+}
+
+/* Placeholder color on focus */
+.search-context.focused .textbox-input::placeholder {
+  color: var(--placeholder-focused-color);
+}
+
+/* Icon color on focus */
+.search-context.focused .main-icon-button .icon {
+  color: var(--placeholder-focused-color);
+}
+
+/* Search button hover on focus */
+.search-context.focused .main-icon-button.search-button:hover {
+  background-color: var(--search-textbox-focused-icons-hover-bg) !important;
+}
+
+/* ========== Corner radius adjustment when dropdown is open ========== */
+.textbox-wrapper.search.focused.with-dropdown {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
