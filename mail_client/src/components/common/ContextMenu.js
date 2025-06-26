@@ -15,8 +15,17 @@ const ContextMenu = ({ items, onClose }) => {
         onClose();
       }
     };
+
+    const handleScroll = () => {
+      onClose();
+    };
+    
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    window.addEventListener('scroll', handleScroll, true);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('scroll', handleScroll, true);
+    };
   }, [onClose]);
 
   return (
