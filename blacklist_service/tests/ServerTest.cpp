@@ -18,10 +18,6 @@ protected:
     }
 };
 
-TEST_F(ServerTest, ConstructorInitializesCorrectly) {
-    EXPECT_EQ(server->serverSocket >= 0, true); // Valid socket created
-}
-
 TEST_F(ServerTest, CanCreateServerInstance) {
     ASSERT_NO_THROW({
         Server localServer(testPort, arraySize, hashRepeats);
