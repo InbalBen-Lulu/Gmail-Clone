@@ -5,6 +5,7 @@ import Icon from "../../assets/icons/Icon";
 import { SmallIconButton } from '../common/button/IconButtons';
 import { useMailService } from '../../services/useMailService';
 import { useCompose } from '../../contexts/ComposeContext';
+import { useMail } from '../../contexts/MailContext';
 
 import './ComposeForm.css';
 
@@ -31,6 +32,7 @@ const ComposeForm = () => {
     const [minimized, setMinimized] = useState(false);
 
     const { sendMail, saveDraft, updateDraft } = useMailService();
+    const { deleteMail } = useMail();
 
     const handleSend = async () => {
         try {
@@ -53,13 +55,21 @@ const ComposeForm = () => {
         }
     };
 
-    const handleDelete = () => {
-        setToField('');
-        setSubjectField('');
-        setBodyField('');
-        setDisplayedSubject('');
-        closeCompose();
+    const handleDelete = async () => {
+        try {
+            if (isDraft && composeId) {
+                await deleteMail(composeId);
+            }
+            setToField('');
+            setSubjectField('');
+            setBodyField('');
+            setDisplayedSubject('');
+            closeCompose();
+        } catch (err) {
+            alert('Failed to delete draft: ' + err.message);
+        }
     };
+
 
     const handleClose = async () => {
         try {

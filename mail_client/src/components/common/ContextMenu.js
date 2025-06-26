@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useEffect, forwardRef } from 'react';
 import './ContextMenu.css';
 
 /**
@@ -6,11 +6,9 @@ import './ContextMenu.css';
  * Renders a list of menu items (checkboxes, dividers, titles, regular actions).
  * Closes automatically when clicking outside.
  */
-const ContextMenu = ({ items, onClose }) => {
-  const menuRef = useRef(null);
-
+const ContextMenu = forwardRef(({ items, onClose }, menuRef) => {
   useEffect(() => {
-    const handleClickOutside = (e) => { // Close the menu if the user clicks outside of it
+    const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         onClose();
       }
@@ -19,9 +17,10 @@ const ContextMenu = ({ items, onClose }) => {
     const handleScroll = () => {
       onClose();
     };
-    
+
     document.addEventListener('mousedown', handleClickOutside);
     window.addEventListener('scroll', handleScroll, true);
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       window.removeEventListener('scroll', handleScroll, true);
@@ -71,6 +70,6 @@ const ContextMenu = ({ items, onClose }) => {
       </ul>
     </div>
   );
-};
+});
 
 export default ContextMenu;
