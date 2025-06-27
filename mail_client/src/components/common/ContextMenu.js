@@ -6,7 +6,7 @@ import './ContextMenu.css';
  * Renders a list of menu items (checkboxes, dividers, titles, regular actions).
  * Closes automatically when clicking outside.
  */
-const ContextMenu = forwardRef(({ items, onClose }, menuRef) => {
+const ContextMenu = forwardRef(({ items, onClose, style = {} }, menuRef) => {
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -28,7 +28,7 @@ const ContextMenu = forwardRef(({ items, onClose }, menuRef) => {
   }, [onClose]);
 
   return (
-    <div className="context-menu" ref={menuRef}>
+    <div className="context-menu" ref={menuRef} style={style}>
       <ul className="menu-list">
         {items.map((item, i) => {
           if (item.type === 'divider') {
@@ -39,9 +39,9 @@ const ContextMenu = forwardRef(({ items, onClose }, menuRef) => {
             return <div key={i} className="menu-title">{item.label}</div>;
           }
 
-          return (
-            <li key={i} className="menu-item">
-              {item.type === 'checkbox' ? (
+          if (item.type === 'checkbox') {
+            return (
+              <li key={i} className="menu-item">
                 <div className="menu-checkbox-wrapper">
                   <input
                     type="checkbox"
@@ -53,17 +53,19 @@ const ContextMenu = forwardRef(({ items, onClose }, menuRef) => {
                     className="menu-checkbox"
                     id={`checkbox-${i}`}
                   />
-
                   <label htmlFor={`checkbox-${i}`} className="menu-label">
                     {item.label}
                   </label>
                 </div>
-              ) : (
-                <>
-                  {item.icon && <span className="menu-icon">{item.icon}</span>}
-                  <span className="menu-label">{item.label}</span>
-                </>
-              )}
+              </li>
+            );
+          }
+
+          // Regular action item
+          return (
+            <li key={i} className="menu-item" onClick={item.onClick}>
+              {item.icon && <span className="menu-icon">{item.icon}</span>}
+              <span className="menu-label">{item.label}</span>
             </li>
           );
         })}

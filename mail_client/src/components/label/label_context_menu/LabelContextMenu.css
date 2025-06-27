@@ -61,3 +61,10 @@
 .remove-color-option:hover {
   background-color: var(--menu-item-hover-bg); /* Highlight on hover */
 }
+
+/* Wrapper for the full context menu with max height */
+.label-context-wrapper {
+  position: fixed;
+  z-index: 3000;
+  max-height: 245px;
+}

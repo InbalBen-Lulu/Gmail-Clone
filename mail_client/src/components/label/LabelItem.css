@@ -47,17 +47,21 @@
 .label-item .more-button-wrapper {
   margin-left: auto;
   border-radius: 50%;
-  visibility: hidden;
-  transition: background-color 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: opacity 0.2s ease;
 }
 
-/* Show the more button when hovering or active */
-.label-item:hover .more-button-wrapper,
-.label-item.active .more-button-wrapper {
-  visibility: visible;
+/* Default icon color inside the "more options" button */
+.label-item .more-button-wrapper .btn.icon.icon-small .icon {
+  color: var(--main-bg-color);
+}
+
+/* Icon color changes on hover or when button is active */
+.label-item:hover .more-button-wrapper .btn.icon.icon-small .icon,
+.label-item .more-button-wrapper .btn.icon.icon-small.pressed .icon {
+  color: var(--icon-light-gray);
 }
 
 /* Hover effect for icon button inside the wrapper */
@@ -69,4 +73,10 @@
 .more-button.pressed {
   background-color: var(--label-item-more-hover);
   border-radius: 50%;
+}
+
+/* Show the more-button-wrapper on hover or when pressed */
+.label-item:hover .more-button-wrapper,
+.label-item .more-button-wrapper .more-button.pressed {
+  opacity: 1;
 }

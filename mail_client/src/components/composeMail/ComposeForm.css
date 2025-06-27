@@ -13,6 +13,7 @@
   bottom: 0px;
   right: 40px;
   min-height: 520px;
+  z-index: 9999;
 }
 
 /* Minimized state - compact view */

@@ -11,12 +11,31 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // true until auth check finishes
 
-  // Log out the user – clear local storage and auth state
-  const logout = useCallback(() => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUser(null);
+  /**
+   * Logs out the currently authenticated user.
+   * Clears the user's authentication cookie and removes user data from localStorage.
+   * Sends a request to the server to log out and clear the session.
+   */
+  const logout = useCallback(async () => {
+    try {
+      // Send a request to the server to log out and clear the cookie
+      await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/tokens/logout`, {
+        method: 'POST',
+        credentials: 'include'  // Include cookies with the request
+      });
+
+      // Remove the token and user data from localStorage
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      
+      // Reset the user state to null
+      setUser(null);
+    } catch (error) {
+      console.error('Logout failed', error);
+      throw new Error('Logout failed. Please try again.');
+    }
   }, []);
+
 
   // On first load – try to restore auth state from localStorage
   useEffect(() => {

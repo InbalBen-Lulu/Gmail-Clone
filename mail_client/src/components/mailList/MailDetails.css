@@ -9,7 +9,7 @@
     flex: 1;
     min-height: 0;
     display: flex;
-flex-direction: column;
+    flex-direction: column;
 }
 
 /* Top row with back button and actions */

@@ -68,12 +68,14 @@ const MailPanel = () => {
           {mails.length === 0 ? (
             <div className="empty-mail-list">No mails found</div>
           ) : (
-            <MailList
-              onClick={(id) => {
-                const clickedMail = mails.find(m => m.id === id);
-                if (clickedMail) handleMailClick(clickedMail);
-              }}
-            />
+            <div className="mail-list-scrollable">
+              <MailList
+                onClick={(id) => {
+                  const clickedMail = mails.find(m => m.id === id);
+                  if (clickedMail) handleMailClick(clickedMail);
+                }}
+              />
+            </div>
           )}
         </>
       )}

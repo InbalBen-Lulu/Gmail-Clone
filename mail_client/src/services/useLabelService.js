@@ -61,7 +61,7 @@ export const useLabelService = () => {
     const errorData = await response.json();
     throw new Error(errorData.error || 'Failed to create label');
   };
-
+  
   // Gets a single label by its ID
   const getLabelById = async (labelId) => {
     const response = await authFetch(`/api/labels/${labelId}`);

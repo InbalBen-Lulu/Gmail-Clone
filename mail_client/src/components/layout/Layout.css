@@ -15,6 +15,8 @@
 /* Main content area (right side of the layout) */
 .layout-content {
   flex: 1;
-  overflow-y: auto;
   background-color: var(--background-color);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }

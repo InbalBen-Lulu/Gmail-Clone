@@ -15,7 +15,6 @@ const MailPageContent = () => {
 
   return (
     <div className="mail-page-wrapper">
-      <div className="mail-sidebar-space" />
       <div className="mail-content-area">
         <MailPanelContainer />
         {showCompose && <ComposeForm />}
