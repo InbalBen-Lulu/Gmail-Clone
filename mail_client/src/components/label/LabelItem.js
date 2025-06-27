@@ -21,6 +21,7 @@ import "./LabelItem.css";
 const LabelItem = ({ label, color, id, isActive, onClick }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const menuRef = useRef(null);
 
   const { renameLabel, deleteLabel, setLabelColor, resetLabelColor } = useLabelService();
@@ -28,14 +29,16 @@ const LabelItem = ({ label, color, id, isActive, onClick }) => {
 
   const closeMenu = () => setShowMenu(false);
 
-  /**
-   * Toggles the visibility of the label's context menu (3-dot icon).
-   * Stops event from bubbling up to prevent triggering parent click.
-   */
   const handleMoreClick = (e) => {
     e.stopPropagation();
-    setShowMenu((prev) => !prev);
+    const rect = menuRef.current.getBoundingClientRect();
+    setMenuPosition({
+      top: rect.bottom,
+      left: rect.left
+    });
+    setShowMenu(true);
   };
+
 
   /**
    * Opens the label edit dialog and closes the context menu.
@@ -124,6 +127,7 @@ const LabelItem = ({ label, color, id, isActive, onClick }) => {
               onSetColor={handleSetColor}
               onClose={closeMenu}
               contextRef={menuRef}
+              menuPosition={menuPosition}
             />
           )}
         </div>

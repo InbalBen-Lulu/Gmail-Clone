@@ -2,9 +2,11 @@
 .sidebar-menu {
   display: flex;
   flex-direction: column;
-  gap: 0; 
   width: 255px;
   margin-right: 10px;
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Container for the Compose button */
@@ -15,13 +17,10 @@
   margin-right: 2px;
 }
 
-/* Optional container styling for the sidebar block */
-.sidebar-container {
-  background-color: var(--main-bg-color, transparent);
-  padding: 0.5rem 0.75rem;
-  height: 100%;
-  overflow-y: auto;
-  max-height: calc(100vh - 64px);
+/* Prevent compose and sidebar items from shrinking */
+.compose,
+.sidebar-item {
+  flex-shrink: 0;
 }
 
 /* Header of the labels section: "Labels" title and Add button */

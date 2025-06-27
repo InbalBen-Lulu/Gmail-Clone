@@ -12,7 +12,7 @@ import "./LabelContextMenu.css";
  * - onSetColor: function(color: string | null) – called with selected color or null to reset
  * - onClose: function – called to close the context menu
  */
-const LabelContextMenu = ({ onEdit, onRemove, onSetColor, onClose, contextRef }) => {
+const LabelContextMenu = ({ onEdit, onRemove, onSetColor, onClose, contextRef, menuPosition  }) => {
   const [showColorSubmenu, setShowColorSubmenu] = useState(false);
   const wrapperRef = useRef(null);
 
@@ -81,7 +81,14 @@ const LabelContextMenu = ({ onEdit, onRemove, onSetColor, onClose, contextRef })
   ];
 
   return (
-    <div ref={wrapperRef}>
+    <div
+      ref={wrapperRef}
+      className="label-context-wrapper"
+      style={{
+        top: `${Math.min(menuPosition.top, window.innerHeight - 245)}px`,
+        left: `${menuPosition.left}px`
+      }}
+    >
       <SimpleContextMenu items={items} onClose={onClose} />
     </div>
   );

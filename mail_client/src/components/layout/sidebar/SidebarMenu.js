@@ -130,16 +130,18 @@ const SidebarMenu = () => {
       </div>
 
       {/* Custom user-created labels */}
-      {labels.map((label) => (
-        <LabelItem
-          key={label.id}
-          id={label.id}
-          label={label.name}
-          color={label.color}
-          isActive={activeItem === `labels-${label.id}`}
-          onClick={() => handleClickLabel(label)}
+      <div className="scrollable-labels">
+        {labels.map((label) => (
+          <LabelItem
+            key={label.id}
+            id={label.id}
+            label={label.name}
+            color={label.color}
+            isActive={activeItem === `labels-${label.id}`}
+            onClick={() => handleClickLabel(label)}
         />
       ))}
+      </div>
 
       {/* Dialog to create a new label */}
       {showDialog && (
@@ -161,4 +163,3 @@ const SidebarMenu = () => {
 };
 
 export default SidebarMenu;
-
