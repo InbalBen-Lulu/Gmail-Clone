@@ -192,6 +192,17 @@ docker-compose up mail_api
 docker-compose up mail_client
 ```
 ---
+
+### Accessing the Application
+Once all services are running, you can access the MailMe web client in your browser at:
+```
+http://localhost:3000
+```
+
+From there, you can create a new account and explore all features.
+
+---
+
 ### Run the Tests
 
 ```
