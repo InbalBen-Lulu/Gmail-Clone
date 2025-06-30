@@ -1,5 +1,5 @@
 const Label = require('../models/labelModel');
-const { removeLabelFromMailStatuses } = require('./mailStatusService');
+// const { removeLabelFromMailStatuses } = require('./mailStatusService');
 
 const DEFAULT_LABEL_COLOR = '#808080';
 
@@ -22,14 +22,14 @@ async function createLabel(name, userId) {
  * Gets all labels for a user.
  */
 async function getLabelsByUser(userId) {
-  return await Label.find({ userId }).sort({ name: 1 }).lean();
+  return await Label.find({ userId }).sort({ name: 1 });
 }
 
 /**
  * Gets a label by id for a user.
  */
 async function getLabelById(userId, labelId) {
-  return await Label.findOne({ userId, _id: labelId }).lean();
+  return await Label.findOne({ userId, _id: labelId });
 }
 
 /**
@@ -102,8 +102,8 @@ async function labelExistsForUser(userId, labelId) {
 async function getLabelsByIdsForUser(userId, labelIds) {
   return await Label.find({
     userId,
-    id: { $in: labelIds }
-}).lean();
+    _id: { $in: labelIds }
+});
 }
 
 module.exports = {

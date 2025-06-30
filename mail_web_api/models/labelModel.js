@@ -5,11 +5,14 @@ const labelSchema = new mongoose.Schema({
   name: { type: String, required: true },
   color: { type: String, default: '#808080' }
 }, {
-  toJSON: { virtuals: true }
-});
-
-labelSchema.virtual('id').get(function () {
-  return this._id.toHexString();
+  toJSON: {
+    virtuals: true,
+    versionKey: false, 
+    transform: function (doc, ret) {
+      ret.id = ret._id.toString();
+      delete ret._id;           
+    }
+  }
 });
 
 labelSchema.index({ userId: 1, name: 1 }, { unique: true });

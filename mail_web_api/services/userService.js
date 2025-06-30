@@ -6,7 +6,7 @@ const User = require('../models/userModel');
 async function createUser(userData) {
   const user = new User(userData);
   await user.save();
-  const { password, ...userWithoutPassword } = user.toObject();
+  const { password, ...userWithoutPassword } = user.toJSON();
   return userWithoutPassword;
 }
 
@@ -14,9 +14,9 @@ async function createUser(userData) {
  * Get full user (without password) by userId.
  */
 async function getUserById(userId) {
-  const user = await User.findOne({ userId: userId.toLowerCase() }).lean();
+  const user = await User.findOne({ userId: userId.toLowerCase() });
   if (!user) return null;
-  const { password, ...userWithoutPassword } = user;
+  const { password, ...userWithoutPassword } = user.toJSON();
   return userWithoutPassword;
 }
 
@@ -24,7 +24,7 @@ async function getUserById(userId) {
  * Get only public info for a user by userId.
  */
 async function getPublicUserById(userId) {
-  const user = await User.findOne({ userId: userId.toLowerCase() }).lean();
+  const user = await User.findOne({ userId: userId.toLowerCase() });
   if (!user) return null;
 
   return {
@@ -38,7 +38,7 @@ async function getPublicUserById(userId) {
  * Get full user (with password) by userId.
  */
 async function getFullUserForLogin(userId) {
-  return await User.findOne({ userId: userId.toLowerCase() }).lean();
+  return await User.findOne({ userId: userId.toLowerCase() });
 }
 
 module.exports = {

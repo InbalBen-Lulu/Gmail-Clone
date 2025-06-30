@@ -34,10 +34,13 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   }
-});
-
-userSchema.virtual('id').get(function () {
-  return this._id.toHexString();
+}, {
+  toJSON: {
+    versionKey: false, 
+    transform: function (doc, ret) {
+      delete ret._id;  
+    }
+  }
 });
 
 module.exports = mongoose.model('User', userSchema);
