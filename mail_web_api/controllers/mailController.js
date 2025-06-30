@@ -1,7 +1,7 @@
 const mailService = require('../services/mailService');
 const mailStatusService = require('../services/mailStatusService');
 const { labelExistsForUser } = require('../services/labelService');
-const { addUrlsToBlacklist, removeUrlsFromBlacklist } = require('../models/blackListModel');
+const { addUrlsToBlacklist, removeUrlsFromBlacklist } = require('../services/blackListService');
 const { processRecipients } = require('../utils/mailUtils');
 
 /**

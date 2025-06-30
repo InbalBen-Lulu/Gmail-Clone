@@ -1,6 +1,6 @@
 const { isValidSystemEmail, getUserIdFromEmail } = require('./emailUtils');
 const { getUserById } = require('../services/userService');
-const { checkUrlsAgainstBlacklist } = require('../models/blackListModel');
+const { checkUrlsAgainstBlacklist } = require('../services/blackListService');
 
 /**
  * Processes the 'to' field of a mail.
