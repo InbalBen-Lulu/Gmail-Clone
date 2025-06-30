@@ -1,17 +1,22 @@
 const { createUser, getUserById, getPublicUserById } = require('../services/userService');
 const { resolveProfileImagePath } = require('../services/profileImageService');
 const { getUserIdFromEmail } = require('../utils/emailUtils');
+const { isValidDate } = require('../utils/dateUtils');
+
+const ALLOWED_GENDERS = ['MALE', 'FEMALE', 'OTHER'];
 
 /**
  * POST /api/users
- * Register a new user with validation
+ * Register a new user with validations.
  */
 async function registerUser(req, res) {
-  const { userId, name, password, gender, birthDate } = req.body;
+  let { userId, name, password, gender, birthDate } = req.body;
 
   if (!userId || userId.trim() === '') {
     return res.status(400).json({ error: 'Missing user ID' });
   }
+  userId = userId.toLowerCase();
+
   if (!name || name.trim() === '') {
     return res.status(400).json({ error: 'Enter first name' });
   }
@@ -21,29 +26,35 @@ async function registerUser(req, res) {
   if (!gender || gender.trim() === '') {
     return res.status(400).json({ error: 'Please select your gender' });
   }
+  if (!ALLOWED_GENDERS.includes(gender.toUpperCase())) {
+    return res.status(400).json({ error: 'Gender must be MALE, FEMALE or OTHER' });
+  }
   if (!birthDate) {
     return res.status(400).json({ error: 'Please fill in a complete birthday' });
   }
 
   const parsedDate = new Date(birthDate);
-  if (isNaN(parsedDate.getTime())) {
-    return res.status(400).json({ error: 'Please enter a valid date' });
+  const day = parsedDate.getDate();
+  const month = parsedDate.getMonth() + 1;
+  const year = parsedDate.getFullYear();
+
+  if (isNaN(parsedDate.getTime()) || !isValidDate(day, month, year)) {
+    return res.status(400).json({ error: 'Please enter a valid, non-future date' });
   }
 
-  const normalizedUserId = userId.toLowerCase();
-  const existingUser = await getUserById(normalizedUserId);
+  const existingUser = await getUserById(userId);
   if (existingUser) {
     return res.status(400).json({ error: 'That username is taken. Try another.' });
   }
 
-  const profileImage = resolveProfileImagePath(normalizedUserId);
+  const profileImage = resolveProfileImagePath(userId);
 
   try {
     const user = await createUser({
-      userId: normalizedUserId,
+      userId,
       name,
       password,
-      gender,
+      gender: gender.toUpperCase(),
       birthDate: parsedDate,
       profileImage
     });

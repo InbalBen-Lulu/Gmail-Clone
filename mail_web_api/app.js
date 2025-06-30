@@ -34,7 +34,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use('/api/users', usersRoutes);
 app.use('/api/tokens', tokensRoutes);
 app.use('/api/labels', labelsRoutes);
-// app.use('/api/mails', mailsRoutes);
+app.use('/api/mails', mailsRoutes);
 app.use('/profilePics', express.static(path.join(__dirname, 'profilePics')));
 
 app.listen(4000, '0.0.0.0');
