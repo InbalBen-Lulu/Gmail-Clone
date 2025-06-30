@@ -1,100 +1,43 @@
-const { users } = require('../storage/userStorage');
-const { userLabels } = require('../storage/labelStorage');
-const { userMailStatus } = require('../storage/mailStatusStorage');
-const { isValidSystemEmail, getUserIdFromEmail } = require('../utils/emailUtils');
+const mongoose = require('mongoose');
 
-/**
- * Remove the password field from a user object.
- */
-function stripPassword(user) {
-    if (!user) return null;
-    const { password: _, ...userWithoutPassword } = user;
-    return userWithoutPassword;
-}
 
-/**
- * Create and add a new user with a string userId.
- * Also initializes empty labels and mails structures for the user.
- */
-function createUser({
-    userId,
-    name,
-    password,
-    gender,
-    birthDate,
-    profileImage
-}) {
-    if (users.has(userId)) {
-        throw new Error("That username is taken. Try another.");
-    }
+const userSchema = new mongoose.Schema({
+  userId: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: [8, 'Password must be at least 8 characters']
+  },
+  gender: {
+    type: String,
+    required: true
+  },
+  birthDate: {
+    type: Date,
+    required: true
+  },
+  profileImage: {
+    type: String
+  },
+  hasCustomImage: {
+    type: Boolean,
+    default: false
+  }
+});
 
-    const newUser = {
-        userId,
-        name,
-        password,
-        gender,
-        birthDate,
-        profileImage,
-        hasCustomImage: false
-    };
+userSchema.virtual('id').get(function () {
+  return this._id.toHexString();
+});
 
-    users.set(userId, newUser);
-
-    // Initialize userLabels and userMailIds
-    userLabels.set(userId, []);
-    userMailStatus.set(userId, new Map());
-
-    return stripPassword(newUser);
-}
-
-/**
- * Get user by ID (without password).
- */
-function getUserById(userId) {
-    const user = users.get(userId.toLowerCase());
-    if (!user) return null;
-
-    return stripPassword(user);
-}
-
-/**
- * Get user by ID (only public data).
- */
-function getPublicUserById(userId) {
-    const user = users.get(userId.toLowerCase());
-    if (!user) return null;
-
-    return {
-        userId: user.userId,
-        name: user.name,
-        profileImage: user.profileImage
-    };
-}
-
-/**
- * Finds a user based on their system email (userId@mailme.com).
- * Only emails that belong to the system domain are accepted.
- */
-function getUserByEmail(email) {
-    const normalizedEmail = email.trim().toLowerCase();
-
-    // 1. Check if email matches system domain
-    if (!isValidSystemEmail(normalizedEmail)) {
-        return null;
-    }
-
-    // 2. Extract userId and look up in users map
-    const userId = getUserIdFromEmail(normalizedEmail);
-    if (!userId) return null;
-
-    const user = users.get(userId);
-    return user ? stripPassword(user) : null;
-}
-
-module.exports = {
-    createUser,
-    getUserById,
-    getUserByEmail, 
-    stripPassword,
-    getPublicUserById
-};
+module.exports = mongoose.model('User', userSchema);
