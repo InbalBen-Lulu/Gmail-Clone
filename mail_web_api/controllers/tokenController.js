@@ -1,20 +1,20 @@
-const { users } = require('../storage/userStorage');
-const { generateToken } = require('../models/tokenModel');
+const { getFullUserForLogin, getUserById } = require('../services/userService');
+const { generateToken } = require('../services/tokenService');
 const { getUserIdFromEmail } = require('../utils/emailUtils');
 
 /**
  * Authenticate user and return JWT token.
  */
-function loginUser(req, res) {
+async function loginUser(req, res) {
     let { userId, password } = req.body;
 
-    // Try to extract userId from email format if necessary
+    // Try to extract userId from email if needed
     const emailBasedId = getUserIdFromEmail(userId);
     if (emailBasedId) {
         userId = emailBasedId;
     }
 
-    const user = users.get(userId.toLowerCase());
+    let user = await getFullUserForLogin(userId.toLowerCase());
 
     if (!user) {
         return res.status(401).json({ error: 'Enter a valid email.' });
@@ -32,19 +32,17 @@ function loginUser(req, res) {
         secure: false
     });
 
+    user = await getUserById(userId.toLowerCase());
     return res.status(200).json({ token, user });
 }
-
 
 /**
  * Clear the user's authentication cookie.
  */
 function logoutUser(req, res) {
     res.clearCookie('token');
-
     return res.status(200).json();
 }
-
 
 module.exports = {
     loginUser,

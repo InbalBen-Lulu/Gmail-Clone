@@ -1,87 +1,93 @@
-const { createUser, getUserById, getPublicUserById } = require('../models/userModel');
-const { resolveProfileImagePath } = require('../models/profileImageModel');
+const { createUser, getUserById, getPublicUserById } = require('../services/userService');
+const { resolveProfileImagePath } = require('../services/profileImageService');
 const { getUserIdFromEmail } = require('../utils/emailUtils');
 
 /**
  * POST /api/users
- * Create a new user with JSON body data.
+ * Register a new user with validation
  */
-function registerUser(req, res) {
-    const userData = req.body;
-    const { userId, name, password, gender, birthDate } = userData;
+async function registerUser(req, res) {
+  const { userId, name, password, gender, birthDate } = req.body;
 
-    userData.userId = userId.toLowerCase();
-
-    if (!birthDate) {
+  if (!userId || userId.trim() === '') {
+    return res.status(400).json({ error: 'Missing user ID' });
+  }
+  if (!name || name.trim() === '') {
+    return res.status(400).json({ error: 'Enter first name' });
+  }
+  if (!password || password.length < 8) {
+    return res.status(400).json({ error: 'Use 8 characters or more for your password' });
+  }
+  if (!gender || gender.trim() === '') {
+    return res.status(400).json({ error: 'Please select your gender' });
+  }
+  if (!birthDate) {
     return res.status(400).json({ error: 'Please fill in a complete birthday' });
-    }
-    if (!gender) {
-        return res.status(400).json({ error: 'Please select your gender' });
-    }
-    if (!name) {
-        return res.status(400).json({ error: 'Enter first name' });
-    }
-    if (!password) {
-        return res.status(400).json({ error: 'Enter a password' });
-    }
-    if (!userId) {
-        return res.status(400).json({ error: 'Missing user ID' });
-    }
+  }
 
+  const parsedDate = new Date(birthDate);
+  if (isNaN(parsedDate.getTime())) {
+    return res.status(400).json({ error: 'Please enter a valid date' });
+  }
 
-    const profileImage = resolveProfileImagePath(userId);
+  const normalizedUserId = userId.toLowerCase();
+  const existingUser = await getUserById(normalizedUserId);
+  if (existingUser) {
+    return res.status(400).json({ error: 'That username is taken. Try another.' });
+  }
 
-    const userWithImage = {
-        ...userData,
-        profileImage
-    };
+  const profileImage = resolveProfileImagePath(normalizedUserId);
 
-    try {
-        const newUser = createUser(userWithImage);
-        return res.status(201).json(newUser);
-    } catch (err) {
-        return res.status(400).json({ error: err.message });
-    }
+  try {
+    const user = await createUser({
+      userId: normalizedUserId,
+      name,
+      password,
+      gender,
+      birthDate: parsedDate,
+      profileImage
+    });
+
+    return res.status(201).json(user);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 }
-
 
 /**
  * GET /api/users/:id
- * Retrieve user details by userId
+ * Retrieve full user by userId (no password)
  */
-function getUserDetails(req, res) {
-    const userId = req.params.id; 
-    const user = getUserById(userId);
-
-    if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-    }
-
-    res.json(user); 
+async function getUserDetails(req, res) {
+  const userId = req.params.id;
+  const user = await getUserById(userId);
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+  res.json(user);
 }
 
 /**
  * GET /api/users/:id/public
- * Retrieve user public details by userId
+ * Retrieve public info (used for availability check or UI display)
  */
-function getPublicUserInfo(req, res) {
-    let userId = req.params.id; 
-    const emailBasedId = getUserIdFromEmail(userId);
-    if (emailBasedId) {
-        userId = emailBasedId;
-    }
+async function getPublicUserInfo(req, res) {
+  let userId = req.params.id;
+  const fromEmail = getUserIdFromEmail(userId);
+  if (fromEmail) {
+    userId = fromEmail;
+  }
 
-    const user = getPublicUserById(userId);
+  const user = await getPublicUserById(userId);
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
 
-    if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-    }
-
-    res.json(user); 
+  res.json(user);
 }
 
 module.exports = {
-    registerUser,
-    getUserDetails, 
-    getPublicUserInfo
+  registerUser,
+  getUserDetails,
+  getPublicUserInfo
 };
