@@ -1,5 +1,5 @@
 const { isValidSystemEmail, getUserIdFromEmail } = require('./emailUtils');
-const { getUserById } = require('../models/userModel');
+const { getUserById } = require('../services/userService');
 const { checkUrlsAgainstBlacklist } = require('../models/blackListModel');
 
 /**

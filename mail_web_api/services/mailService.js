@@ -1,14 +1,15 @@
 const Mail = require('../models/mailModel');
 const { isContentBlacklisted } = require('../utils/mailUtils');
-const { getPublicUserById , getUserById } = require('./userService');
-const { getLabelsByIdsForUser } = require('./labelService');
+const { getPublicUserById } = require('./userService');
+const { getLabelsByIdsForUser } = require('./labelMailUtils');
 const {
   initializeSenderStatus,
   initializeRecipientStatus,
   getMailStatus,
   formatMailSummary,
   deleteMailStatus,
-  markDraftAsSent  
+  markDraftAsSent,
+  getAllStatusesForUser 
 } = require('./mailStatusService.js');
 
 /**
@@ -149,7 +150,7 @@ async function searchMails(userId, query, limit = 5, offset = 0) {
   const q = String(query || '').trim().toLowerCase();
   if (!q) return { total: 0, mails: [] };
 
-  const statuses = await MailStatus.find({ userId }, 'mailId').lean();
+  const statuses = await getAllStatusesForUser(userId);
   if (!statuses.length) return { total: 0, mails: [] };
 
   const mailIds = statuses.map(s => s.mailId);

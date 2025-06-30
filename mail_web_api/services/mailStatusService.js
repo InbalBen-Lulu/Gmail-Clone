@@ -1,6 +1,6 @@
-const MailStatus = require('../models/mailStatus');
+const MailStatus = require('../models/mailStatusModel');
 const { getPublicUserById } = require('./userService');
-const { getLabelsByIdsForUser } = require('./labelService');
+const { getLabelsByIdsForUser } = require('./labelMailUtils');
 const Mail = require('../models/mailModel');
 
 /**
@@ -42,6 +42,14 @@ async function getMailStatus(mailId, userId) {
 }
 
 /**
+ * Returns all mail status entries for a given user.
+ * Used to fetch all visible mail IDs.
+ */
+async function getAllStatusesForUser(userId) {
+  return await MailStatus.find({ userId }, 'mailId').lean();
+}
+
+/**
  * Deletes a specific mail status entry from the database.
  */
 async function deleteMailStatus(mailId, userId) {
@@ -60,7 +68,9 @@ async function addLabel(mailId, userId, labelId) {
   if (!status) return null;
   if (status.isSpam) return -1;
 
-  if (!status.labels.includes(labelId)) {
+  // Avoid duplicates using equals()
+  const alreadyExists = status.labels.some(id => id.equals(labelId));
+  if (!alreadyExists) {
     status.labels.push(labelId);
     await status.save();
   }
@@ -80,19 +90,13 @@ async function removeLabel(mailId, userId, labelId) {
   if (!status) return null;
   if (status.isSpam) return -1;
 
-  status.labels = status.labels.filter(id => id !== labelId);
-  await status.save();
-  return true;
-}
-
-/**
- * Removes a label from all mail statuses of a specific user.
- */
-async function removeLabelFromMailStatuses(userId, labelId) {
-  await MailStatus.updateMany(
-    { userId },
+  // Use $pull for atomic removal
+  await MailStatus.updateOne(
+    { mailId, userId },
     { $pull: { labels: labelId } }
   );
+
+  return true;
 }
 
 /**
@@ -261,10 +265,12 @@ function getDraftMails(userId, limit = 50, offset = 0) {
  * Returns all mails with a specific label that are not spam.
  */
 function getMailsByLabel(userId, labelId, limit = 50, offset = 0) {
-  const numericLabelId = Number(labelId);
+  const objectId = labelId.toString();
   return getFilteredMails(
     userId,
-    s => !s.isSpam && Array.isArray(s.labels) && s.labels.includes(numericLabelId),
+    s => !s.isSpam &&
+        Array.isArray(s.labels) &&
+        s.labels.some(id => id.equals?.(objectId)),
     offset,
     limit
   );
@@ -277,7 +283,6 @@ module.exports = {
   deleteMailStatus,
   addLabel,
   removeLabel,
-  removeLabelFromMailStatuses,
   markAsRead,
   toggleStar,
   setSpamStatus,
@@ -289,5 +294,6 @@ module.exports = {
   getSpamMails,
   getDraftMails,
   getMailsByLabel,
-  markDraftAsSent
+  markDraftAsSent,
+  getAllStatusesForUser
 };
