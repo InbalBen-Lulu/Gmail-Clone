@@ -1,6 +1,6 @@
-const mailModel = require('../models/mailModel');
-const mailStatusModel = require('../models/mailStatusModel');
-const { labelExistsForUser } = require('../models/labelModel');
+const mailService = require('../services/mailService');
+const mailStatusService = require('../services/mailStatusService');
+const { labelExistsForUser } = require('../services/labelService');
 const { addUrlsToBlacklist, removeUrlsFromBlacklist } = require('../models/blackListModel');
 const { processRecipients } = require('../utils/mailUtils');
 
@@ -27,7 +27,6 @@ async function createMail(req, res) {
     }
     
     if (result.error) {
-        mailModel.deleteMail(mailId, userId);
         return res.status(result.status || 400).json({
             error: `${result.error}${result.invalidEmails?.length ? `: ${result.invalidEmails.join(', ')}` : ''}`
         });
@@ -35,7 +34,7 @@ async function createMail(req, res) {
 
     const { validRecipients, responseMeta } = result;
 
-    const mail = await mailModel.createMail(userId, validRecipients, subject, body, isDraft);
+    const mail = await mailService.createMail(userId, validRecipients, subject, body, isDraft);
     if (!mail) {
         return res.status(500).json({ error: 'Failed to create mail' });
     }
@@ -51,13 +50,13 @@ async function createMail(req, res) {
  *   - 200 with mail content
  *   - 404 if not found or inaccessible
  */
-function getMailById(req, res) {
-    const mailId = parseInt(req.params.id);
-    const mail = mailModel.getMailById(mailId, req.user.userId.toLowerCase());
+async function getMailById(req, res) {
+    const mailId = req.params.id;
+    const mail = await mailService.getMailById(mailId, req.user.userId.toLowerCase());
     if (!mail) {
         return res.status(404).json({ error: 'Mail not found' });
     }
-    mailStatusModel.markAsRead(mailId, req.user.userId.toLowerCase());
+    await mailStatusService.markAsRead(mailId, req.user.userId.toLowerCase());
     res.status(200).json(mail);
 }
 
@@ -69,13 +68,10 @@ function getMailById(req, res) {
  *   - 204 on success
  *   - 404 if mail not found or already deleted
  */
-function deleteMail(req, res) {
-    const mailId = parseInt(req.params.id);
-    if (isNaN(mailId)) {
-        return res.status(404).json({ error: 'Mail not found' });
-    }
+async function deleteMail(req, res) {
+    const mailId = req.params.id;
 
-    const success = mailModel.deleteMail(mailId, req.user.userId.toLowerCase());
+    const success = await mailService.deleteMail(mailId, req.user.userId.toLowerCase());
     if (!success) {
         return res.status(404).json({ error: 'Mail not found' });
     }
@@ -92,13 +88,10 @@ function deleteMail(req, res) {
  *   - 400 if not a draft or invalid input
  *   - 404 if mail not found
  */
-function updateMail(req, res) {
-    const mailId = parseInt(req.params.id);
-    if (isNaN(mailId)) {
-        return res.status(400).json({ error: 'Invalid mail ID' });
-    }
+async function updateMail(req, res) {
+    const mailId = req.params.id;
 
-    const mail = mailModel.getMailById(mailId, req.user.userId.toLowerCase());
+    const mail = await mailService.getMailById(mailId, req.user.userId.toLowerCase());
     if (!mail) {
         return res.status(404).json({ error: 'Mail not found' });
     }
@@ -109,7 +102,7 @@ function updateMail(req, res) {
         to: req.body.to
     };
 
-    const result = mailModel.updateMail(mailId, req.user.userId.toLowerCase(), updates);
+    const result = await mailService.updateMail(mailId, req.user.userId.toLowerCase(), updates);
 
     if (result === null) {
         return res.status(400).json({ error: 'Only draft mails can be edited' });
@@ -127,12 +120,10 @@ function updateMail(req, res) {
  *   - 400/404 if mail is not valid or not a draft
  */
 async function sendDraftMail(req, res) {
-    const mailId = parseInt(req.params.id);
-    if (isNaN(mailId)) {
-        return res.status(400).json({ error: 'Invalid mail ID' });
-    }
+    const mailId = req.params.id;
+    const userId = req.user.userId.toLowerCase();
 
-    const mail = mailModel.getMailById(mailId, req.user.userId.toLowerCase());
+    const mail = await mailService.getMailById(mailId, userId);
     if (!mail) {
         return res.status(404).json({ error: 'Mail not found' });
     }
@@ -143,15 +134,13 @@ async function sendDraftMail(req, res) {
         return res.status(400).json({ error: 'Recipients are required for sending mails' });
     }
 
-    const userId = req.user.userId.toLowerCase();
     const result = processRecipients(to, false, res, userId);
 
     if (result.error) {
-        mailModel.deleteMail(mailId, userId);
+        await mailService.deleteMail(mailId, userId);
         return res.status(result.status || 400).json({
             error: `${result.error}${result.invalidEmails?.length ? `: ${result.invalidEmails.join(', ')}` : ''}`
         });
-
     }
 
     const { validRecipients, responseMeta } = result;
@@ -162,7 +151,7 @@ async function sendDraftMail(req, res) {
         to: validRecipients
     };
 
-    const updated = await mailModel.sendDraft(mailId, userId, updates);
+    const updated = await mailService.sendDraft(mailId, userId, updates);
     if (updated === null) {
         return res.status(400).json({ error: 'Only draft mails can be sent' });
     }
@@ -181,7 +170,7 @@ async function sendDraftMail(req, res) {
  *   - 200 with array of mail summaries
  *   - 400 if query is empty
  */
-function searchMails(req, res) {
+async function searchMails(req, res) {
     let query = req.params.query?.trim();
     if (query.startsWith('search-')) {
         query = query.replace('search-', '');
@@ -193,7 +182,7 @@ function searchMails(req, res) {
         return res.status(400).json({ error: 'Search query cannot be empty' });
     }
 
-    const results = mailModel.searchMails(req.user.userId.toLowerCase(), query, +limit, +offset);
+    const results = await mailService.searchMails(req.user.userId.toLowerCase(), query, +limit, +offset);
     res.status(200).json(results);
 }
 
@@ -205,8 +194,8 @@ function searchMails(req, res) {
  *   - 400 if label is missing or mail is spam
  *   - 404 if mail or label not found
  */
-function addLabelToMail(req, res) {
-    const mailId = parseInt(req.params.id);
+async function addLabelToMail(req, res) {
+    const mailId = req.params.id;
     const labelId = req.body.labelId;
     const userId = req.user.userId.toLowerCase();
 
@@ -218,7 +207,7 @@ function addLabelToMail(req, res) {
         return res.status(404).json({ error: 'Label not found' });
     }
 
-    const result = mailStatusModel.addLabel(mailId, userId, labelId);
+    const result = await mailStatusService.addLabel(mailId, userId, labelId);
 
     if (result === null) {
         return res.status(404).json({ error: 'Mail not found' });
@@ -238,8 +227,8 @@ function addLabelToMail(req, res) {
  *   - 400 if label is missing or mail is spam
  *   - 404 if mail or label not found
  */
-function removeLabelFromMail(req, res) {
-    const mailId = parseInt(req.params.id);
+async function removeLabelFromMail(req, res) {
+    const mailId = req.params.id;
     const labelId = req.body.labelId;
     const userId = req.user.userId.toLowerCase();
 
@@ -251,7 +240,7 @@ function removeLabelFromMail(req, res) {
         return res.status(404).json({ error: 'Label not found' });
     }
 
-    const result = mailStatusModel.removeLabel(mailId, userId, labelId);
+    const result = await mailStatusService.removeLabel(mailId, userId, labelId);
 
     if (result === null) {
         return res.status(404).json({ error: 'Mail not found' });
@@ -272,15 +261,11 @@ function removeLabelFromMail(req, res) {
  *   - 400 if mail is spam or ID is invalid
  *   - 404 if mail not found
  */
-function toggleStar(req, res) {
-    const mailId = parseInt(req.params.id);
+async function toggleStar(req, res) {
+    const mailId = req.params.id;
     const userId = req.user.userId.toLowerCase();
 
-    if (isNaN(mailId)) {
-        return res.status(400).json({ error: 'Invalid mail ID' });
-    }
-
-    const status = mailStatusModel.getMailStatus(mailId, userId);
+    const status = await mailStatusService.getMailStatus(mailId, userId);
     if (!status) {
         return res.status(404).json({ error: 'Mail not found' });
     }
@@ -289,7 +274,7 @@ function toggleStar(req, res) {
         return res.status(400).json({ error: 'Cannot star a spam mail' });
     }
 
-    mailStatusModel.toggleStar(mailId, userId);
+    await mailStatusService.toggleStar(mailId, userId);
     res.status(204).end();
 }
 
@@ -304,7 +289,7 @@ function toggleStar(req, res) {
  *   - 404 if mail not found
  */
 async function setSpamStatus(req, res) {
-    const mailId = parseInt(req.params.id);
+    const mailId = req.params.id;
     const userId = req.user.userId.toLowerCase();
     const { isSpam } = req.body;
 
@@ -312,12 +297,12 @@ async function setSpamStatus(req, res) {
         return res.status(400).json({ error: 'isSpam must be true or false' });
     }
 
-    const mail = mailModel.getMailById(mailId, userId);
+    const mail = await mailService.getMailById(mailId, userId);
     if (!mail) {
         return res.status(404).json({ error: 'Mail not found' });
     }
 
-    const result = mailStatusModel.setSpamStatus(mailId, userId, isSpam);
+    const result = await mailStatusService.setSpamStatus(mailId, userId, isSpam);
     if (result === null) {
         return res.status(404).json({ error: 'Mail not found' });
     }
@@ -336,15 +321,14 @@ async function setSpamStatus(req, res) {
     res.status(204).end();
 }
 
-
 /**
  * GET /api/mails/inbox
  * Returns the current user's non-spam received mails.
  * Supports pagination via limit and offset.
  */
-function getInboxMails(req, res) {
+async function getInboxMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
-    const mails = mailStatusModel.getInboxMails(req.user.userId.toLowerCase(), +limit, +offset);
+    const mails = await mailStatusService.getInboxMails(req.user.userId.toLowerCase(), +limit, +offset);
     res.status(200).json(mails);
 }
 
@@ -353,9 +337,9 @@ function getInboxMails(req, res) {
  * Returns non-draft mails sent by the current user.
  * Supports pagination via limit and offset.
  */
-function getSentMails(req, res) {
+async function getSentMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
-    const mails = mailStatusModel.getSentMails(req.user.userId.toLowerCase(), +limit, +offset);
+    const mails = await mailStatusService.getSentMails(req.user.userId.toLowerCase(), +limit, +offset);
     res.status(200).json(mails);
 }
 
@@ -364,9 +348,9 @@ function getSentMails(req, res) {
  * Returns mails marked as spam by the user.
  * Supports pagination via limit and offset.
  */
-function getSpamMails(req, res) {
+async function getSpamMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
-    const mails = mailStatusModel.getSpamMails(req.user.userId.toLowerCase(), +limit, +offset);
+    const mails = await mailStatusService.getSpamMails(req.user.userId.toLowerCase(), +limit, +offset);
     res.status(200).json(mails);
 }
 
@@ -375,9 +359,9 @@ function getSpamMails(req, res) {
  * Returns draft mails created by the current user.
  * Supports pagination via limit and offset.
  */
-function getDraftMails(req, res) {
+async function getDraftMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
-    const mails = mailStatusModel.getDraftMails(req.user.userId.toLowerCase(), +limit, +offset);
+    const mails = await mailStatusService.getDraftMails(req.user.userId.toLowerCase(), +limit, +offset);
     res.status(200).json(mails);
 }
 
@@ -386,9 +370,9 @@ function getDraftMails(req, res) {
  * Returns all non-spam starred mails for the user.
  * Supports pagination via limit and offset.
  */
-function getStarredMails(req, res) {
+async function getStarredMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
-    const mails = mailStatusModel.getStarredMails(req.user.userId.toLowerCase(), +limit, +offset);
+    const mails = await mailStatusService.getStarredMails(req.user.userId.toLowerCase(), +limit, +offset);
     res.status(200).json(mails);
 }
 
@@ -397,9 +381,9 @@ function getStarredMails(req, res) {
  * Returns all non-spam mails for the current user.
  * Supports pagination via limit and offset.
  */
-function getAllMails(req, res) {
+async function getAllMails(req, res) {
     const { limit = 50, offset = 0 } = req.query;
-    const mails = mailStatusModel.getAllNonSpamMails(req.user.userId.toLowerCase(), +limit, +offset);
+    const mails = await mailStatusService.getAllNonSpamMails(req.user.userId.toLowerCase(), +limit, +offset);
     res.status(200).json(mails);
 }
 
@@ -410,7 +394,7 @@ function getAllMails(req, res) {
  *   - 200 with list of mail summaries
  *   - 404 if label does not exist
  */
-function getMailsByLabel(req, res) {
+async function getMailsByLabel(req, res) {
     let { labelId } = req.params;
     const { limit = 50, offset = 0 } = req.query;
     const userId = req.user.userId.toLowerCase();
@@ -423,7 +407,7 @@ function getMailsByLabel(req, res) {
         return res.status(404).json({ error: 'Label not found' });
     }
 
-    const mails = mailStatusModel.getMailsByLabel(userId, labelId, +limit, +offset);
+    const mails = await mailStatusService.getMailsByLabel(userId, labelId, +limit, +offset);
     res.status(200).json(mails);
 }
 
