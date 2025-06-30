@@ -1,29 +1,27 @@
-const labelModel = require('../models/labelModel');
+const labelModel = require('../services/labelService');
 
 /**
  * GET /api/labels
  * Returns all labels for the authenticated user.
  */
-function getAllLabels(req, res) {
-    const labels = labelModel.getLabelsByUser(req.user.userId.toLowerCase());
+async function getAllLabels(req, res) {
+    const labels = await labelModel.getLabelsByUser(req.user.userId);
     res.status(200).json(labels);
 }
 
 /**
  * POST /api/labels
  * Creates a new label for the user.
- * - Returns 400 if name is missing or already exists for the user.
- * - Returns 201 with Location header if created successfully.
  */
-function createLabel(req, res) {
+async function createLabel(req, res) {
     const { name } = req.body;
 
     if (!name) {
         return res.status(400).json({ error: 'Name is required' });
     }
 
-    const result = labelModel.createLabel(name, req.user.userId.toLowerCase());
-    if (result === null) {
+    const result = await labelModel.createLabel(name, req.user.userId);
+    if (!result) {
         return res.status(400).json({ error: 'Label with the same name already exists' });
     }
 
@@ -32,16 +30,11 @@ function createLabel(req, res) {
 
 /**
  * GET /api/labels/:id
- * Retrieves a single label by its ID.
- * - Returns 404 if the ID is invalid or not found for the user.
+ * Retrieves a label by ID.
  */
-function getLabelById(req, res) {
-    const labelId = parseInt(req.params.id);
-    if (isNaN(labelId)) {
-        return res.status(404).json({ error: 'Label not found' });
-    }
-
-    const label = labelModel.getLabelById(req.user.userId.toLowerCase(), labelId);
+async function getLabelById(req, res) {
+    const { id } = req.params;
+    const label = await labelModel.getLabelById(req.user.userId, id);
     if (!label) {
         return res.status(404).json({ error: 'Label not found' });
     }
@@ -52,23 +45,16 @@ function getLabelById(req, res) {
 /**
  * PATCH /api/labels/:id
  * Renames a label.
- * - Returns 404 if label is not found or ID is invalid.
- * - Returns 400 if the new name already exists for this user.
- * - Returns 204 on success.
  */
-function renameLabel(req, res) {
-    const labelId = parseInt(req.params.id);
+async function renameLabel(req, res) {
+    const { id } = req.params;
     const { name } = req.body;
-
-    if (isNaN(labelId)) {
-        return res.status(404).json({ error: 'Label not found' });
-    }
 
     if (!name) {
         return res.status(400).json({ error: 'Name is required' });
     }
 
-    const result = labelModel.renameLabel(req.user.userId.toLowerCase(), labelId, name);
+    const result = await labelModel.renameLabel(req.user.userId, id, name);
     if (result === -1) {
         return res.status(404).json({ error: 'Label not found' });
     }
@@ -82,16 +68,10 @@ function renameLabel(req, res) {
 /**
  * DELETE /api/labels/:id
  * Deletes a label by its ID.
- * - Returns 404 if label is not found or ID is invalid.
- * - Returns 204 on successful deletion.
  */
-function deleteLabel(req, res) {
-    const labelId = parseInt(req.params.id);
-    if (isNaN(labelId)) {
-        return res.status(404).json({ error: 'Label not found' });
-    }
-
-    const result = labelModel.deleteLabel(req.user.userId.toLowerCase(), labelId);
+async function deleteLabel(req, res) {
+    const { id } = req.params;
+    const result = await labelModel.deleteLabel(req.user.userId, id);
     if (result === -1) {
         return res.status(404).json({ error: 'Label not found' });
     }
@@ -101,22 +81,18 @@ function deleteLabel(req, res) {
 
 /**
  * PATCH /api/labels/:id/color
- * Updates the color of a label.
- * - Returns 404 if label is not found or ID is invalid.
- * - Returns 400 if the provided color is invalid.
- * - Returns 204 on success.
+ * Updates label color.
  */
-function setLabelColor(req, res) {
-    const labelId = parseInt(req.params.id);
+async function setLabelColor(req, res) {
+    const { id } = req.params;
     const { color } = req.body;
 
-    if (isNaN(labelId)) {
-        return res.status(404).json({ error: 'Label not found' });
+    if (!color) {
+        return res.status(400).json({ error: 'Color is required' });
     }
 
-    const result = labelModel.setLabelColor(req.user.userId.toLowerCase(), labelId, color);
-
-    if (result === false) {
+    const result = await labelModel.setLabelColor(req.user.userId, id, color);
+    if (!result) {
         return res.status(404).json({ error: 'Label not found' });
     }
 
@@ -125,20 +101,12 @@ function setLabelColor(req, res) {
 
 /**
  * DELETE /api/labels/:id/color
- * Resets the color of a label to the default value.
- * - Returns 404 if label is not found or ID is invalid.
- * - Returns 204 on success.
+ * Resets label color.
  */
-function resetLabelColor(req, res) {
-    const labelId = parseInt(req.params.id);
-
-    if (isNaN(labelId)) {
-        return res.status(404).json({ error: 'Label not found' });
-    }
-
-    const result = labelModel.resetLabelColor(req.user.userId.toLowerCase(), labelId);
-
-    if (result === false) {
+async function resetLabelColor(req, res) {
+    const { id } = req.params;
+    const result = await labelModel.resetLabelColor(req.user.userId, id);
+    if (!result) {
         return res.status(404).json({ error: 'Label not found' });
     }
 
