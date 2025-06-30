@@ -1,13 +1,13 @@
 const fs = require('fs');
 const path = require('path');
-const { users } = require('../storage/userStorage');
+const User = require('../models/userModel');
 
 /**
  * Saves a new base64-encoded profile image for the given user.
  * Deletes any previous uploaded image if it exists.
  * Returns an object with success or error information.
  */
-function saveProfileImage(user, image) {
+async function saveProfileImage(user, image) {
     if (!image || !image.startsWith('data:image/')) {
         return { error: 'Invalid or missing image' };
     }
@@ -22,12 +22,15 @@ function saveProfileImage(user, image) {
     if (base64Data.length > 7_000_000) { // > 5MB
         return { error: 'Image too large' };
     }
+
     const buffer = Buffer.from(base64Data, 'base64');
 
-    // delete old image if exists
+    // delete old image from disk if exists
     if (user.profileImage && user.profileImage.startsWith('/profilePics/uploads/')) {
         const oldPath = path.join(__dirname, '..', user.profileImage);
-        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+        if (fs.existsSync(oldPath)) {
+            fs.unlinkSync(oldPath);
+        }
     }
 
     const fileName = `${user.userId}.${ext}`;
@@ -35,10 +38,16 @@ function saveProfileImage(user, image) {
     fs.mkdirSync(path.dirname(filePath), { recursive: true });
     fs.writeFileSync(filePath, buffer);
 
-    user.profileImage = `/profilePics/uploads/${fileName}`;
-    user.hasCustomImage = true;
+    const newImagePath = `/profilePics/uploads/${fileName}`;
 
-    users.set(user.userId, user);
+    // update user in database
+    await User.findOneAndUpdate(
+        { userId: user.userId },
+        {
+            profileImage: newImagePath,
+            hasCustomImage: true
+        }
+    );
 
     return { success: true };
 }
@@ -47,15 +56,23 @@ function saveProfileImage(user, image) {
  * Removes the uploaded profile image of the user (if exists)
  * and resets it to a default avatar based on userId.
  */
-function removeProfileImage(user) {
+async function removeProfileImage(user) {
     if (user.profileImage && user.profileImage.startsWith('/profilePics/uploads/')) {
         const imagePath = path.join(__dirname, '..', user.profileImage);
-        if (fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
+        if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
+        }
     }
-    user.profileImage = resolveProfileImagePath(user.userId);
-    user.hasCustomImage = false;
-    
-    users.set(user.userId, user);
+
+    const defaultImage = resolveProfileImagePath(user.userId);
+
+    await User.findOneAndUpdate(
+        { userId: user.userId },
+        {
+            profileImage: defaultImage,
+            hasCustomImage: false
+        }
+    );
 }
 
 /**
