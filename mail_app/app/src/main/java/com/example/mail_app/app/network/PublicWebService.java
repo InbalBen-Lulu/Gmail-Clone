@@ -10,7 +10,7 @@ import com.example.mail_app.R;
 public class PublicWebService {
     private static Retrofit retrofit;
 
-    public static Retrofit getInstance(Context context) {
+    public static Retrofit getInstance() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(MyApp.getInstance().getString(R.string.BaseUrl))

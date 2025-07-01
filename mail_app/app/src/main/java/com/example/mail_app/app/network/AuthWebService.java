@@ -12,7 +12,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 public class AuthWebService {
-    public static Retrofit getInstance(Context context, String token) {
+    public static Retrofit getInstance(String token) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
                     Request request = chain.request().newBuilder()
