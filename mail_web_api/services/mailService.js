@@ -121,8 +121,12 @@ async function sendDraft(mailId, userId, updatedFields) {
  */
 async function formatFullMail(mail, userId, status) {
   const fromUser = await getPublicUserById(mail.from);
+  let labels = await getLabelsByIdsForUser(userId, status?.labels || []);
 
-  const labels = await getLabelsByIdsForUser(userId, status?.labels || []);
+  // Convert labels using toJSON
+  labels = labels.map(label =>
+    typeof label.toJSON === 'function' ? label.toJSON() : label
+  );
 
   return {
     id: mail._id.toString(),

@@ -153,7 +153,12 @@ async function setSpamStatus(mailId, userId, isSpam) {
 async function formatMailSummary(mail, userId) {
   const status = await getMailStatus(mail._id, userId);
   const fromUser = await getPublicUserById(mail.from);
-  const labels = await getLabelsByIdsForUser(userId, status?.labels || []);
+  let labels = await getLabelsByIdsForUser(userId, status?.labels || []);
+
+  // Convert labels using toJSON
+  labels = labels.map(label =>
+    typeof label.toJSON === 'function' ? label.toJSON() : label
+  );
 
   const summary = {
     id: mail._id.toString(),
