@@ -43,27 +43,14 @@ public interface MailWebService {
     Call<Void> deleteMail(@Path("id") String id);
 
     // Filters
-    @GET("mails/allmails")
-    Call<List<MailFromServer>> getAllMails();
+    @GET("mails/{type}")
+    Call<List<MailFromServer>> getMailsByType(@Path("type") String type);
 
-    @GET("mails/inbox")
-    Call<List<MailFromServer>> getInboxMails();
-
-    @GET("mails/sent")
-    Call<List<MailFromServer>> getSentMails();
-
-    @GET("mails/drafts")
-    Call<List<MailFromServer>> getDraftMails();
-
-    @GET("mails/spam")
-    Call<List<MailFromServer>> getSpamMails();
-
-    @GET("mails/starred")
-    Call<List<MailFromServer>> getStarredMails();
+    @GET("mails/search-{query}")
+    Call<List<MailFromServer>> searchMails(@Path("query") String query);
 
     @GET("mails/labels-{labelId}")
     Call<List<MailFromServer>> getMailsByLabel(@Path("labelId") String labelId);
 
-    @GET("mails/search-{query}")
-    Call<List<MailFromServer>> searchMails(@Path("query") String query);
+
 }

@@ -17,6 +17,7 @@ import com.example.mail_app.data.entity.Mail;
 import com.example.mail_app.data.entity.MailLabelCrossRef;
 import com.example.mail_app.data.entity.MailRecipientCrossRef;
 import com.example.mail_app.data.entity.MailWithRecipientsAndLabels;
+import com.example.mail_app.data.model.MailboxType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,8 @@ public class MailRepository {
     private final MailRecipientCrossRefDao recipientRefDao;
     private final MailListData mailListData;
     private final MailAPI api;
+
+    private MailboxType currentType = MailboxType.INBOX;
 
     public MailRepository(Context context) {
         LocalDatabase db = MyApp.getInstance().getDatabase();
@@ -77,19 +80,28 @@ public class MailRepository {
     public void add(final Mail mail) {
         new Thread(() -> {
             mailDao.insertMail(mail);
-            reload();
+            reload(currentType);
         }).start();
     }
 
     public void delete(final Mail mail) {
         new Thread(() -> {
             mailDao.deleteMail(mail);
-            reload();
+            reload(currentType);
         }).start();
     }
 
-    public void reload() {
-        api.getAll();
+    public void reload(MailboxType type) {
+        currentType = type;
+        api.loadByType(type);
+    }
+
+    public void search(String query) {
+        api.search(query);
+    }
+
+    public void loadByLabel(String labelId) {
+        api.getByLabel(labelId);
     }
 
     public void sendDraft(String mailId, Mail mail, List<String> to) {
@@ -119,13 +131,4 @@ public class MailRepository {
     public void deleteMailById(String mailId) {
         api.deleteMail(mailId);
     }
-
-    // כל פונקציית פילטר תוסיף קריאה ל־MailAPI המקביל
-    public void loadInbox() { api.getInbox(); }
-    public void loadSent() { api.getSent(); }
-    public void loadSpam() { api.getSpam(); }
-    public void loadStarred() { api.getStarred(); }
-    public void loadDrafts() { api.getDrafts(); }
-    public void loadByLabel(String labelId) { api.getByLabel(labelId); }
-    public void search(String query) { api.search(query);}
 }
