@@ -5,15 +5,17 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 import com.example.mail_app.data.dao.LabelDao;
+import com.example.mail_app.data.dao.LoggedInUserDao;
 import com.example.mail_app.data.dao.MailDao;
 import com.example.mail_app.data.dao.MailLabelCrossRefDao;
 import com.example.mail_app.data.dao.MailRecipientCrossRefDao;
-import com.example.mail_app.data.dao.UserDao;
+import com.example.mail_app.data.dao.PublicUserDao;
 import com.example.mail_app.data.entity.Label;
+import com.example.mail_app.data.entity.LoggedInUser;
 import com.example.mail_app.data.entity.Mail;
 import com.example.mail_app.data.entity.MailLabelCrossRef;
 import com.example.mail_app.data.entity.MailRecipientCrossRef;
-import com.example.mail_app.data.entity.User;
+import com.example.mail_app.data.entity.PublicUser;
 import com.example.mail_app.data.entity.utils.Converters;
 
 /**
@@ -23,8 +25,9 @@ import com.example.mail_app.data.entity.utils.Converters;
 @Database(
         entities = {
                 Mail.class,
+                LoggedInUser.class,
+                PublicUser.class,
                 Label.class,
-                User.class,
                 MailLabelCrossRef.class,
                 MailRecipientCrossRef.class
         },
@@ -35,7 +38,8 @@ public abstract class LocalDatabase extends RoomDatabase {
 
     public abstract MailDao mailDao();
     public abstract LabelDao labelDao();
-    public abstract UserDao userDao();
+    public abstract PublicUserDao publicUserDao();
+    public abstract LoggedInUserDao userDao();
     public abstract MailLabelCrossRefDao mailLabelCrossRefDao();
     public abstract MailRecipientCrossRefDao mailRecipientCrossRefDao();
 }

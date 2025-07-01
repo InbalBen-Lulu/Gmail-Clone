@@ -36,7 +36,7 @@ public class MailViewModel extends AndroidViewModel {
     }
 
     public void reloadMails(String path) {
-        repository.reload(path);
+
     }
 
     public void sendDraft(String mailId, Mail mail, List<String> to) {

@@ -15,7 +15,7 @@ public class MailWithRecipients {
             entityColumn = "userId",
             associateBy = @Junction(MailRecipientCrossRef.class)
     )
-    private List<User> recipients;
+    private List<PublicUser> recipients;
 
     public Mail getMail() {
         return mail;
@@ -25,11 +25,11 @@ public class MailWithRecipients {
         this.mail = mail;
     }
 
-    public List<User> getRecipients() {
+    public List<PublicUser> getRecipients() {
         return recipients;
     }
 
-    public void setRecipients(List<User> recipients) {
+    public void setRecipients(List<PublicUser> recipients) {
         this.recipients = recipients;
     }
 }

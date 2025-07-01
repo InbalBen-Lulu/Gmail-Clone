@@ -19,7 +19,7 @@ public class MailWithRecipientsAndLabels {
                     entityColumn = "userId"
             )
     )
-    private List<User> recipients;
+    private List<PublicUser> recipients;
 
     @Relation(
             parentColumn = "id",
@@ -40,11 +40,11 @@ public class MailWithRecipientsAndLabels {
         this.mail = mail;
     }
 
-    public List<User> getRecipients() {
+    public List<PublicUser> getRecipients() {
         return recipients;
     }
 
-    public void setRecipients(List<User> recipients) {
+    public void setRecipients(List<PublicUser> recipients) {
         this.recipients = recipients;
     }
 

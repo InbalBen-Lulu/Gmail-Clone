@@ -1,11 +1,10 @@
-package com.example.mail_app.app.service;
+package com.example.mail_app.app.api;
 
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.mail_app.MyApp;
-import com.example.mail_app.R;
 import com.example.mail_app.app.network.AuthWebService;
 import com.example.mail_app.auth.AuthManager;
 import com.example.mail_app.data.dto.MailFromServer;
@@ -20,11 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 import retrofit2.*;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.widget.Toast;
 
 public class MailAPI {
