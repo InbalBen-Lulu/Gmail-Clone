@@ -3,12 +3,20 @@ const MailStatus = require('../models/mailStatusModel');
 
 /**
  * Retrieves all labels belonging to a specific user, filtered by a list of label IDs.
+ * Returns plain objects with id, name, color, userId (no _id, no __v)
  */
 async function getLabelsByIdsForUser(userId, labelIds) {
-  return await Label.find({
+  const labels = await Label.find({
     userId,
     _id: { $in: labelIds }
   }).lean();
+
+  return labels.map(label => ({
+    id: label._id.toString(),
+    name: label.name,
+    color: label.color,
+    userId: label.userId
+  }));
 }
 
 /**

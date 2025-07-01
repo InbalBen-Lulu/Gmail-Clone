@@ -137,6 +137,7 @@ async function formatFullMail(mail, userId, status) {
     to: mail.to,
     labels,
     isStar: status?.isStar || false,
+    isDraft: status?.isDraft || false,
     isSpam: status?.isSpam || false,
     type: status?.type || 'sent'
   };
