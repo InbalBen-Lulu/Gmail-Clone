@@ -6,6 +6,7 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
 import androidx.room.Delete;
+import androidx.room.OnConflictStrategy;
 
 import com.example.mail_app.data.entity.*;
 
@@ -13,14 +14,20 @@ import java.util.List;
 
 @Dao
 public interface MailDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMail(Mail mail);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertList(List<Mail> mails);
 
     @Update
     void updateMail(Mail mail);
 
     @Delete
     void deleteMail(Mail mail);
+
+    @Query("DELETE FROM Mail")
+    void clear();
 
     @Query("SELECT * FROM Mail WHERE id = :mailId")
     Mail getMailById(String mailId);

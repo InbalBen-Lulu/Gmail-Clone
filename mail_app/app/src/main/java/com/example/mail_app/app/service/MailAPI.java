@@ -1,0 +1,106 @@
+package com.example.mail_app.app.service;
+
+import androidx.lifecycle.MutableLiveData;
+
+import com.example.mail_app.MyApp;
+import com.example.mail_app.R;
+import com.example.mail_app.app.network.AuthWebService;
+import com.example.mail_app.data.dto.MailFromServer;
+import com.example.mail_app.data.entity.Mail;
+import com.example.mail_app.data.entity.MailWithRecipientsAndLabels;
+import com.example.mail_app.data.remote.MailWebService;
+import com.example.mail_app.repository.MailRepository;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import retrofit2.*;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+public class MailAPI {
+    private final MutableLiveData<List<MailWithRecipientsAndLabels>> mailListData;
+    private final MailRepository repository;
+    private final MailWebService api;
+
+    public MailAPI(MutableLiveData<List<MailWithRecipientsAndLabels>> mailListData, MailRepository repository) {
+        this.mailListData = mailListData;
+        this.repository = repository;
+
+        Retrofit retrofit = AuthWebService.getInstance(context, token);
+
+        api = retrofit.create(MailWebService.class);
+    }
+
+    private void loadFromCall(Call<List<MailFromServer>> call) {
+        call.enqueue(new Callback<List<MailFromServer>>() {
+            @Override
+            public void onResponse(Call<List<MailFromServer>> call, Response<List<MailFromServer>> response) {
+                if (response.body() != null) {
+                    repository.saveMany(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<MailFromServer>> call, Throwable t) {}
+        });
+    }
+
+    public void getAll()       { loadFromCall(api.getAllMails()); }
+    public void getInbox()     { loadFromCall(api.getInboxMails()); }
+    public void getSent()      { loadFromCall(api.getSentMails()); }
+    public void getDrafts()    { loadFromCall(api.getDraftMails()); }
+    public void getSpam()      { loadFromCall(api.getSpamMails()); }
+    public void getStarred()   { loadFromCall(api.getStarredMails()); }
+    public void getByLabel(String labelId) { loadFromCall(api.getMailsByLabel(labelId)); }
+    public void search(String query)       { loadFromCall(api.searchMails(query)); }
+
+    public void sendDraft(String mailId, Mail mail, List<String> to) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("to", to);
+        body.put("subject", mail.getSubject());
+        body.put("body", mail.getBody());
+        api.sendDraft(mailId, body).enqueue(emptyCallback());
+    }
+
+    public void updateDraft(String mailId, Mail mail, List<String> to) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("to", to);
+        body.put("subject", mail.getSubject());
+        body.put("body", mail.getBody());
+        api.updateMail(mailId, body).enqueue(emptyCallback());
+    }
+
+    public void toggleStar(String mailId) {
+        api.toggleStar(mailId).enqueue(emptyCallback());
+    }
+
+    public void setSpam(String mailId, boolean isSpam) {
+        Map<String, Boolean> body = new HashMap<>();
+        body.put("isSpam", isSpam);
+        api.setSpam(mailId, body).enqueue(emptyCallback());
+    }
+
+    public void deleteMail(String mailId) {
+        api.deleteMail(mailId).enqueue(emptyCallback());
+    }
+
+    public void addLabelToMail(String mailId, String labelId) {
+        Map<String, String> body = new HashMap<>();
+        body.put("labelId", labelId);
+        api.addLabelToMail(mailId, body).enqueue(emptyCallback());
+    }
+
+    public void removeLabelFromMail(String mailId, String labelId) {
+        Map<String, String> body = new HashMap<>();
+        body.put("labelId", labelId);
+        api.removeLabelFromMail(mailId, body).enqueue(emptyCallback());
+    }
+
+    private Callback<Void> emptyCallback() {
+        return new Callback<Void>() {
+            @Override public void onResponse(Call<Void> call, Response<Void> response) {}
+            @Override public void onFailure(Call<Void> call, Throwable t) {}
+  };
+}
+}

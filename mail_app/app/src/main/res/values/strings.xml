@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">mail_app</string>
+    <string name="BaseUrl">http://localhost:4000/api/</string>
+    <string name="BaseUrlEmulator">http://10.0.2.2:4000/api/</string>
+    <string name="BaseUrlMoria">http://172.31.160.1:4000/api/</string>
 </resources>

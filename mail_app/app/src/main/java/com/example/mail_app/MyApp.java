@@ -11,7 +11,7 @@ import androidx.room.Room;
 public class MyApp extends Application {
 
     private static MyApp instance;
-    private AppDatabase database;
+    private LocalDatabase database;
 
     @Override
     public void onCreate() {
@@ -20,8 +20,8 @@ public class MyApp extends Application {
 
         database = Room.databaseBuilder(
                 getApplicationContext(),
-                AppDatabase.class,
-                "gmail_app_db"
+                LocalDatabase.class,
+                "mail_app_db"
         ).build();
     }
 
@@ -29,7 +29,7 @@ public class MyApp extends Application {
         return instance;
     }
 
-    public AppDatabase getDatabase() {
+    public LocalDatabase getDatabase() {
         return database;
     }
 }

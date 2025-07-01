@@ -31,7 +31,7 @@ import com.example.mail_app.data.entity.utils.Converters;
         version = 1
 )
 @TypeConverters(Converters.class)
-public abstract class AppDatabase extends RoomDatabase {
+public abstract class LocalDatabase extends RoomDatabase {
 
     public abstract MailDao mailDao();
     public abstract LabelDao labelDao();
