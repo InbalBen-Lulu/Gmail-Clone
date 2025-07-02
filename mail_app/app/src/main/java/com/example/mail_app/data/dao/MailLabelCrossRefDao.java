@@ -2,7 +2,7 @@ package com.example.mail_app.data.dao;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
-import androidx.room.Delete;
+import androidx.room.Query;
 
 import com.example.mail_app.data.entity.MailLabelCrossRef;
 
@@ -11,6 +11,6 @@ public interface MailLabelCrossRefDao {
     @Insert
     void insertMailLabelCrossRef(MailLabelCrossRef crossRef);
 
-    @Delete
-    void deleteMailLabelCrossRef(MailLabelCrossRef crossRef);
+    @Query("DELETE FROM MailLabelCrossRef WHERE mailId = :mailId")
+    void deleteByMailId(String mailId);
 }

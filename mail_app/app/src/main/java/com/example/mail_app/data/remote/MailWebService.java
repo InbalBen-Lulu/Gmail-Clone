@@ -15,42 +15,63 @@ import retrofit2.http.Path;
 
 public interface MailWebService {
 
+    // יצירת מייל חדש
     @POST("mails")
-    Call<Void> createMail(@Body Map<String, Object> mail);
+    Call<Void> createMail(@Body Map<String, Object> mailData);
 
-    @GET("mails/{id}")
-    Call<MailFromServer> getMailById(@Path("id") String id);
-
-    @PATCH("mails/{id}")
-    Call<Void> updateMail(@Path("id") String id, @Body Map<String, Object> updated);
-
+    // שליחה של טיוטה
     @PATCH("mails/{id}/send")
-    Call<Void> sendDraft(@Path("id") String id, @Body Map<String, Object> body);
+    Call<Void> sendDraft(@Path("id") String mailId, @Body Map<String, Object> body);
 
+    // עדכון טיוטה
+    @PATCH("mails/{id}")
+    Call<Void> updateMail(@Path("id") String mailId, @Body Map<String, Object> body);
+
+    // מחיקת מייל
+    @DELETE("mails/{id}")
+    Call<Void> deleteMail(@Path("id") String mailId);
+
+    // כוכב
     @PATCH("mails/{id}/star")
-    Call<Void> toggleStar(@Path("id") String id);
+    Call<Void> toggleStar(@Path("id") String mailId);
 
+    // ספאם
     @PATCH("mails/{id}/spam")
-    Call<Void> setSpam(@Path("id") String id, @Body Map<String, Boolean> body);
+    Call<Void> setSpam(@Path("id") String mailId, @Body Map<String, Boolean> body);
 
+    // תיוג
     @POST("mails/{id}/labels")
-    Call<Void> addLabelToMail(@Path("id") String id, @Body Map<String, String> body);
+    Call<Void> addLabelToMail(@Path("id") String mailId, @Body Map<String, String> body);
 
     @DELETE("mails/{id}/labels")
-    Call<Void> removeLabelFromMail(@Path("id") String id, @Body Map<String, String> body);
+    Call<Void> removeLabelFromMail(@Path("id") String mailId, @Body Map<String, String> body);
 
-    @DELETE("mails/{id}")
-    Call<Void> deleteMail(@Path("id") String id);
+    // קבלת מייל לפי מזהה
+    @GET("mails/{id}")
+    Call<MailFromServer> getMailById(@Path("id") String mailId);
 
-    // Filters
-    @GET("mails/{type}")
-    Call<List<MailFromServer>> getMailsByType(@Path("type") String type);
+    // תיבות דואר
+    @GET("mails/allmails")
+    Call<List<MailFromServer>> getAllMails();
 
-    @GET("mails/search-{query}")
-    Call<List<MailFromServer>> searchMails(@Path("query") String query);
+    @GET("mails/inbox")
+    Call<List<MailFromServer>> getInboxMails();
+
+    @GET("mails/sent")
+    Call<List<MailFromServer>> getSentMails();
+
+    @GET("mails/drafts")
+    Call<List<MailFromServer>> getDraftMails();
+
+    @GET("mails/spam")
+    Call<List<MailFromServer>> getSpamMails();
+
+    @GET("mails/starred")
+    Call<List<MailFromServer>> getStarredMails();
 
     @GET("mails/labels-{labelId}")
     Call<List<MailFromServer>> getMailsByLabel(@Path("labelId") String labelId);
 
-
+    @GET("mails/search-{query}")
+    Call<List<MailFromServer>> searchMails(@Path("query") String query);
 }

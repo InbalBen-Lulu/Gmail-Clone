@@ -1,15 +1,12 @@
 package com.example.mail_app.app.network;
 
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-import android.content.Context;
-
 import com.example.mail_app.MyApp;
 import com.example.mail_app.R;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AuthWebService {
     public static Retrofit getInstance(String token) {

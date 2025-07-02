@@ -19,8 +19,10 @@ import com.example.mail_app.data.entity.MailRecipientCrossRef;
 import com.example.mail_app.data.entity.MailWithRecipientsAndLabels;
 import com.example.mail_app.data.model.MailboxType;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+
+import retrofit2.Callback;
 
 public class MailRepository {
     private final MailDao mailDao;
@@ -43,7 +45,7 @@ public class MailRepository {
     class MailListData extends MutableLiveData<List<MailWithRecipientsAndLabels>> {
         public MailListData() {
             super();
-            setValue(new ArrayList<>());
+            setValue(new LinkedList<>());
         }
 
         @Override
@@ -77,16 +79,19 @@ public class MailRepository {
         for (MailLabelCrossRef l : labels) labelRefDao.insertMailLabelCrossRef(l);
     }
 
-    public void add(final Mail mail) {
-        new Thread(() -> {
-            mailDao.insertMail(mail);
-            reload(currentType);
-        }).start();
+    public void createMail(Mail mail, List<String> to, boolean isDraft) {
+        api.createMail(mail, to, isDraft);
     }
 
-    public void delete(final Mail mail) {
+    public void deleteMailById(String mailId) {
+        api.deleteMail(mailId);
         new Thread(() -> {
-            mailDao.deleteMail(mail);
+            recipientRefDao.deleteByMailId(mailId);
+            labelRefDao.deleteByMailId(mailId);
+            Mail mail = mailDao.getMailById(mailId);
+            if (mail != null) {
+                mailDao.deleteMail(mail);
+            }
             reload(currentType);
         }).start();
     }
@@ -104,12 +109,17 @@ public class MailRepository {
         api.getByLabel(labelId);
     }
 
-    public void sendDraft(String mailId, Mail mail, List<String> to) {
-        api.sendDraft(mailId, mail, to);
+    public void getMailById(String mailId, Callback<MailFromServer> callback) {
+        api.getMailById(mailId, callback);
     }
 
-    public void updateDraft(String mailId, Mail mail, List<String> to) {
-        api.updateDraft(mailId, mail, to);
+
+    public void sendDraft(Mail mail, List<String> to) {
+        api.sendDraft(mail.getId(), mail, to);
+    }
+
+    public void updateDraft(Mail mail, List<String> to) {
+        api.updateDraft(mail.getId(), mail, to);
     }
 
     public void toggleStar(String mailId) {
@@ -128,7 +138,7 @@ public class MailRepository {
         api.removeLabelFromMail(mailId, labelId);
     }
 
-    public void deleteMailById(String mailId) {
-        api.deleteMail(mailId);
+    public void refreshLocalList() {
+        new Thread(() -> mailListData.postValue(mailDao.getAllMailsWithRecipientsAndLabels())).start();
     }
 }

@@ -8,9 +8,13 @@ import androidx.lifecycle.LiveData;
 
 import com.example.mail_app.data.entity.Mail;
 import com.example.mail_app.data.entity.MailWithRecipientsAndLabels;
+import com.example.mail_app.data.model.MailboxType;
 import com.example.mail_app.repository.MailRepository;
+import com.example.mail_app.data.dto.MailFromServer;
 
 import java.util.List;
+
+import retrofit2.Callback;
 
 public class MailViewModel extends AndroidViewModel {
 
@@ -27,24 +31,36 @@ public class MailViewModel extends AndroidViewModel {
         return mails;
     }
 
-    public void addMail(Mail mail) {
-        repository.add(mail);
+    public void createMail(Mail mail, List<String> to, boolean isDraft) {
+        repository.createMail(mail, to, isDraft);
     }
 
-    public void deleteMail(Mail mail) {
-        repository.delete(mail);
+    public void deleteMailById(String mailId) {
+        repository.deleteMailById(mailId);
     }
 
-    public void reloadMails(String path) {
-        repository.reload(path);
+    public void getMailById(String mailId, Callback<MailFromServer> callback) {
+        repository.getMailById(mailId, callback);
     }
 
-    public void sendDraft(String mailId, Mail mail, List<String> to) {
-        repository.sendDraft(mailId, mail, to);
+    public void reloadMails(MailboxType type) {
+        repository.reload(type);
     }
 
-    public void updateDraft(String mailId, Mail mail, List<String> to) {
-        repository.updateDraft(mailId, mail, to);
+    public void search(String query) {
+        repository.search(query);
+    }
+
+    public void loadByLabel(String labelId) {
+        repository.loadByLabel(labelId);
+    }
+
+    public void sendDraft(Mail mail, List<String> to) {
+        repository.sendDraft(mail, to);
+    }
+
+    public void updateDraft(Mail mail, List<String> to) {
+        repository.updateDraft(mail, to);
     }
 
     public void toggleStar(String mailId) {
@@ -61,9 +77,5 @@ public class MailViewModel extends AndroidViewModel {
 
     public void removeLabelFromMail(String mailId, String labelId) {
         repository.removeLabelFromMail(mailId, labelId);
-    }
-
-    public void deleteMailById(String mailId) {
-        repository.deleteMailById(mailId);
     }
 }
