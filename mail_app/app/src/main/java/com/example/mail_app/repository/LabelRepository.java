@@ -14,7 +14,7 @@ import java.util.List;
 
 public class LabelRepository {
     private final LabelDao labelDao;
-    private final MutableLiveData<List<Label>> labelListData;
+    private final LabelListData labelListData;
     private final LabelAPI api;
 
     public LabelRepository() {
