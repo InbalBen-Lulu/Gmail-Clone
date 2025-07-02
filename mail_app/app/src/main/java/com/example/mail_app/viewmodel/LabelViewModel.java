@@ -1,23 +1,19 @@
 package com.example.mail_app.viewmodel;
 
-import android.app.Application;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.example.mail_app.data.entity.Label;
 import com.example.mail_app.repository.LabelRepository;
 
 import java.util.List;
 
-public class LabelViewModel extends AndroidViewModel {
+public class LabelViewModel extends ViewModel {
     private final LabelRepository repository;
     private final LiveData<List<Label>> labels;
 
-    public LabelViewModel(@NonNull Application application) {
-        super(application);
-        repository = new LabelRepository(application);
+    public LabelViewModel() {
+        repository = new LabelRepository();
         labels = repository.getAll();
     }
 
@@ -25,24 +21,8 @@ public class LabelViewModel extends AndroidViewModel {
         return labels;
     }
 
-    public void addLabel(Label label) {
-        repository.add(label);
-    }
-
-    public void deleteLabel(Label label) {
-        repository.delete(label);
-    }
-
-    public void renameLabel(String id, String newName) {
-        repository.rename(id, newName);
-    }
-
-    public void setColor(String id, String color) {
-        repository.setColor(id, color);
-    }
-
-    public void resetColor(String id) {
-        repository.resetColor(id);
+    public Label getById(String id) {
+        return repository.getById(id);
     }
 
     public void reloadLabels() {

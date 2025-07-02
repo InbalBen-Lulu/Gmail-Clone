@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.mail_app.LocalDatabase;
 import com.example.mail_app.MyApp;
 import com.example.mail_app.app.mapper.MailDataMapper;
-import com.example.mail_app.app.service.MailAPI;
+import com.example.mail_app.app.api.MailAPI;
 import com.example.mail_app.data.dao.MailDao;
 import com.example.mail_app.data.dao.MailLabelCrossRefDao;
 import com.example.mail_app.data.dao.MailRecipientCrossRefDao;
