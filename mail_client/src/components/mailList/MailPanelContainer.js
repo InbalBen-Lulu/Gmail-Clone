@@ -16,7 +16,7 @@ import './MailPanelContainer.css';
 
 const MailPanelContainer = () => {
     const { category, mailId } = useParams();
-    const mailIdNum = Number(mailId);
+    const mailIdNum = mailId;
     const [searchParams] = useSearchParams();
     const { refreshLabels } = useLabels();
 

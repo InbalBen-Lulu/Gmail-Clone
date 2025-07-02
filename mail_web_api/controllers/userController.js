@@ -1,87 +1,112 @@
-const { createUser, getUserById, getPublicUserById } = require('../models/userModel');
-const { resolveProfileImagePath } = require('../models/profileImageModel');
+const { createUser, getUserById, getPublicUserById } = require('../services/userService');
+const { resolveProfileImagePath } = require('../services/profileImageService');
 const { getUserIdFromEmail } = require('../utils/emailUtils');
+const { isValidDate } = require('../utils/dateUtils');
+
+const ALLOWED_GENDERS = ['MALE', 'FEMALE', 'OTHER'];
 
 /**
  * POST /api/users
- * Create a new user with JSON body data.
+ * Register a new user with validations.
  */
-function registerUser(req, res) {
-    const userData = req.body;
-    const { userId, name, password, gender, birthDate } = userData;
+async function registerUser(req, res) {
+  try {
+    let { userId, name, password, gender, birthDate } = req.body;
 
-    userData.userId = userId.toLowerCase();
+    if (!userId || userId.trim() === '') {
+      return res.status(400).json({ error: 'Missing user ID' });
+    }
+    userId = userId.toLowerCase();
 
+    if (!name || name.trim() === '') {
+      return res.status(400).json({ error: 'Enter first name' });
+    }
+    if (!password || password.length < 8) {
+      return res.status(400).json({ error: 'Use 8 characters or more for your password' });
+    }
+    if (!gender || gender.trim() === '') {
+      return res.status(400).json({ error: 'Please select your gender' });
+    }
+    if (!ALLOWED_GENDERS.includes(gender.toUpperCase())) {
+      return res.status(400).json({ error: 'Gender must be MALE, FEMALE or OTHER' });
+    }
     if (!birthDate) {
-    return res.status(400).json({ error: 'Please fill in a complete birthday' });
-    }
-    if (!gender) {
-        return res.status(400).json({ error: 'Please select your gender' });
-    }
-    if (!name) {
-        return res.status(400).json({ error: 'Enter first name' });
-    }
-    if (!password) {
-        return res.status(400).json({ error: 'Enter a password' });
-    }
-    if (!userId) {
-        return res.status(400).json({ error: 'Missing user ID' });
+      return res.status(400).json({ error: 'Please fill in a complete birthday' });
     }
 
+    const parsedDate = new Date(birthDate);
+    const day = parsedDate.getDate();
+    const month = parsedDate.getMonth() + 1;
+    const year = parsedDate.getFullYear();
+
+    if (isNaN(parsedDate.getTime()) || !isValidDate(day, month, year)) {
+      return res.status(400).json({ error: 'Please enter a valid, non-future date' });
+    }
+
+    const existingUser = await getUserById(userId);
+    if (existingUser) {
+      return res.status(400).json({ error: 'That username is taken. Try another.' });
+    }
 
     const profileImage = resolveProfileImagePath(userId);
 
-    const userWithImage = {
-        ...userData,
-        profileImage
-    };
+    const user = await createUser({
+      userId,
+      name,
+      password,
+      gender: gender.toUpperCase(),
+      birthDate: parsedDate,
+      profileImage
+    });
 
-    try {
-        const newUser = createUser(userWithImage);
-        return res.status(201).json(newUser);
-    } catch (err) {
-        return res.status(400).json({ error: err.message });
-    }
+    return res.status(201).json(user);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 }
-
 
 /**
  * GET /api/users/:id
- * Retrieve user details by userId
+ * Retrieve full user by userId (no password)
  */
-function getUserDetails(req, res) {
-    const userId = req.params.id; 
-    const user = getUserById(userId);
-
+async function getUserDetails(req, res) {
+  try {
+    const userId = req.params.id;
+    const user = await getUserById(userId);
     if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: 'User not found' });
     }
-
-    res.json(user); 
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
 }
 
 /**
  * GET /api/users/:id/public
- * Retrieve user public details by userId
+ * Retrieve public info (used for availability check or UI display)
  */
-function getPublicUserInfo(req, res) {
-    let userId = req.params.id; 
-    const emailBasedId = getUserIdFromEmail(userId);
-    if (emailBasedId) {
-        userId = emailBasedId;
+async function getPublicUserInfo(req, res) {
+  try {
+    let userId = req.params.id;
+    const fromEmail = getUserIdFromEmail(userId);
+    if (fromEmail) {
+      userId = fromEmail;
     }
 
-    const user = getPublicUserById(userId);
-
+    const user = await getPublicUserById(userId);
     if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: 'User not found' });
     }
 
-    res.json(user); 
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
 }
 
 module.exports = {
-    registerUser,
-    getUserDetails, 
-    getPublicUserInfo
+  registerUser,
+  getUserDetails,
+  getPublicUserInfo
 };
