@@ -2,8 +2,11 @@ package com.example.mail_app.app.api;
 
 import com.example.mail_app.MyApp;
 import com.example.mail_app.app.network.AuthWebService;
+import com.example.mail_app.app.network.PublicWebService;
 import com.example.mail_app.auth.AuthManager;
 import com.example.mail_app.data.dao.LoggedInUserDao;
+import com.example.mail_app.data.dto.LoginRequest;
+import com.example.mail_app.data.dto.LoginResponse;
 import com.example.mail_app.data.dto.RegisterRequest;
 import com.example.mail_app.data.entity.LoggedInUser;
 import com.example.mail_app.data.remote.LoggedInUserWebService;
@@ -104,4 +107,54 @@ public class LoggedInUserAPI {
             }
         });
     }
+
+    public void login(String userId, String password, Callback<LoginResponse> callback) {
+        Retrofit noAuthRetrofit = PublicWebService.getInstance();
+        LoggedInUserWebService noAuthApi = noAuthRetrofit.create(LoggedInUserWebService.class);
+        LoginRequest request = new LoginRequest(userId, password);
+
+        noAuthApi.login(request).enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    LoginResponse loginResponse = response.body();
+
+                    // שמירת הטוקן וה־userId
+                    AuthManager.saveToken(MyApp.getInstance(), loginResponse.getToken());
+                    AuthManager.saveUserId(MyApp.getInstance(), loginResponse.getUser().getUserId());
+
+                    get();
+
+                    // החזר קריאה חיצונית
+                    callback.onResponse(call, response);
+                } else {
+                    callback.onResponse(call, response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
+    public void logout(Callback<Void> callback) {
+        api.logout().enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                // מחיקת מידע מהאפליקציה
+                AuthManager.clearAll(MyApp.getInstance());
+                new Thread(() -> dao.clear()).start();
+
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
 }

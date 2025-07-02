@@ -1,5 +1,7 @@
 package com.example.mail_app.data.remote;
 
+import com.example.mail_app.data.dto.LoginRequest;
+import com.example.mail_app.data.dto.LoginResponse;
 import com.example.mail_app.data.dto.RegisterRequest;
 import com.example.mail_app.data.entity.LoggedInUser;
 
@@ -28,4 +30,10 @@ public interface LoggedInUserWebService {
 
     @DELETE("users/{id}/profile-image")
     Call<Void> deleteProfileImage(@Path("id") String userId);
+
+    @POST("token/login")
+    Call<LoginResponse> login(@Body LoginRequest request);
+
+    @POST("token/logout")
+    Call<Void> logout();
 }

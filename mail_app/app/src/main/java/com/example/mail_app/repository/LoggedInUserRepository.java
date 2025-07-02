@@ -7,9 +7,12 @@ import com.example.mail_app.LocalDatabase;
 import com.example.mail_app.MyApp;
 import com.example.mail_app.app.api.LoggedInUserAPI;
 import com.example.mail_app.data.dao.LoggedInUserDao;
+import com.example.mail_app.data.dto.LoginResponse;
 import com.example.mail_app.data.entity.LoggedInUser;
 
 import java.io.File;
+
+import retrofit2.Callback;
 
 public class LoggedInUserRepository {
     private final LoggedInUserDao loggedInUserDao;
@@ -75,4 +78,17 @@ public class LoggedInUserRepository {
     public void reloadFromServer() {
         reload();
     }
+
+    // 🔹 התחברות (login)
+    public void login(String userId, String password, Callback<LoginResponse> callback) {
+        api.login(userId, password, callback);
+//        reload(); // רענון לאחר התחברות
+    }
+
+    // 🔹 התנתקות (logout)
+    public void logout(Callback<Void> callback) {
+        api.logout(callback);
+//        clear(); // ניקוי מקומי לאחר התנתקות
+    }
+
 }

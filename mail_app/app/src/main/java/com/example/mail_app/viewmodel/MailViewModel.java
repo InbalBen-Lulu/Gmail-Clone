@@ -1,7 +1,5 @@
 package com.example.mail_app.viewmodel;
 
-import android.app.Application;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -16,8 +14,8 @@ public class MailViewModel extends ViewModel {
     private final MailRepository repository;
     private final LiveData<List<FullMail>> mails;
 
-    public MailViewModel(Application app) {
-        repository = new MailRepository(app);
+    public MailViewModel() {
+        repository = new MailRepository();
         mails = repository.getLiveData();
     }
 
