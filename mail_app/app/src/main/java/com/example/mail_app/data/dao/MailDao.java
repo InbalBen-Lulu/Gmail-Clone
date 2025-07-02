@@ -104,11 +104,11 @@ public interface MailDao {
     void markAsRead(String mailId);
 
     // הוספת נמענים (to)
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertRecipients(List<MailRecipientCrossRef> recipients);
 
     // הוספת תווית
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertLabelToMail(MailLabelCrossRef labelRef);
 
     // הסרת תווית
