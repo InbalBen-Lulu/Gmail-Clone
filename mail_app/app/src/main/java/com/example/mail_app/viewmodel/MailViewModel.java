@@ -2,80 +2,98 @@ package com.example.mail_app.viewmodel;
 
 import android.app.Application;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
 
-import com.example.mail_app.data.entity.Mail;
-import com.example.mail_app.data.entity.MailWithRecipientsAndLabels;
-import com.example.mail_app.data.model.MailboxType;
+import com.example.mail_app.data.entity.FullMail;
 import com.example.mail_app.repository.MailRepository;
-import com.example.mail_app.data.dto.MailFromServer;
 
 import java.util.List;
+import java.util.Map;
 
-import retrofit2.Callback;
-
-public class MailViewModel extends AndroidViewModel {
+public class MailViewModel extends ViewModel {
 
     private final MailRepository repository;
-    private final LiveData<List<MailWithRecipientsAndLabels>> mails;
+    private final LiveData<List<FullMail>> mails;
 
-    public MailViewModel(@NonNull Application application) {
-        super(application);
-        repository = new MailRepository(application);
-        mails = repository.getAll();
+    public MailViewModel(Application app) {
+        repository = new MailRepository(app);
+        mails = repository.getLiveData();
     }
 
-    public LiveData<List<MailWithRecipientsAndLabels>> getMails() {
+    public LiveData<List<FullMail>> getMails() {
         return mails;
     }
 
-    public void createMail(Mail mail, List<String> to, boolean isDraft) {
-        repository.createMail(mail, to, isDraft);
+    public void loadInitialMails() {
+        repository.loadInitialMails();
     }
 
-    public void deleteMailById(String mailId) {
-        repository.deleteMailById(mailId);
+    public void loadInboxMails(int offset, int limit) {
+        repository.loadInboxMails(offset, limit);
     }
 
-    public void getMailById(String mailId, Callback<MailFromServer> callback) {
-        repository.getMailById(mailId, callback);
+    public void loadSentMails(int offset, int limit) {
+        repository.loadSentMails(offset, limit);
     }
 
-    public void reloadMails(MailboxType type) {
-        repository.reload(type);
+    public void loadDraftMails(int offset, int limit) {
+        repository.loadDraftMails(offset, limit);
     }
 
-    public void search(String query) {
-        repository.search(query);
+    public void loadSpamMails(int offset, int limit) {
+        repository.loadSpamMails(offset, limit);
     }
 
-    public void loadByLabel(String labelId) {
-        repository.loadByLabel(labelId);
+    public void loadStarredMails(int offset, int limit) {
+        repository.loadStarredMails(offset, limit);
     }
 
-    public void sendDraft(Mail mail, List<String> to) {
-        repository.sendDraft(mail, to);
+    public void loadAllMails(int offset, int limit) {
+        repository.loadAllMails(offset, limit);
     }
 
-    public void updateDraft(Mail mail, List<String> to) {
-        repository.updateDraft(mail, to);
+    public void loadMailsByLabel(String labelId, int offset, int limit) {
+        repository.loadMailsByLabel(labelId, offset, limit);
+    }
+
+    public void searchMails(String query, int offset, int limit) {
+        repository.searchMails(query, offset, limit);
+    }
+
+    public void deleteMail(String mailId) {
+        repository.deleteMail(mailId);
     }
 
     public void toggleStar(String mailId) {
         repository.toggleStar(mailId);
     }
 
-    public void setSpam(String mailId, boolean isSpam) {
-        repository.setSpam(mailId, isSpam);
+    public void setSpam(String mailId, Map<String, Boolean> body) {
+        repository.setSpam(mailId, body);
     }
 
-    public void addLabelToMail(String mailId, String labelId) {
-        repository.addLabelToMail(mailId, labelId);
+    public void addLabelToMail(String mailId, Map<String, String> body) {
+        repository.addLabelToMail(mailId, body);
     }
 
-    public void removeLabelFromMail(String mailId, String labelId) {
-        repository.removeLabelFromMail(mailId, labelId);
+    public void removeLabelFromMail(String mailId, Map<String, String> body) {
+        repository.removeLabelFromMail(mailId, body);
+    }
+
+    public void getMailById(String mailId) {
+        repository.getMailById(mailId);
+    }
+
+    public void createMail(Map<String, Object> body) {
+        repository.createMail(body);
+    }
+
+    public void sendDraft(String mailId, Map<String, Object> body) {
+        repository.sendDraft(mailId, body);
+    }
+
+    public void updateMail(String mailId, Map<String, Object> body) {
+        repository.updateMail(mailId, body);
     }
 }

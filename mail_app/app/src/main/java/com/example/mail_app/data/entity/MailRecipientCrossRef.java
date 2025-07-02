@@ -3,7 +3,10 @@ package com.example.mail_app.data.entity;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 
-@Entity(primaryKeys = {"mailId", "userId"})
+@Entity(
+        tableName = "mail_recipient_cross_ref",
+        primaryKeys = {"mailId", "userId"}
+)
 public class MailRecipientCrossRef {
     @NonNull
     private String mailId;

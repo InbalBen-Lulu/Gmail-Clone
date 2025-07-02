@@ -7,8 +7,6 @@ import androidx.room.TypeConverters;
 import com.example.mail_app.data.dao.LabelDao;
 import com.example.mail_app.data.dao.LoggedInUserDao;
 import com.example.mail_app.data.dao.MailDao;
-import com.example.mail_app.data.dao.MailLabelCrossRefDao;
-import com.example.mail_app.data.dao.MailRecipientCrossRefDao;
 import com.example.mail_app.data.dao.PublicUserDao;
 import com.example.mail_app.data.entity.Label;
 import com.example.mail_app.data.entity.LoggedInUser;
@@ -40,6 +38,4 @@ public abstract class LocalDatabase extends RoomDatabase {
     public abstract LabelDao labelDao();
     public abstract PublicUserDao publicUserDao();
     public abstract LoggedInUserDao userDao();
-    public abstract MailLabelCrossRefDao mailLabelCrossRefDao();
-    public abstract MailRecipientCrossRefDao mailRecipientCrossRefDao();
 }

@@ -11,16 +11,16 @@ import java.util.List;
 
 @Dao
 public interface LabelDao {
-    @Query("SELECT * FROM Label")
+    @Query("SELECT * FROM label")
     List<Label> getAll();
 
-    @Query("SELECT * FROM Label WHERE id = :id")
+    @Query("SELECT * FROM label WHERE id = :id")
     Label getById(String id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<Label> labels);
 
-    @Query("DELETE FROM Label")
+    @Query("DELETE FROM label")
     void clear();
 }
 

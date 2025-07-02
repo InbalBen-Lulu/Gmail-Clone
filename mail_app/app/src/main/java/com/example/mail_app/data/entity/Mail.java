@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
-@Entity
+@Entity(tableName = "mail")
 public class Mail {
     @PrimaryKey
     @NonNull

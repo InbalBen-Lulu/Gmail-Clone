@@ -20,4 +20,7 @@ public interface PublicUserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<PublicUser> users);
+
+    @Query("DELETE FROM public_users")
+    void clearAllUesrs();
 }

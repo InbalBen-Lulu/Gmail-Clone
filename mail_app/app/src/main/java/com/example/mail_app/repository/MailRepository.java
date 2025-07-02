@@ -1,144 +1,131 @@
 package com.example.mail_app.repository;
 
-import android.content.Context;
+import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.mail_app.LocalDatabase;
 import com.example.mail_app.MyApp;
-import com.example.mail_app.app.mapper.MailDataMapper;
 import com.example.mail_app.app.api.MailAPI;
 import com.example.mail_app.data.dao.MailDao;
-import com.example.mail_app.data.dao.MailLabelCrossRefDao;
-import com.example.mail_app.data.dao.MailRecipientCrossRefDao;
-import com.example.mail_app.data.dto.MailFromServer;
-import com.example.mail_app.data.entity.Mail;
-import com.example.mail_app.data.entity.MailLabelCrossRef;
-import com.example.mail_app.data.entity.MailRecipientCrossRef;
-import com.example.mail_app.data.entity.MailWithRecipientsAndLabels;
-import com.example.mail_app.data.model.MailboxType;
+import com.example.mail_app.data.dao.PublicUserDao;
+import com.example.mail_app.data.entity.FullMail;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Callback;
+import java.util.Map;
 
 public class MailRepository {
-    private final MailDao mailDao;
-    private final MailLabelCrossRefDao labelRefDao;
-    private final MailRecipientCrossRefDao recipientRefDao;
+    private final MailDao dao;
+    private final PublicUserDao publicUserDao;
     private final MailListData mailListData;
     private final MailAPI api;
 
-    private MailboxType currentType = MailboxType.INBOX;
-
-    public MailRepository(Context context) {
+    public MailRepository(Application app) {
         LocalDatabase db = MyApp.getInstance().getDatabase();
-        this.mailDao = db.mailDao();
-        this.labelRefDao = db.mailLabelCrossRefDao();
-        this.recipientRefDao = db.mailRecipientCrossRefDao();
+        this.dao = db.mailDao();
+        this.publicUserDao = db.publicUserDao();
         this.mailListData = new MailListData();
-        this.api = new MailAPI(mailListData, this);
+        this.api = new MailAPI(mailListData, dao, publicUserDao);
     }
 
-    class MailListData extends MutableLiveData<List<MailWithRecipientsAndLabels>> {
-        public MailListData() {
-            super();
-            setValue(new LinkedList<>());
-        }
+    // --- חשיפה החוצה ---
 
-        @Override
-        protected void onActive() {
-            super.onActive();
-            new Thread(() -> postValue(mailDao.getAllMailsWithRecipientsAndLabels())).start();
-        }
-    }
-
-    public LiveData<List<MailWithRecipientsAndLabels>> getAll() {
+    public LiveData<List<FullMail>> getLiveData() {
         return mailListData;
     }
 
-    public void saveMany(List<MailFromServer> dtos) {
-        new Thread(() -> {
-            mailDao.clear();
-            for (MailFromServer dto : dtos) {
-                saveFullMail(dto);
-            }
-            mailListData.postValue(mailDao.getAllMailsWithRecipientsAndLabels());
-        }).start();
+    // --- API פעולות ---
+
+    public void loadInitialMails() {
+        api.loadInitialMails();
     }
 
-    public void saveFullMail(MailFromServer dto) {
-        Mail mail = MailDataMapper.toMail(dto);
-        List<MailRecipientCrossRef> recipients = MailDataMapper.toRecipients(dto.id, dto.to);
-        List<MailLabelCrossRef> labels = MailDataMapper.toLabelCrossRefs(dto.id, dto.labels);
-
-        mailDao.insertMail(mail);
-        for (MailRecipientCrossRef r : recipients) recipientRefDao.insertMailRecipientCrossRef(r);
-        for (MailLabelCrossRef l : labels) labelRefDao.insertMailLabelCrossRef(l);
+    public void loadInboxMails(int offset, int limit) {
+        api.loadInboxMails(offset, limit);
     }
 
-    public void createMail(Mail mail, List<String> to, boolean isDraft) {
-        api.createMail(mail, to, isDraft);
+    public void loadSentMails(int offset, int limit) {
+        api.loadSentMails(offset, limit);
     }
 
-    public void deleteMailById(String mailId) {
+    public void loadDraftMails(int offset, int limit) {
+        api.loadDraftMails(offset, limit);
+    }
+
+    public void loadSpamMails(int offset, int limit) {
+        api.loadSpamMails(offset, limit);
+    }
+
+    public void loadStarredMails(int offset, int limit) {
+        api.loadStarredMails(offset, limit);
+    }
+
+    public void loadAllMails(int offset, int limit) {
+        api.loadAllMails(offset, limit);
+    }
+
+    public void loadMailsByLabel(String labelId, int offset, int limit) {
+        api.loadMailsByLabel(labelId, offset, limit);
+    }
+
+    public void searchMails(String query, int offset, int limit) {
+        api.searchMails(query, offset, limit);
+    }
+
+    public void createMail(Map<String, Object> body) {
+        api.createMail(body);
+    }
+
+    public void sendDraft(String mailId, Map<String, Object> body) {
+        api.sendDraft(mailId, body);
+    }
+
+    public void updateMail(String mailId, Map<String, Object> body) {
+        api.updateMail(mailId, body);
+    }
+
+    public void deleteMail(String mailId) {
         api.deleteMail(mailId);
-        new Thread(() -> {
-            recipientRefDao.deleteByMailId(mailId);
-            labelRefDao.deleteByMailId(mailId);
-            Mail mail = mailDao.getMailById(mailId);
-            if (mail != null) {
-                mailDao.deleteMail(mail);
-            }
-            reload(currentType);
-        }).start();
-    }
-
-    public void reload(MailboxType type) {
-        currentType = type;
-        api.loadByType(type);
-    }
-
-    public void search(String query) {
-        api.search(query);
-    }
-
-    public void loadByLabel(String labelId) {
-        api.getByLabel(labelId);
-    }
-
-    public void getMailById(String mailId, Callback<MailFromServer> callback) {
-        api.getMailById(mailId, callback);
-    }
-
-
-    public void sendDraft(Mail mail, List<String> to) {
-        api.sendDraft(mail.getId(), mail, to);
-    }
-
-    public void updateDraft(Mail mail, List<String> to) {
-        api.updateDraft(mail.getId(), mail, to);
     }
 
     public void toggleStar(String mailId) {
         api.toggleStar(mailId);
     }
 
-    public void setSpam(String mailId, boolean isSpam) {
-        api.setSpam(mailId, isSpam);
+    public void setSpam(String mailId, Map<String, Boolean> body) {
+        api.setSpam(mailId, body);
     }
 
-    public void addLabelToMail(String mailId, String labelId) {
-        api.addLabelToMail(mailId, labelId);
+    public void addLabelToMail(String mailId, Map<String, String> body) {
+        api.addLabelToMail(mailId, body);
     }
 
-    public void removeLabelFromMail(String mailId, String labelId) {
-        api.removeLabelFromMail(mailId, labelId);
+    public void removeLabelFromMail(String mailId, Map<String, String> body) {
+        api.removeLabelFromMail(mailId, body);
     }
 
-    public void refreshLocalList() {
-        new Thread(() -> mailListData.postValue(mailDao.getAllMailsWithRecipientsAndLabels())).start();
+    public void getMailById(String mailId) {
+        api.getMailById(mailId);
+    }
+
+    // --- מחלקה פנימית לניהול LiveData ---
+
+    public class MailListData extends MutableLiveData<List<FullMail>> {
+
+        public MailListData() {
+            super();
+            setValue(new ArrayList<>());
+        }
+
+        @Override
+        protected void onActive() {
+            super.onActive();
+            new Thread(() -> {
+                List<FullMail> mails = MyApp.getInstance().getDatabase().mailDao().getAllMails();
+                postValue(mails);
+            }).start();
+        }
     }
 }
