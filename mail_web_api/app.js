@@ -22,7 +22,6 @@ app.use(cors({
   credentials: true
 }));
 
-
 app.set('json spaces', 2);
 
 const usersRoutes = require('./routes/userRoute');

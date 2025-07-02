@@ -6,34 +6,38 @@ const { getUserIdFromEmail } = require('../utils/emailUtils');
  * Authenticate user and return JWT token.
  */
 async function loginUser(req, res) {
+  try {
     let { userId, password } = req.body;
 
     // Try to extract userId from email if needed
     const emailBasedId = getUserIdFromEmail(userId);
     if (emailBasedId) {
-        userId = emailBasedId;
+      userId = emailBasedId;
     }
 
     let user = await getFullUserForLogin(userId.toLowerCase());
 
     if (!user) {
-        return res.status(401).json({ error: 'Enter a valid email.' });
+      return res.status(401).json({ error: 'Enter a valid email.' });
     }
 
     if (user.password !== password) {
-        return res.status(401).json({ error: 'Wrong password. Try again.' });
+      return res.status(401).json({ error: 'Wrong password. Try again.' });
     }
 
     const token = generateToken(user);
 
     res.cookie('token', token, {
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: false
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: false
     });
 
     user = await getUserById(userId.toLowerCase());
     return res.status(200).json({ token, user });
+  } catch (err) {
+    res.status(500).json({ error: 'Login failed' });
+  }
 }
 
 /**

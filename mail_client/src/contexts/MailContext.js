@@ -91,7 +91,7 @@ export const MailProvider = ({ children }) => {
 
     // Toggles a label on a specific mail (adds or removes)
     const toggleLabel = async (mailId, labelId) => {
-        const mailIdNum = Number(mailId);
+        const mailIdNum = mailId;
         const mail = mails.find(m => m.id === mailIdNum);
         if (!mail) {
             console.error('Mail not found:', mailId);

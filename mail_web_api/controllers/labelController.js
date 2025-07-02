@@ -5,8 +5,13 @@ const labelModel = require('../services/labelService');
  * Returns all labels for the authenticated user.
  */
 async function getAllLabels(req, res) {
-    const labels = await labelModel.getLabelsByUser(req.user.userId);
-    res.status(200).json(labels);
+    try {
+        const labels = await labelModel.getLabelsByUser(req.user.userId);
+        res.status(200).json(labels);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to fetch labels' });
+    }
 }
 
 /**
@@ -14,18 +19,23 @@ async function getAllLabels(req, res) {
  * Creates a new label for the user.
  */
 async function createLabel(req, res) {
-    const { name } = req.body;
+    try {
+        const { name } = req.body;
 
-    if (!name) {
-        return res.status(400).json({ error: 'Name is required' });
+        if (!name) {
+            return res.status(400).json({ error: 'Name is required' });
+        }
+
+        const result = await labelModel.createLabel(name, req.user.userId);
+        if (!result) {
+            return res.status(400).json({ error: 'Label with the same name already exists' });
+        }
+
+        res.status(201).location(`/api/labels/${result.id}`).end();
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to create label' });
     }
-
-    const result = await labelModel.createLabel(name, req.user.userId);
-    if (!result) {
-        return res.status(400).json({ error: 'Label with the same name already exists' });
-    }
-
-    res.status(201).location(`/api/labels/${result.id}`).end();
 }
 
 /**
@@ -33,13 +43,18 @@ async function createLabel(req, res) {
  * Retrieves a label by ID.
  */
 async function getLabelById(req, res) {
-    const { id } = req.params;
-    const label = await labelModel.getLabelById(req.user.userId, id);
-    if (!label) {
-        return res.status(404).json({ error: 'Label not found' });
-    }
+    try {
+        const { id } = req.params;
+        const label = await labelModel.getLabelById(req.user.userId, id);
+        if (!label) {
+            return res.status(404).json({ error: 'Label not found' });
+        }
 
-    res.status(200).json(label);
+        res.status(200).json(label);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to fetch label' });
+    }
 }
 
 /**
@@ -47,22 +62,27 @@ async function getLabelById(req, res) {
  * Renames a label.
  */
 async function renameLabel(req, res) {
-    const { id } = req.params;
-    const { name } = req.body;
+    try {
+        const { id } = req.params;
+        const { name } = req.body;
 
-    if (!name) {
-        return res.status(400).json({ error: 'Name is required' });
-    }
+        if (!name) {
+            return res.status(400).json({ error: 'Name is required' });
+        }
 
-    const result = await labelModel.renameLabel(req.user.userId, id, name);
-    if (result === -1) {
-        return res.status(404).json({ error: 'Label not found' });
-    }
-    if (result === null) {
-        return res.status(400).json({ error: 'Another label with this name already exists' });
-    }
+        const result = await labelModel.renameLabel(req.user.userId, id, name);
+        if (result === -1) {
+            return res.status(404).json({ error: 'Label not found' });
+        }
+        if (result === null) {
+            return res.status(400).json({ error: 'Another label with this name already exists' });
+        }
 
-    res.status(204).end();
+        res.status(204).end();
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to rename label' });
+    }
 }
 
 /**
@@ -70,13 +90,18 @@ async function renameLabel(req, res) {
  * Deletes a label by its ID.
  */
 async function deleteLabel(req, res) {
-    const { id } = req.params;
-    const result = await labelModel.deleteLabel(req.user.userId, id);
-    if (result === -1) {
-        return res.status(404).json({ error: 'Label not found' });
-    }
+    try {
+        const { id } = req.params;
+        const result = await labelModel.deleteLabel(req.user.userId, id);
+        if (result === -1) {
+            return res.status(404).json({ error: 'Label not found' });
+        }
 
-    res.status(204).end();
+        res.status(204).end();
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to delete label' });
+    }
 }
 
 /**
@@ -84,19 +109,24 @@ async function deleteLabel(req, res) {
  * Updates label color.
  */
 async function setLabelColor(req, res) {
-    const { id } = req.params;
-    const { color } = req.body;
+    try {
+        const { id } = req.params;
+        const { color } = req.body;
 
-    if (!color) {
-        return res.status(400).json({ error: 'Color is required' });
+        if (!color) {
+            return res.status(400).json({ error: 'Color is required' });
+        }
+
+        const result = await labelModel.setLabelColor(req.user.userId, id, color);
+        if (!result) {
+            return res.status(404).json({ error: 'Label not found' });
+        }
+
+        res.status(204).end();
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to update label color' });
     }
-
-    const result = await labelModel.setLabelColor(req.user.userId, id, color);
-    if (!result) {
-        return res.status(404).json({ error: 'Label not found' });
-    }
-
-    res.status(204).end();
 }
 
 /**
@@ -104,13 +134,18 @@ async function setLabelColor(req, res) {
  * Resets label color.
  */
 async function resetLabelColor(req, res) {
-    const { id } = req.params;
-    const result = await labelModel.resetLabelColor(req.user.userId, id);
-    if (!result) {
-        return res.status(404).json({ error: 'Label not found' });
-    }
+    try {
+        const { id } = req.params;
+        const result = await labelModel.resetLabelColor(req.user.userId, id);
+        if (!result) {
+            return res.status(404).json({ error: 'Label not found' });
+        }
 
-    res.status(204).end();
+        res.status(204).end();
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to reset label color' });
+    }
 }
 
 module.exports = {
