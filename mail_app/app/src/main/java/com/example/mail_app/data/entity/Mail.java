@@ -6,6 +6,9 @@ import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
+/**
+ * Represents a mail entity stored locally in Room.
+ */
 @Entity(tableName = "mail")
 public class Mail {
     @PrimaryKey
@@ -17,14 +20,12 @@ public class Mail {
     private String body;
     private Date sentAt;
 
-    // MailStatus
-    private String type;       // "sent" or "received"
+    private String type;
     private boolean isDraft;
     private boolean isSpam;
     private boolean isStar;
     private boolean isRead;
 
-    // Constructor
     public Mail(@NonNull String id, String from, String subject, String body, Date sentAt,
                 String type, boolean isDraft, boolean isSpam,
                 boolean isStar, boolean isRead) {
@@ -40,6 +41,7 @@ public class Mail {
         this.isRead = isRead;
     }
 
+    /** Returns the mail ID. */
     @NonNull
     public String getId() {
         return id;
@@ -49,6 +51,7 @@ public class Mail {
         this.id = id;
     }
 
+    /** Returns the sender user ID. */
     public String getFrom() {
         return from;
     }
@@ -57,6 +60,7 @@ public class Mail {
         this.from = from;
     }
 
+    /** Returns the subject of the mail. */
     public String getSubject() {
         return subject;
     }
@@ -65,6 +69,7 @@ public class Mail {
         this.subject = subject;
     }
 
+    /** Returns the body of the mail. */
     public String getBody() {
         return body;
     }
@@ -73,6 +78,7 @@ public class Mail {
         this.body = body;
     }
 
+    /** Returns the send time of the mail. */
     public Date getSentAt() {
         return sentAt;
     }
@@ -81,6 +87,7 @@ public class Mail {
         this.sentAt = sentAt;
     }
 
+    /** Returns the mail type (sent/received). */
     public String getType() {
         return type;
     }
@@ -89,6 +96,7 @@ public class Mail {
         this.type = type;
     }
 
+    /** Returns true if the mail is a draft. */
     public boolean isDraft() {
         return isDraft;
     }
@@ -97,6 +105,7 @@ public class Mail {
         isDraft = draft;
     }
 
+    /** Returns true if the mail is marked as spam. */
     public boolean isSpam() {
         return isSpam;
     }
@@ -105,6 +114,7 @@ public class Mail {
         isSpam = spam;
     }
 
+    /** Returns true if the mail is starred. */
     public boolean isStar() {
         return isStar;
     }
@@ -113,6 +123,7 @@ public class Mail {
         isStar = star;
     }
 
+    /** Returns true if the mail has been read. */
     public boolean isRead() {
         return isRead;
     }

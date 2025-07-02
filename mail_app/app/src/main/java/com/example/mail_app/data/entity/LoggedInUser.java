@@ -6,6 +6,9 @@ import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
+/**
+ * Represents the currently logged-in user in the app.
+ */
 @Entity(tableName = "logged_in_user")
 public class LoggedInUser {
     @PrimaryKey
@@ -27,19 +30,24 @@ public class LoggedInUser {
         this.hasCustomImage = hasCustomImage;
     }
 
-    // Getters + Setters
+    /** Returns the user ID. */
     @NonNull public String getUserId() { return userId; }
 
+    /** Returns the user's name. */
     public String getName() { return name; }
 
+    /** Returns the user's gender. */
     public String getGender() { return gender; }
 
+    /** Returns the user's birth date. */
     public Date getBirthDate() { return birthDate; }
 
+    /** Returns the user's profile image URL. */
     public String getProfileImage() { return profileImage; }
 
     public void setProfileImage(String profileImage) { this.profileImage = profileImage; }
 
+    /** Returns true if the user has a custom image. */
     public boolean hasCustomImage() { return hasCustomImage; }
 
     public void setHasCustomImage(boolean hasCustomImage) { this.hasCustomImage = hasCustomImage; }

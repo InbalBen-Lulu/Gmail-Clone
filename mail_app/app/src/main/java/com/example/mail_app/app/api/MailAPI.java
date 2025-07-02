@@ -3,9 +3,7 @@ package com.example.mail_app.app.api;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
-
 import com.example.mail_app.MyApp;
 import com.example.mail_app.app.network.AuthWebService;
 import com.example.mail_app.auth.AuthManager;
@@ -17,24 +15,29 @@ import com.example.mail_app.data.entity.FullMail;
 import com.example.mail_app.data.entity.MailLabelCrossRef;
 import com.example.mail_app.data.entity.PublicUser;
 import com.example.mail_app.data.remote.MailWebService;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+/**
+ * MailAPI handles all operations related to mail synchronization between the
+ * local Room database and the remote mail server using Retrofit.
+ */
 public class MailAPI {
     private final MailDao mailDao;
     private final PublicUserDao publicUserDao;
     private final MutableLiveData<List<FullMail>> mailListData;
     private final MailWebService api;
 
+    /**
+     * Constructor initializes DAOs, LiveData, and Retrofit API instance.
+     */
     public MailAPI(MutableLiveData<List<FullMail>> mailListData, MailDao mailDao, PublicUserDao publicUserDao) {
         this.mailDao = mailDao;
         this.publicUserDao = publicUserDao;
@@ -45,13 +48,17 @@ public class MailAPI {
         this.api = retrofit.create(MailWebService.class);
     }
 
+    /**
+     * Posts a Runnable on the main thread (used to update LiveData).
+     */
     private void postToMain(Runnable action) {
         new Handler(Looper.getMainLooper()).post(action);
     }
 
     /**
-     * טוען מחדש את המיילים (ניקוי ושמירה מחדש)
-     * מיועד לקריאה בעת כניסה לאפליקציה בלבד
+     * Loads the initial 100 mails from the server.
+     * This method should be called once when the app starts (not during infinite scroll).
+     * Clears existing mails and users from Room, and saves the newly fetched ones.
      */
     public void loadInitialMails() {
         api.getAllMails(100, 0).enqueue(new Callback<MailListResponse>() {
@@ -65,16 +72,13 @@ public class MailAPI {
                             mails.add(serverMail.toFullMail());
                         }
 
-                        // ניקוי כל הטבלאות
                         mailDao.clearAllMails();
                         publicUserDao.clearAllUesrs();
                         publicUserDao.insertAll(extractPublicUsers(mails));
 
-                        // שמירה מחדש
                         for (FullMail mail : mails) {
                             mailDao.insertMail(mail.getMail());
                             mailDao.insertRecipients(mail.getRecipientRefs());
-
                             for (MailLabelCrossRef ref : mail.getLabelRefs()) {
                                 mailDao.insertLabelToMail(ref);
                             }
@@ -92,6 +96,9 @@ public class MailAPI {
         });
     }
 
+    /**
+     * Extracts all sender users from a list of FullMail objects to sync PublicUser table.
+     */
     private List<PublicUser> extractPublicUsers(List<FullMail> mails) {
         Set<PublicUser> users = new HashSet<>();
         for (FullMail mail : mails) {
@@ -100,6 +107,9 @@ public class MailAPI {
         return new ArrayList<>(users);
     }
 
+    /**
+     * Saves a single MailFromServer object into the Room database.
+     */
     private void saveMailFromServer(MailFromServer mail) {
         FullMail fullMail = mail.toFullMail();
 
@@ -116,13 +126,17 @@ public class MailAPI {
         publicUserDao.insert(fullMail.getFromUser());
     }
 
+    /**
+     * Saves a list of MailFromServer objects into Room.
+     */
     private void saveMailsFromResponse(List<MailFromServer> mails) {
         for (MailFromServer mail : mails) {
             saveMailFromServer(mail);
         }
     }
 
-    // טוען מיילים לפי קטגוריה
+    // ---------------- Mail Loading by Type ---------------- //
+
     public void loadInboxMails(int offset, int limit) {
         api.getInboxMails(limit, offset).enqueue(loadMailListCallback());
     }
@@ -155,7 +169,10 @@ public class MailAPI {
         api.searchMails(query, limit, offset).enqueue(loadMailListCallback());
     }
 
-    // Callback כללי
+    /**
+     * Shared callback for all mail-loading methods.
+     * Saves fetched mails into Room.
+     */
     private Callback<MailListResponse> loadMailListCallback() {
         return new Callback<MailListResponse>() {
             @Override
@@ -173,13 +190,15 @@ public class MailAPI {
         };
     }
 
+    // ---------------- Mail Creation / Update / Delete ---------------- //
+
     public void createMail(Map<String, Object> body) {
         api.createMail(body).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful() && body.containsKey("id")) {
                     String mailId = (String) body.get("id");
-                    getMailById(mailId); // תביא את המייל מהשרת ותכניס ל־ROOM
+                    getMailById(mailId);
                 }
             }
 
@@ -235,6 +254,8 @@ public class MailAPI {
             }
         });
     }
+
+    // ---------------- Mail Actions: Star / Spam / Label ---------------- //
 
     public void toggleStar(String mailId) {
         api.toggleStar(mailId).enqueue(new Callback<Void>() {
@@ -298,6 +319,9 @@ public class MailAPI {
         });
     }
 
+    /**
+     * Retrieves a specific mail by ID from the server and stores it in Room.
+     */
     public void getMailById(String mailId) {
         api.getMailById(mailId).enqueue(new Callback<MailFromServer>() {
             @Override
@@ -314,7 +338,9 @@ public class MailAPI {
         });
     }
 
-
+    /**
+     * Utility method that returns a simple logging-only callback.
+     */
     private Callback<Void> logOnlyCallback(String tag) {
         return new Callback<Void>() {
             @Override

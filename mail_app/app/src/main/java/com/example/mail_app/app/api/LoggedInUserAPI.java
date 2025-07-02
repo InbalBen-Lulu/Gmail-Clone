@@ -1,5 +1,4 @@
 package com.example.mail_app.app.api;
-
 import com.example.mail_app.MyApp;
 import com.example.mail_app.app.network.AuthWebService;
 import com.example.mail_app.app.network.PublicWebService;
@@ -10,9 +9,7 @@ import com.example.mail_app.data.dto.LoginResponse;
 import com.example.mail_app.data.dto.RegisterRequest;
 import com.example.mail_app.data.entity.LoggedInUser;
 import com.example.mail_app.data.remote.LoggedInUserWebService;
-
 import java.io.File;
-
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -21,10 +18,17 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+/**
+ * Handles authentication, registration, and profile image operations for the currently logged-in user.
+ * Interacts with both the remote server and Room database.
+ */
 public class LoggedInUserAPI {
     private final LoggedInUserDao dao;
     private final LoggedInUserWebService api;
 
+    /**
+     * Initializes the DAO and Retrofit API interface with token.
+     */
     public LoggedInUserAPI(LoggedInUserDao dao) {
         this.dao = dao;
 
@@ -33,12 +37,18 @@ public class LoggedInUserAPI {
         api = retrofit.create(LoggedInUserWebService.class);
     }
 
+    /**
+     * Registers a new user using the public endpoint (no token required).
+     */
     public void registerUser(RegisterRequest request, Callback<Void> callback) {
-        Retrofit noAuthRetrofit = AuthWebService.getInstance(null); // Registration requires no token
+        Retrofit noAuthRetrofit = AuthWebService.getInstance(null);
         LoggedInUserWebService noAuthApi = noAuthRetrofit.create(LoggedInUserWebService.class);
         noAuthApi.registerUser(request).enqueue(callback);
     }
 
+    /**
+     * Retrieves the currently logged-in user from the server and stores it in Room.
+     */
     public void get() {
         String userId = AuthManager.getUserId(MyApp.getInstance());
         Call<LoggedInUser> call = api.getMyUser(userId);
@@ -61,6 +71,10 @@ public class LoggedInUserAPI {
         });
     }
 
+    /**
+     * Uploads a profile image for the logged-in user.
+     * On success, triggers a user re-fetch.
+     */
     public void uploadImage(File imageFile) {
         String userId = AuthManager.getUserId(MyApp.getInstance());
 
@@ -72,7 +86,7 @@ public class LoggedInUserAPI {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     System.out.println("[Upload Image] Success");
-                    get(); // Refresh user from server (includes hasCustomImage update)
+                    get();
                 } else {
                     System.out.println("[Upload Image] Failed with code " + response.code());
                 }
@@ -86,6 +100,9 @@ public class LoggedInUserAPI {
         });
     }
 
+    /**
+     * Deletes the profile image of the logged-in user and refreshes the user object.
+     */
     public void deleteImage() {
         String userId = AuthManager.getUserId(MyApp.getInstance());
 
@@ -94,7 +111,7 @@ public class LoggedInUserAPI {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     System.out.println("[Delete Image] Success");
-                    get(); // Refresh user from server (hasCustomImage should be false now)
+                    get();
                 } else {
                     System.out.println("[Delete Image] Failed with code " + response.code());
                 }
@@ -108,6 +125,9 @@ public class LoggedInUserAPI {
         });
     }
 
+    /**
+     * Logs in the user, saves the token and user ID, then fetches the user profile.
+     */
     public void login(String userId, String password, Callback<LoginResponse> callback) {
         Retrofit noAuthRetrofit = PublicWebService.getInstance();
         LoggedInUserWebService noAuthApi = noAuthRetrofit.create(LoggedInUserWebService.class);
@@ -118,18 +138,11 @@ public class LoggedInUserAPI {
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse loginResponse = response.body();
-
-                    // שמירת הטוקן וה־userId
                     AuthManager.saveToken(MyApp.getInstance(), loginResponse.getToken());
                     AuthManager.saveUserId(MyApp.getInstance(), loginResponse.getUser().getUserId());
-
                     get();
-
-                    // החזר קריאה חיצונית
-                    callback.onResponse(call, response);
-                } else {
-                    callback.onResponse(call, response);
                 }
+                callback.onResponse(call, response);
             }
 
             @Override
@@ -139,14 +152,15 @@ public class LoggedInUserAPI {
         });
     }
 
+    /**
+     * Logs out the user by calling the API and clearing local user data.
+     */
     public void logout(Callback<Void> callback) {
         api.logout().enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                // מחיקת מידע מהאפליקציה
                 AuthManager.clearAll(MyApp.getInstance());
                 new Thread(() -> dao.clear()).start();
-
                 callback.onResponse(call, response);
             }
 
@@ -156,5 +170,4 @@ public class LoggedInUserAPI {
             }
         });
     }
-
 }
