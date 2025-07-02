@@ -42,14 +42,13 @@ public class LabelAPI {
                     labelListData.postValue(dao.getAll());
                 }).start();
             }
-            @Override public void onFailure(Call<List<Label>> call, Throwable t) {}
+            @Override public void onFailure(Call<List<Label>> call, Throwable t) {
+                t.printStackTrace();
+            }
         });
     }
 
-    private Callback<Void> emptyCallback() {
-        return new Callback<Void>() {
-            @Override public void onResponse(Call<Void> call, Response<Void> response) {}
-            @Override public void onFailure(Call<Void> call, Throwable t) {}
-        };
+    public Label getById(String id) {
+        return dao.getById(id);
     }
 }

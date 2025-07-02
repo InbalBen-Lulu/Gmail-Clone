@@ -21,15 +21,9 @@ import retrofit2.Retrofit;
 public class LoggedInUserAPI {
     private final LoggedInUserDao dao;
     private final LoggedInUserWebService api;
-    private final OnUserFetched callback;
 
-    public interface OnUserFetched {
-        void onFetched(LoggedInUser user);
-    }
-
-    public LoggedInUserAPI(LoggedInUserDao dao, OnUserFetched callback) {
+    public LoggedInUserAPI(LoggedInUserDao dao) {
         this.dao = dao;
-        this.callback = callback;
 
         String token = AuthManager.getToken(MyApp.getInstance());
         Retrofit retrofit = AuthWebService.getInstance(token);
@@ -37,7 +31,7 @@ public class LoggedInUserAPI {
     }
 
     public void registerUser(RegisterRequest request, Callback<Void> callback) {
-        Retrofit noAuthRetrofit = AuthWebService.getInstance(null); // no token for registration
+        Retrofit noAuthRetrofit = AuthWebService.getInstance(null); // Registration requires no token
         LoggedInUserWebService noAuthApi = noAuthRetrofit.create(LoggedInUserWebService.class);
         noAuthApi.registerUser(request).enqueue(callback);
     }
@@ -53,12 +47,14 @@ public class LoggedInUserAPI {
                     new Thread(() -> {
                         dao.clear();
                         dao.insert(user);
-                        callback.onFetched(user);
                     }).start();
                 }
             }
 
-            @Override public void onFailure(Call<LoggedInUser> call, Throwable t) {}
+            @Override
+            public void onFailure(Call<LoggedInUser> call, Throwable t) {
+                t.printStackTrace();
+            }
         });
     }
 
@@ -68,18 +64,44 @@ public class LoggedInUserAPI {
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), imageFile);
         MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", imageFile.getName(), requestFile);
 
-        api.uploadProfileImage(userId, imagePart).enqueue(emptyCallback());
+        api.uploadProfileImage(userId, imagePart).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    System.out.println("[Upload Image] Success");
+                    get(); // Refresh user from server (includes hasCustomImage update)
+                } else {
+                    System.out.println("[Upload Image] Failed with code " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                System.out.println("[Upload Image] Failed");
+                t.printStackTrace();
+            }
+        });
     }
 
     public void deleteImage() {
         String userId = AuthManager.getUserId(MyApp.getInstance());
-        api.deleteProfileImage(userId).enqueue(emptyCallback());
-    }
 
-    private Callback<Void> emptyCallback() {
-        return new Callback<Void>() {
-            @Override public void onResponse(Call<Void> call, Response<Void> response) {}
-            @Override public void onFailure(Call<Void> call, Throwable t) {}
-        };
+        api.deleteProfileImage(userId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    System.out.println("[Delete Image] Success");
+                    get(); // Refresh user from server (hasCustomImage should be false now)
+                } else {
+                    System.out.println("[Delete Image] Failed with code " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                System.out.println("[Delete Image] Failed");
+                t.printStackTrace();
+            }
+        });
     }
 }

@@ -19,7 +19,7 @@ public class LoggedInUserRepository {
     public LoggedInUserRepository() {
         LocalDatabase db = MyApp.getInstance().getDatabase();
         loggedInUserDao = db.userDao();
-        api = new LoggedInUserAPI(loggedInUserDao, this::updateUser);
+        api = new LoggedInUserAPI(loggedInUserDao); // 🔁 הסרנו את callback
         userLiveData = new UserLiveData();
     }
 
@@ -35,16 +35,16 @@ public class LoggedInUserRepository {
         }
     }
 
-    private void updateUser(LoggedInUser user) {
-        userLiveData.postValue(user);
-    }
-
     public LiveData<LoggedInUser> getUser() {
         return userLiveData;
     }
 
     public void reload() {
         api.get();
+        new Thread(() -> {
+            LoggedInUser user = loggedInUserDao.get();
+            userLiveData.postValue(user);
+        }).start();
     }
 
     public void save(LoggedInUser user) {
@@ -64,13 +64,15 @@ public class LoggedInUserRepository {
 
     public void uploadProfileImage(File imageFile) {
         api.uploadImage(imageFile);
+        reload();
     }
 
     public void deleteProfileImage() {
         api.deleteImage();
+        reload();
     }
 
     public void reloadFromServer() {
-        api.get();
+        reload();
     }
 }
