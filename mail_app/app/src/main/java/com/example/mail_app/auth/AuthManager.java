@@ -20,12 +20,6 @@ public class AuthManager {
         return prefs.getString(KEY_TOKEN, null);
     }
 
-    // 🔹 מחיקת הטוקן
-    public static void clearToken(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        prefs.edit().remove(KEY_TOKEN).apply();
-    }
-
     // 🔹 שמירת userId
     public static void saveUserId(Context context, String userId) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);

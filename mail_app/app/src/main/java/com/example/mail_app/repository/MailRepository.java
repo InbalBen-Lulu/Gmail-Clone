@@ -1,7 +1,5 @@
 package com.example.mail_app.repository;
 
-import android.app.Application;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -22,7 +20,7 @@ public class MailRepository {
     private final MailListData mailListData;
     private final MailAPI api;
 
-    public MailRepository(Application app) {
+    public MailRepository() {
         LocalDatabase db = MyApp.getInstance().getDatabase();
         this.dao = db.mailDao();
         this.publicUserDao = db.publicUserDao();
