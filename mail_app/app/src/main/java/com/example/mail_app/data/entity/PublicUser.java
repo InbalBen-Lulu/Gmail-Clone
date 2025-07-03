@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+/**
+ * Represents a public user (sender) associated with a mail.
+ */
 @Entity(tableName = "public_users")
 public class PublicUser {
     @PrimaryKey
@@ -18,10 +21,12 @@ public class PublicUser {
         this.profileImage = profileImage;
     }
 
-    // Getters + Setters
+    /** Returns the user ID. */
     @NonNull public String getUserId() { return userId; }
 
+    /** Returns the user's full name. */
     public String getName() { return name; }
 
+    /** Returns the user's profile image URL. */
     public String getProfileImage() { return profileImage; }
 }

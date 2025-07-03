@@ -19,7 +19,7 @@ const MailPanel = () => {
   const { openCompose } = useCompose();
   const navigate = useNavigate();
   const { mailId, category } = useParams();
-  const mailIdNum = Number(mailId);
+  const mailIdNum = mailId;
 
   const {
     mails,

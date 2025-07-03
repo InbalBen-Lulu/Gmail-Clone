@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+/**
+ * Represents a label entity associated with a user.
+ */
 @Entity(tableName = "label")
 public class Label {
     @PrimaryKey
@@ -21,12 +24,15 @@ public class Label {
         this.color = color;
     }
 
+    /** Returns the label ID. */
     @NonNull public String getId() { return id; }
 
+    /** Returns the user ID who owns this label. */
     public String getUserId() { return userId; }
 
+    /** Returns the name of the label. */
     public String getName() { return name; }
 
+    /** Returns the color of the label. */
     public String getColor() { return color; }
-
 }

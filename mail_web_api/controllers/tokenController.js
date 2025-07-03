@@ -1,50 +1,52 @@
-const { users } = require('../storage/userStorage');
-const { generateToken } = require('../models/tokenModel');
+const { getFullUserForLogin, getUserById } = require('../services/userService');
+const { generateToken } = require('../services/tokenService');
 const { getUserIdFromEmail } = require('../utils/emailUtils');
 
 /**
  * Authenticate user and return JWT token.
  */
-function loginUser(req, res) {
+async function loginUser(req, res) {
+  try {
     let { userId, password } = req.body;
 
-    // Try to extract userId from email format if necessary
+    // Try to extract userId from email if needed
     const emailBasedId = getUserIdFromEmail(userId);
     if (emailBasedId) {
-        userId = emailBasedId;
+      userId = emailBasedId;
     }
 
-    const user = users.get(userId.toLowerCase());
+    let user = await getFullUserForLogin(userId.toLowerCase());
 
     if (!user) {
-        return res.status(401).json({ error: 'Enter a valid email.' });
+      return res.status(401).json({ error: 'Enter a valid email.' });
     }
 
     if (user.password !== password) {
-        return res.status(401).json({ error: 'Wrong password. Try again.' });
+      return res.status(401).json({ error: 'Wrong password. Try again.' });
     }
 
     const token = generateToken(user);
 
     res.cookie('token', token, {
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: false
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: false
     });
 
+    user = await getUserById(userId.toLowerCase());
     return res.status(200).json({ token, user });
+  } catch (err) {
+    res.status(500).json({ error: 'Login failed' });
+  }
 }
-
 
 /**
  * Clear the user's authentication cookie.
  */
 function logoutUser(req, res) {
     res.clearCookie('token');
-
     return res.status(200).json();
 }
-
 
 module.exports = {
     loginUser,

@@ -3,6 +3,9 @@ package com.example.mail_app.data.entity;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 
+/**
+ * Cross-reference entity connecting a mail with a label (many-to-many).
+ */
 @Entity(
         tableName = "mail_label_cross_ref",
         primaryKeys = {"mailId", "labelId"}
@@ -19,6 +22,7 @@ public class MailLabelCrossRef {
         this.labelId = labelId;
     }
 
+    /** Returns the mail ID. */
     @NonNull
     public String getMailId() {
         return mailId;
@@ -28,6 +32,7 @@ public class MailLabelCrossRef {
         this.mailId = mailId;
     }
 
+    /** Returns the label ID. */
     @NonNull
     public String getLabelId() {
         return labelId;
