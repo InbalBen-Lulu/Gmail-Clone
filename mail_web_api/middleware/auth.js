@@ -5,8 +5,11 @@ const SECRET_KEY = process.env.SECRET_KEY;
  * Express middleware to check if request has a valid JWT token.
  */
 function isLoggedIn(req, res, next) {
-    const token = req.cookies.token;
-
+    const authHeader = req.headers['authorization'];
+    const headerToken = authHeader && authHeader.split(' ')[1]; // Bearer <token>
+    const cookieToken = req.cookies?.token;
+    const token = headerToken || cookieToken;
+    
     if (!token) {
         return res.status(403).json({ error: 'Token required' });
     }
