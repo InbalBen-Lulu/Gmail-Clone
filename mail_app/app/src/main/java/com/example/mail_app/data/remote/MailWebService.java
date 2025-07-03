@@ -16,79 +16,79 @@ import retrofit2.http.Query;
 
 public interface MailWebService {
 
-    // יצירת מייל חדש
+    // Creates a new mail (draft or sent)
     @POST("mails")
     Call<Void> createMail(@Body Map<String, Object> body);
 
-    // שליחת טיוטה
+    // Sends an existing draft mail
     @PATCH("mails/{id}/send")
     Call<Void> sendDraft(@Path("id") String mailId, @Body Map<String, Object> body);
 
-    // עדכון טיוטה קיימת
+    // Updates an existing draft (without sending it)
     @PATCH("mails/{id}")
     Call<Void> updateMail(@Path("id") String mailId, @Body Map<String, Object> body);
 
-    // מחיקת מייל לפי מזהה
+    // Deletes a mail by its ID
     @DELETE("mails/{id}")
     Call<Void> deleteMail(@Path("id") String mailId);
 
-    // סימון/ביטול כוכב
+    // Toggles the star status of a mail
     @PATCH("mails/{id}/star")
     Call<Void> toggleStar(@Path("id") String mailId);
 
-    // סימון/ביטול ספאם
+    // Toggles the spam status of a mail
     @PATCH("mails/{id}/spam")
     Call<Void> setSpam(@Path("id") String mailId, @Body Map<String, Boolean> body);
 
-    // הוספת תווית למייל
+    // Adds a label to a mail
     @POST("mails/{id}/labels")
     Call<Void> addLabelToMail(@Path("id") String mailId, @Body Map<String, String> body);
 
-    // הסרת תווית ממייל
+    // Removes a label from a mail
     @DELETE("mails/{id}/labels")
     Call<Void> removeLabelFromMail(@Path("id") String mailId, @Body Map<String, String> body);
 
-    // שליפת מייל לפי מזהה
+    // Retrieves a single mail by ID
     @GET("mails/{id}")
     Call<MailFromServer> getMailById(@Path("id") String mailId);
 
-    // שליפת כל המיילים
+    // Retrieves all mails (any type)
     @GET("mails/allmails")
     Call<MailListResponse> getAllMails(@Query("limit") int limit,
-                                           @Query("offset") int offset);
+                                       @Query("offset") int offset);
 
-    // שליפת מיילים שהתקבלו
+    // Retrieves received mails (inbox)
     @GET("mails/inbox")
     Call<MailListResponse> getInboxMails(@Query("limit") int limit,
-                                             @Query("offset") int offset);
+                                         @Query("offset") int offset);
 
-    // שליפת מיילים שנשלחו
+    // Retrieves sent mails
     @GET("mails/sent")
     Call<MailListResponse> getSentMails(@Query("limit") int limit,
-                                            @Query("offset") int offset);
+                                        @Query("offset") int offset);
 
-    // שליפת טיוטות
+    // Retrieves draft mails
     @GET("mails/drafts")
     Call<MailListResponse> getDraftMails(@Query("limit") int limit,
-                                             @Query("offset") int offset);
+                                         @Query("offset") int offset);
 
-    // שליפת מיילים שנחשבים ספאם
+    // Retrieves spam mails
     @GET("mails/spam")
     Call<MailListResponse> getSpamMails(@Query("limit") int limit,
-                                            @Query("offset") int offset);
+                                        @Query("offset") int offset);
 
-    // שליפת מיילים עם כוכב
+    // Retrieves starred mails
     @GET("mails/starred")
     Call<MailListResponse> getStarredMails(@Query("limit") int limit,
-                                               @Query("offset") int offset);
+                                           @Query("offset") int offset);
 
-    // שליפת מיילים לפי תווית
+    // Retrieves mails associated with a specific label
     @GET("mails/labels-{labelId}")
     Call<MailListResponse> getMailsByLabel(@Path("labelId") String labelId,
-                                               @Query("limit") int limit,
-                                               @Query("offset") int offset);
+                                           @Query("limit") int limit,
+                                           @Query("offset") int offset);
 
-    // חיפוש מיילים לפי מחרוזת
+    // Searches mails by query (subject, body, sender, etc.)
     @GET("mails/search-{query}")
     Call<MailListResponse> searchMails(@Path("query") String query,
                                        @Query("limit") int limit,

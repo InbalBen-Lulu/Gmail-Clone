@@ -5,7 +5,6 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
-import androidx.room.Update;
 
 import com.example.mail_app.data.entity.FullMail;
 import com.example.mail_app.data.entity.Mail;
@@ -17,38 +16,42 @@ import java.util.List;
 @Dao
 public interface MailDao {
 
-    // שליפת מייל לפי ID כולל נמענים ותוויות
+    // Retrieves a full mail (with recipients and labels) by ID
     @Transaction
     @Query("SELECT * FROM mail WHERE id = :mailId")
     FullMail getMailById(String mailId);
 
-    // שליפת כל המיילים כולל TO + LABELS
+    // Retrieves all non-spam mails with recipients and labels
     @Transaction
     @Query("SELECT * FROM mail WHERE isSpam = 0")
     List<FullMail> getAllMails();
 
-    // שליפת מיילים לפי מצב (inbox, sent, drafts וכו')
+    // Retrieves inbox mails (received and not spam)
     @Transaction
     @Query("SELECT * FROM mail WHERE type = 'received' AND isSpam = 0")
     List<FullMail> getInboxMails();
 
+    // Retrieves sent mails (not drafts)
     @Transaction
     @Query("SELECT * FROM mail WHERE type = 'sent' AND isDraft = 0")
     List<FullMail> getSentMails();
 
+    // Retrieves draft mails
     @Transaction
     @Query("SELECT * FROM mail WHERE isDraft = 1")
     List<FullMail> getDraftMails();
 
+    // Retrieves spam mails
     @Transaction
     @Query("SELECT * FROM mail WHERE isSpam = 1")
     List<FullMail> getSpamMails();
 
+    // Retrieves starred mails
     @Transaction
     @Query("SELECT * FROM mail WHERE isStar = 1")
     List<FullMail> getStarredMails();
 
-    // חיפוש טקסטואלי לפי subject או body
+    // Full-text search across subject, body, sender, sender name, and recipients
     @Transaction
     @Query("SELECT DISTINCT * FROM mail " +
             "LEFT JOIN public_users AS from_user ON \"from\" = from_user.userId " +
@@ -60,80 +63,54 @@ public interface MailDao {
             "mail_recipient_cross_ref.userId LIKE '%' || :query || '%'")
     List<FullMail> searchMails(String query);
 
-    // שליפת מיילים לפי labelId
+    // Retrieves mails associated with a specific label ID
     @Transaction
     @Query("SELECT * FROM mail " +
             "INNER JOIN mail_label_cross_ref ON mail.id = mail_label_cross_ref.mailId " +
             "WHERE mail_label_cross_ref.labelId = :labelId")
     List<FullMail> getMailsByLabel(String labelId);
 
-    // הוספת מייל (רק את הישות עצמה)
+    // Inserts a single mail object into the database
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMail(Mail mail);
 
-    // עדכון מייל (רק את הישות עצמה)
-    @Update
-    void updateMail(Mail mail);
-
-    // מחיקת מייל לפי מזהה
+    // Deletes a mail by its ID
     @Query("DELETE FROM mail WHERE id = :mailId")
     void deleteMailById(String mailId);
 
-    // מחיקת הנמענים (TO) של מייל
+    // Deletes all recipients (TO) related to a mail
     @Query("DELETE FROM mail_recipient_cross_ref WHERE mailId = :mailId")
     void deleteRecipientsByMailId(String mailId);
 
-    // מחיקת התוויות של מייל
+    // Deletes all labels linked to a mail
     @Query("DELETE FROM mail_label_cross_ref WHERE mailId = :mailId")
     void deleteLabelsByMailId(String mailId);
 
-    // שליחת טיוטה → שינוי isDraft=false
-    @Query("UPDATE mail SET isDraft = 0, sentAt = :timestamp WHERE id = :mailId")
-    void sendDraftMail(String mailId, java.util.Date timestamp);
-
-    // סימון/ביטול כוכב
+    // Toggles the isStar flag of a mail (on/off)
     @Query("UPDATE mail SET isStar = NOT isStar WHERE id = :mailId")
     void toggleStar(String mailId);
 
-    // סימון ספאם
+    // Toggles the isSpam flag of a mail (on/off)
     @Query("UPDATE mail SET isSpam = NOT isSpam WHERE id = :mailId")
     void setSpam(String mailId);
 
-    // סימון קריאה
+    // Marks a mail as read (isRead = 1)
     @Query("UPDATE mail SET isRead = 1 WHERE id = :mailId")
     void markAsRead(String mailId);
 
-    // הוספת נמענים (to)
+    // Inserts a list of recipients (TO) for a mail
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertRecipients(List<MailRecipientCrossRef> recipients);
 
-    // הוספת תווית
+    // Adds a label to a mail
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertLabelToMail(MailLabelCrossRef labelRef);
 
-    // הסרת תווית
+    // Removes a specific label from a mail
     @Query("DELETE FROM mail_label_cross_ref WHERE mailId = :mailId AND labelId = :labelId")
     void removeLabelFromMail(String mailId, String labelId);
 
-    @Query("SELECT id FROM mail WHERE isSpam = 0 AND type = 'received' ORDER BY sentAt DESC LIMIT :limit")
-    List<String> getRecentInboxMailIds(int limit);
-
-    @Query("SELECT id FROM mail WHERE isDraft = 1 ORDER BY sentAt DESC LIMIT :limit")
-    List<String> getRecentDraftMailIds(int limit);
-
-    @Query("SELECT id FROM mail WHERE isSpam = 1 ORDER BY sentAt DESC LIMIT :limit")
-    List<String> getRecentSpamMailIds(int limit);
-
-    @Query("SELECT id FROM mail WHERE isStar = 1 AND isSpam = 0 ORDER BY sentAt DESC LIMIT :limit")
-
-    List<String> getRecentStarredMailIds(int limit);
-
-    @Query("SELECT id FROM mail WHERE type = 'sent' AND isDraft = 0 ORDER BY sentAt DESC LIMIT :limit")
-    List<String> getRecentSentMailIds(int limit);
-
-    @Query("DELETE FROM mail WHERE id NOT IN (:ids)")
-    void deleteMailsNotIn(List<String> ids);
-
+    // Deletes all mails from the table
     @Query("DELETE FROM mail")
     void clearAllMails();
 }

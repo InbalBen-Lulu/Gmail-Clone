@@ -10,16 +10,39 @@ import com.example.mail_app.data.dao.MailDao;
 import com.example.mail_app.data.dao.PublicUserDao;
 import com.example.mail_app.data.entity.FullMail;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Repository for managing mail operations via MailAPI and local Room database.
+ * Provides LiveData of mails and wraps all mail-related actions.
+ */
 public class MailRepository {
     private final MailDao dao;
     private final PublicUserDao publicUserDao;
     private final MailListData mailListData;
     private final MailAPI api;
 
+    /**
+     * Custom LiveData wrapper for observing and auto-refreshing mail list.
+     */
+    class MailListData extends MutableLiveData<List<FullMail>> {
+        public MailListData() {
+            super();
+            setValue(new LinkedList<>());
+        }
+
+        @Override
+        protected void onActive() {
+            super.onActive();
+            new Thread(() -> postValue(dao.getAllMails())).start();
+        }
+    }
+
+    /**
+     * Initializes the mail and user DAOs, LiveData wrapper, and MailAPI handler.
+     */
     public MailRepository() {
         LocalDatabase db = MyApp.getInstance().getDatabase();
         this.dao = db.mailDao();
@@ -28,102 +51,140 @@ public class MailRepository {
         this.api = new MailAPI(mailListData, dao, publicUserDao);
     }
 
-    // --- חשיפה החוצה ---
-
+    /**
+     * Returns observable LiveData of the current list of mails.
+     */
     public LiveData<List<FullMail>> getLiveData() {
         return mailListData;
     }
 
-    // --- API פעולות ---
-
+    /** Loads initial batch of mails from the server (first 100), resets Room. */
     public void loadInitialMails() {
         api.loadInitialMails();
     }
 
-    public void loadInboxMails(int offset, int limit) {
-        api.loadInboxMails(offset, limit);
+    /** Loads inbox mails (from Room first, then server). */
+    public void loadInboxMails() {
+        api.loadInboxMailsFromRoomThenServer();
     }
 
-    public void loadSentMails(int offset, int limit) {
-        api.loadSentMails(offset, limit);
+    /** Loads all mails (from Room first, then server). */
+    public void loadAllMails() {
+        api.loadAllMailsFromRoomThenServer();
     }
 
-    public void loadDraftMails(int offset, int limit) {
-        api.loadDraftMails(offset, limit);
+    /** Loads sent mails (from Room first, then server). */
+    public void loadSentMails() {
+        api.loadSentMailsFromRoomThenServer();
     }
 
-    public void loadSpamMails(int offset, int limit) {
-        api.loadSpamMails(offset, limit);
+    /** Loads draft mails (from Room first, then server). */
+    public void loadDraftMails() {
+        api.loadDraftMailsFromRoomThenServer();
     }
 
-    public void loadStarredMails(int offset, int limit) {
-        api.loadStarredMails(offset, limit);
+    /** Loads spam mails (from Room first, then server). */
+    public void loadSpamMails() {
+        api.loadSpamMailsFromRoomThenServer();
     }
 
-    public void loadAllMails(int offset, int limit) {
-        api.loadAllMails(offset, limit);
+    /** Loads starred mails (from Room first, then server). */
+    public void loadStarredMails() {
+        api.loadStarredMailsFromRoomThenServer();
     }
 
-    public void loadMailsByLabel(String labelId, int offset, int limit) {
-        api.loadMailsByLabel(labelId, offset, limit);
+    /** Loads mails with a specific label (from Room then updates from server). */
+    public void loadMailsByLabel(String labelId, int limit, int offset) {
+        api.loadMailsByLabelWithoutSaving(labelId, limit, offset);
     }
 
-    public void searchMails(String query, int offset, int limit) {
-        api.searchMails(query, offset, limit);
+    /** Searches mails by query (Room first, then server). */
+    public void searchMails(String query, int limit, int offset) {
+        api.searchMailsWithoutSaving(query, limit, offset);
     }
 
-    public void createMail(Map<String, Object> body) {
-        api.createMail(body);
+    /** Loads a specific mail by ID from Room first, then server. */
+    public void loadMailById(String mailId) {
+        api.loadMailById(mailId);
     }
 
+    /** Sends a draft mail (PATCH + fetch updated mail). */
     public void sendDraft(String mailId, Map<String, Object> body) {
         api.sendDraft(mailId, body);
     }
 
+    /** Creates a new mail. */
+    public void createMail(Map<String, Object> body) {
+        api.createMail(body);
+    }
+
+    /** Updates a specific mail by ID. */
     public void updateMail(String mailId, Map<String, Object> body) {
         api.updateMail(mailId, body);
     }
 
+    /** Deletes a specific mail by ID. */
     public void deleteMail(String mailId) {
         api.deleteMail(mailId);
     }
 
+    /** Toggles the star status of a mail. */
     public void toggleStar(String mailId) {
         api.toggleStar(mailId);
     }
 
+    /** Marks a mail as spam or not. */
     public void setSpam(String mailId, Map<String, Boolean> body) {
         api.setSpam(mailId, body);
     }
 
+    /** Adds a label to a mail. */
     public void addLabelToMail(String mailId, Map<String, String> body) {
         api.addLabelToMail(mailId, body);
     }
 
+    /** Removes a label from a mail. */
     public void removeLabelFromMail(String mailId, Map<String, String> body) {
         api.removeLabelFromMail(mailId, body);
     }
 
-    public void getMailById(String mailId) {
-        api.getMailById(mailId);
+    /** Scroll-loads inbox mails from server (no Room update). */
+    public void scrollLoadInboxMails(int offset, int limit) {
+        api.loadInboxMails(offset, limit);
     }
 
-    // --- מחלקה פנימית לניהול LiveData ---
+    /** Scroll-loads sent mails from server (no Room update). */
+    public void scrollLoadSentMails(int offset, int limit) {
+        api.loadSentMails(offset, limit);
+    }
 
-    public class MailListData extends MutableLiveData<List<FullMail>> {
+    /** Scroll-loads draft mails from server (no Room update). */
+    public void scrollLoadDraftMails(int offset, int limit) {
+        api.loadDraftMails(offset, limit);
+    }
 
-        public MailListData() {
-            super();
-            setValue(new ArrayList<>());
-        }
+    /** Scroll-loads spam mails from server (no Room update). */
+    public void scrollLoadSpamMails(int offset, int limit) {
+        api.loadSpamMails(offset, limit);
+    }
 
-        @Override
-        protected void onActive() {
-            super.onActive();
-            new Thread(() -> {
-                List<FullMail> mails = MyApp.getInstance().getDatabase().mailDao().getAllMails();
-                postValue(mails);
-            }).start();
-        }
+    /** Scroll-loads starred mails from server (no Room update). */
+    public void scrollLoadStarredMails(int offset, int limit) {
+        api.loadStarredMails(offset, limit);
+    }
+
+    /** Scroll-loads all mails from server (no Room update). */
+    public void scrollLoadAllMails(int offset, int limit) {
+        api.loadAllMails(offset, limit);
+    }
+
+    /** Scroll-loads mails by label from server (no Room update). */
+    public void scrollLoadMailsByLabel(String labelId, int offset, int limit) {
+        api.loadMailsByLabel(labelId, offset, limit);
+    }
+
+    /** Scroll-loads search result mails from server (no Room update). */
+    public void scrollSearchMails(String query, int offset, int limit) {
+        api.searchMails(query, offset, limit);
     }
 }

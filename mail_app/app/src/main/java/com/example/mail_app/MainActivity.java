@@ -1,13 +1,16 @@
 package com.example.mail_app;
 
 import android.os.Bundle;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+/**
+ * Main activity of the app.
+ * Sets up edge-to-edge layout and applies system window insets.
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override
