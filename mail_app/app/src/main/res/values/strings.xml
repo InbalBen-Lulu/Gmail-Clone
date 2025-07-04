@@ -1,10 +1,11 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
 
     <!-- App-level constants -->
     <string name="app_name">MailMe</string>
     <string name="BaseUrl">http://10.0.2.2:4000/api/</string> <!-- Used for emulator access -->
     <string name="BaseUrlMoria">http://172.31.160.1:4000/api/</string> <!-- Used for real device access -->
-    <string name="email_domain">/@mailme.com</string> <!-- Used to auto-append domain to username -->
+    <string name="email_domain">@mailme.com</string> <!-- Used to auto-append domain to username -->
     <string name="BaseUrlEmulator">http://10.0.2.2:4000/api/</string>
 
 

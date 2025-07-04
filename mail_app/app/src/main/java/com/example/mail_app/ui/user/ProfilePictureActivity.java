@@ -7,17 +7,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.example.mail_app.R;
 import com.example.mail_app.ui.view.UserAvatarView;
 import com.example.mail_app.utils.ImageUtils;
 import com.example.mail_app.viewmodel.LoggedInUserViewModel;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -100,7 +97,7 @@ public class ProfilePictureActivity extends AppCompatActivity {
         userViewModel.getUser().observe(this, user -> {
             if (user == null) return;
             if (user.getProfileImage() != null)
-                avatarView.setImageUri(Uri.parse(user.getProfileImage()));
+                avatarView.setImageUrl(user.getProfileImage());
 
             boolean hasImage = user.hasCustomImage();
             addButton.setVisibility(hasImage ? View.GONE : View.VISIBLE);

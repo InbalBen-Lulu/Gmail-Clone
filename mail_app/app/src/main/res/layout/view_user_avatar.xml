@@ -1,4 +1,5 @@
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- Profile image displayed as a circle, cropped to fit -->
     <com.google.android.material.imageview.ShapeableImageView
@@ -6,7 +7,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/profile_image"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/CircleImageView" />
 
     <!-- Spinner shown while loading the image -->
     <ProgressBar

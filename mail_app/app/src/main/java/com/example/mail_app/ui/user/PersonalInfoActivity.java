@@ -15,6 +15,9 @@ import com.example.mail_app.ui.view.UserAvatarView;
 import com.example.mail_app.utils.EmailUtils;
 import com.example.mail_app.viewmodel.LoggedInUserViewModel;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 /**
  * Activity that displays the personal information of the currently logged-in user.
  * This includes name, birthday, gender, email, and profile image.
@@ -52,14 +55,16 @@ public class PersonalInfoActivity extends AppCompatActivity {
             Log.d("PersonalInfo", "observed user = " + user);
             if (user != null) {
                 nameTextView.setText(user.getName());
-                birthdayTextView.setText(user.getBirthDate().toString());
+                String formattedDate = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+                        .format(user.getBirthDate());
+                birthdayTextView.setText(formattedDate);
                 genderTextView.setText(user.getGender());
 
                 String email = EmailUtils.buildEmail(this, user.getUserId());
                 emailTextView.setText(email);
 
-                if (user.getProfileImage() != null) {
-                    profileImageView.setImageUri(Uri.parse(user.getProfileImage()));
+                if (user.getProfileImage() != null && !user.getProfileImage().isEmpty()) {
+                    profileImageView.setImageUrl(user.getProfileImage());
                 }
             }
         });
