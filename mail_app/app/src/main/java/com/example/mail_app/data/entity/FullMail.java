@@ -1,6 +1,7 @@
 package com.example.mail_app.data.entity;
 
 import androidx.room.Embedded;
+import androidx.room.Ignore;
 import androidx.room.Relation;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,12 @@ public class FullMail {
     )
     private List<Label> labels;
 
+    @Relation(
+            parentColumn = "id",
+            entityColumn = "mailId"
+    )
+    private List<MailRecipientCrossRef> recipientRefs;
+    @Ignore
     private List<String> toUserIds;
 
     /** Returns the mail entity. */
@@ -41,11 +48,20 @@ public class FullMail {
     /** Returns the sender of the mail. */
     public PublicUser getFromUser() { return fromUser; }
 
+    public void setRecipientRefs(List<MailRecipientCrossRef> recipientRefs) { this.recipientRefs = recipientRefs; }
+
     public void setFromUser(PublicUser fromUser) { this.fromUser = fromUser; }
 
     /** Returns the list of recipient user IDs. */
-    public List<String> getToUserIds() { return toUserIds; }
-
+    public List<String> getToUserIds() {
+        if (toUserIds == null && recipientRefs != null) {
+            toUserIds = new ArrayList<>();
+            for (MailRecipientCrossRef ref : recipientRefs) {
+                toUserIds.add(ref.getUserId());
+            }
+        }
+        return toUserIds;
+    }
     public void setToUserIds(List<String> toUserIds) { this.toUserIds = toUserIds; }
 
     /** Returns the list of labels attached to the mail. */
