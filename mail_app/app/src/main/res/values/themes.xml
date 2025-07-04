@@ -1,9 +1,22 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.Mail_app" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-    </style>
+    <style name="Theme.Mail_app" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Light theme colors -->
+        <item name="colorOnBackground">#202124</item> <!-- primary text -->
+        <item name="colorBackground">#FFFFFF</item>    <!-- screen background -->
+        <item name="colorSecondary">#5F6368</item>     <!-- secondary text -->
+        <item name="dividerColor">#DDDDDD</item>
 
-    <style name="Theme.Mail_app" parent="Base.Theme.Mail_app" />
+        <!-- Personal Info Screen -->
+        <item name="avatarBackground">#CCCCFF</item>
+        <item name="colorLabel">#555555</item>
+
+        <!-- Profile picture button (Add/Change/Remove) -->
+        <item name="profile_action_bg">#C2E7FF</item>      <!-- button background -->
+        <item name="profile_action_color">#001D35</item>   <!-- button text/icon -->
+
+        <!-- Profile screen background -->
+        <item name="profile_screen_bg">#f8fafd</item>
+
+        <item name="colorSurface">#FFFFFF</item>
+    </style>
 </resources>

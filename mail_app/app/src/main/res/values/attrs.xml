@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- General colors -->
+    <attr name="colorLabel" format="color" />
+    <attr name="colorBackground" format="color" />
+    <attr name="avatarBackground" format="color" />
+
+    <!-- Profile picture button colors -->
+    <attr name="profile_action_bg" format="color" />       <!-- background color of profile action buttons -->
+    <attr name="profile_action_color" format="color" />    <!-- text/icon color of profile action buttons -->
+    <attr name="profile_screen_bg" format="color" />
+</resources>

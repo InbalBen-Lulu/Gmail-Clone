@@ -1,6 +1,35 @@
 <resources>
+    <!-- ───────────── BASE URLS FOR RETROFIT ───────────── -->
     <string name="BaseUrl">http://localhost:4000/api/</string>
     <string name="BaseUrlEmulator">http://10.0.2.2:4000/api/</string>
     <string name="BaseUrlMoria">http://172.31.160.1:4000/api/</string>
-    <string name="app_name">Mail App</string>
+
+    <!-- ───────────── APP-WIDE STRINGS ───────────── -->
+    <string name="email_domain">\@mailme.com</string>
+    <string name="app_name">MailMe</string>
+
+    <!-- ───────────── PERSONAL INFO SCREEN ───────────── -->
+    <string name="title_personal_info">Personal info</string>
+    <string name="desc_personal_info">Personal info and options to manage it. You can make some of this info, like your contact details, visible to others so they can reach you easily. You can also see a summary of your profiles.</string>
+    <string name="section_basic_info">Basic info</string>
+    <string name="section_contact_info">Contact info</string>
+    <string name="label_name">Name</string>
+    <string name="label_birthday">Birthday</string>
+    <string name="label_gender">Gender</string>
+    <string name="label_email">Email</string>
+    <string name="label_profile_picture">Profile picture</string>
+    <string name="subtext_profile_picture">Add a profile picture to personalize your account</string>
+    <string name="desc_profile_image">Profile image</string>
+    <string name="desc_camera_icon">Camera icon</string>
+
+    <!-- ───────────── PROFILE PICTURE SCREEN ───────────── -->
+    <string name="mailme_account">MailMe Account</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="profile_picture_subtext">A picture helps people recognize you and lets you know when you’re signed in to your account</string>
+    <string name="add_profile_picture">Add profile picture</string>
+    <string name="change_profile_picture">Change</string>
+    <string name="remove_profile_picture">Remove</string>
+    <string name="mailme">MailMe</string>
+    <string name="account">Account</string>
+    <string name="profile_image">Profile image</string>
 </resources>

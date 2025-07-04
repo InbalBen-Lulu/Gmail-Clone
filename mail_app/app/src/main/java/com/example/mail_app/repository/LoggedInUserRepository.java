@@ -7,8 +7,9 @@ import com.example.mail_app.MyApp;
 import com.example.mail_app.app.api.LoggedInUserAPI;
 import com.example.mail_app.data.dao.LoggedInUserDao;
 import com.example.mail_app.data.dto.LoginResponse;
+import com.example.mail_app.data.dto.RegisterRequest;
 import com.example.mail_app.data.entity.LoggedInUser;
-import java.io.File;
+import com.example.mail_app.data.entity.PublicUser;
 import retrofit2.Callback;
 
 /**
@@ -20,12 +21,14 @@ public class LoggedInUserRepository {
     private final LoggedInUserAPI api;
     private final MutableLiveData<LoggedInUser> userLiveData;
 
-    /** Initializes the repository with database access and API. */
+    /**
+     * Initializes the repository with database access and API.
+     */
     public LoggedInUserRepository() {
         LocalDatabase db = MyApp.getInstance().getDatabase();
         loggedInUserDao = db.userDao();
-        api = new LoggedInUserAPI(loggedInUserDao);
         userLiveData = new UserLiveData();
+        api = new LoggedInUserAPI(loggedInUserDao, userLiveData);
     }
 
     /**
@@ -39,65 +42,65 @@ public class LoggedInUserRepository {
         @Override
         protected void onActive() {
             super.onActive();
-            new Thread(() -> postValue(loggedInUserDao.get())).start();
+            new Thread(() -> {
+                userLiveData.postValue(loggedInUserDao.get());
+            }).start();
         }
     }
 
-    /** Returns LiveData containing the currently logged-in user. */
+    /**
+     * Returns LiveData containing the currently logged-in user.
+     */
     public LiveData<LoggedInUser> getUser() {
         return userLiveData;
     }
 
-    /** Triggers a reload of user data from the server and updates the local state. */
-    public void reload() {
-        api.get();
-        new Thread(() -> {
-            LoggedInUser user = loggedInUserDao.get();
-            userLiveData.postValue(user);
-        }).start();
+    /**
+     * Triggers a reload of user data from the server and updates the local state.
+     */
+    public void reload(Callback<LoggedInUser> callback) {
+        api.get(callback);
     }
 
-    /** Saves the given user into the local database and updates the LiveData. */
-    public void save(LoggedInUser user) {
-        new Thread(() -> {
-            loggedInUserDao.clear();
-            loggedInUserDao.insert(user);
-            userLiveData.postValue(user);
-        }).start();
+    /**
+     * Uploads a new profile image and refreshes user data.
+     */
+    public void uploadProfileImage(String base64Image, Callback<Void> callback) {
+        api.uploadImage(base64Image, callback);
     }
 
-    /** Clears the local user data and sets LiveData to null. */
-    public void clear() {
-        new Thread(() -> {
-            loggedInUserDao.clear();
-            userLiveData.postValue(null);
-        }).start();
+    /**
+     * Deletes the user's profile image and refreshes user data.
+     */
+    public void deleteProfileImage(Callback<Void> callback) {
+        api.deleteImage(callback);
     }
 
-    /** Uploads a new profile image and refreshes user data. */
-    public void uploadProfileImage(File imageFile) {
-        api.uploadImage(imageFile);
-        reload();
-    }
-
-    /** Deletes the user's profile image and refreshes user data. */
-    public void deleteProfileImage() {
-        api.deleteImage();
-        reload();
-    }
-
-    /** Refreshes user data from the server. */
-    public void reloadFromServer() {
-        reload();
-    }
-
-    /** Performs user login via the API and triggers the given callback. */
+    /**
+     * Performs user login via the API and triggers the given callback.
+     */
     public void login(String userId, String password, Callback<LoginResponse> callback) {
         api.login(userId, password, callback);
     }
 
-    /** Performs user logout via the API and triggers the given callback. */
+    /**
+     * Performs user registration + login and triggers the given callback.
+     */
+    public void registerUser(RegisterRequest request, Callback<LoginResponse> callback) {
+        api.registerUser(request, callback);
+    }
+
+    /**
+     * Performs user logout via the API and triggers the given callback.
+     */
     public void logout(Callback<Void> callback) {
         api.logout(callback);
+    }
+
+    /**
+     * Fetches public info of a user without requiring authentication.
+     */
+    public void getPublicUserInfo(String userId, Callback<PublicUser> callback) {
+        api.getPublicUserInfo(userId, callback);
     }
 }

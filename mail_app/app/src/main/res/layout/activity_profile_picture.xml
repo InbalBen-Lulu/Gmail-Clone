@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/profile_screen_bg">
+
+    <!-- ────────── Top bar: back + title ────────── -->    <LinearLayout
+        android:id="@+id/top_bar"
+        android:layout_width="397dp"
+        android:layout_height="79dp"
+        android:layout_marginTop="4dp"
+        android:background="?attr/colorSurface"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingTop="30dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/baseline_arrow_back_24"
+            app:tint="?attr/colorOnBackground" />
+
+        <TextView
+            android:id="@+id/title_mailme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/mailme"
+            android:textColor="?attr/colorOnBackground"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/title_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:fontFamily="sans-serif"
+            android:text="@string/account"
+            android:textColor="?attr/colorOnBackground"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <!-- Section title -->
+    <TextView
+        android:id="@+id/label_profile_picture"
+        style="@style/ProfilePictureTitle"
+        android:text="@string/profile_picture"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_bar"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp" />
+
+    <!-- Subtitle under the title -->
+    <TextView
+        android:id="@+id/label_subtext"
+        style="@style/ProfilePictureSubtext"
+        android:text="@string/profile_picture_subtext"
+        app:layout_constraintStart_toStartOf="@id/label_profile_picture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_profile_picture"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="24dp" />
+
+    <!-- Button: Add new profile picture -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/add_picture_button"
+        style="@style/ProfileActionButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/add_profile_picture"
+        app:icon="@drawable/baseline_add_a_photo_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <!-- Button: Change existing picture -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/change_picture_button"
+        style="@style/ProfileActionButton"
+        android:layout_width="155dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="24dp"
+        android:text="@string/change_profile_picture"
+        app:icon="@drawable/baseline_edit_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Button: Remove current picture -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/remove_picture_button"
+        style="@style/ProfileActionButton"
+        android:layout_width="162dp"
+        android:layout_height="44dp"
+        android:layout_marginEnd="24dp"
+        android:text="@string/remove_profile_picture"
+        app:icon="@drawable/outline_delete_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Avatar view (large profile image) -->
+    <com.example.mail_app.ui.view.UserAvatarView
+        android:id="@+id/avatar_view"
+        android:layout_width="290dp"
+        android:layout_height="290dp"
+        android:contentDescription="@string/desc_profile_image"
+        android:src="@drawable/default_avatar"
+        app:layout_constraintBottom_toTopOf="@id/add_picture_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_subtext"
+        app:layout_constraintVertical_bias="0.415" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="70dp"
+    android:layout_height="70dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center"
+    android:background="@drawable/circle_background"
+    android:clipToOutline="true"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Avatar preview inside circle -->
+    <com.example.mail_app.ui.view.UserAvatarView
+        android:id="@+id/profile_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/desc_profile_image"
+        android:src="@drawable/default_avatar" />
+
+    <!-- Camera icon shown over avatar -->
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="4dp"
+        android:src="@drawable/baseline_photo_camera_24"
+        app:tint="@color/icon_camera_tint"
+        android:contentDescription="@string/desc_camera_icon" />
+</FrameLayout>

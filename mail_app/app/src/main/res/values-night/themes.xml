@@ -1,7 +1,22 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.Mail_app" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <style name="Theme.Mail_app" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Dark theme colors -->
+        <item name="colorOnBackground">#FFFFFF</item>
+        <item name="colorBackground">#202124</item>
+        <item name="colorSecondary">#BBBBBB</item>
+        <item name="dividerColor">#444444</item>
+
+        <!-- Personal Info Screen -->
+        <item name="avatarBackground">#666699</item>
+        <item name="colorLabel">#E8EAED</item>
+
+        <!-- Profile picture button (Add/Change/Remove) -->
+        <item name="profile_action_bg">#004A77</item>      <!-- button background -->
+        <item name="profile_action_color">#E3E3E3</item>   <!-- button text/icon -->
+
+        <!-- Profile screen background -->
+        <item name="profile_screen_bg">#202124</item>
+
+        <item name="colorSurface">#303134</item>
     </style>
 </resources>
