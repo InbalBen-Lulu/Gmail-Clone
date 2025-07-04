@@ -6,18 +6,16 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.mail_app.R;
 import com.google.android.material.imageview.ShapeableImageView;
 
 /**
- * Custom avatar view that displays a circular profile image
- * with optional loading spinner overlay.
- * Supports full or partial image URLs (e.g. "/profilePics/xyz.png").
+ * Custom view to display a circular user avatar with an optional loading spinner overlay.
+ * Supports setting the image from a URL, drawable resource, or URI.
  */
 public class UserAvatarView extends FrameLayout {
-
     private ShapeableImageView imageView;
     private ProgressBar loadingSpinner;
 
@@ -58,12 +56,11 @@ public class UserAvatarView extends FrameLayout {
     }
 
     /**
-     * Sets the profile image using a relative or full URL.
-     * If the path starts with "/profilePics", it prepends the base URL.
+     * Sets the profile image using a full or relative image URL.
+     * If the path starts with "/profilePics", it is resolved using the base server URL.
      */
     public void setImageUrl(String imagePath) {
         if (imagePath == null || imagePath.isEmpty()) {
-            imageView.setImageResource(R.drawable.default_avatar);
             return;
         }
 
@@ -77,7 +74,8 @@ public class UserAvatarView extends FrameLayout {
 
         Glide.with(getContext())
                 .load(fullUrl)
-                .placeholder(R.drawable.default_avatar)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(imageView);
     }
 

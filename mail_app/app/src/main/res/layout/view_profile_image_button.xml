@@ -14,8 +14,7 @@
         android:id="@+id/profile_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/desc_profile_image"
-        android:src="@drawable/default_avatar" />
+        android:contentDescription="@string/desc_profile_image" />
 
     <!-- Camera icon shown over avatar -->
     <ImageView

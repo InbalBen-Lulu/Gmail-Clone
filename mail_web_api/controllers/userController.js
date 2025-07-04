@@ -54,7 +54,7 @@ async function registerUser(req, res) {
       userId,
       name,
       password,
-      gender: gender.toUpperCase(),
+      gender: gender.toLowerCase(),
       birthDate: parsedDate,
       profileImage
     });

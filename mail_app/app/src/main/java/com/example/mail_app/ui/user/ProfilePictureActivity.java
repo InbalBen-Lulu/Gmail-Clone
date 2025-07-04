@@ -20,8 +20,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Activity for changing the user's profile picture.
- * Allows uploading a new image or removing the existing one.
+ * Activity for updating the user's profile picture.
+ * Allows picking an image from gallery or removing the current image.
+ * Handles image size check and base64 conversion before upload.
  */
 public class ProfilePictureActivity extends AppCompatActivity {
 
@@ -141,3 +142,4 @@ public class ProfilePictureActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
+

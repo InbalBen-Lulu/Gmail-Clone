@@ -1,20 +1,16 @@
 package com.example.mail_app.ui.user;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
-
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.mail_app.R;
 import com.example.mail_app.ui.view.UserAvatarView;
 import com.example.mail_app.utils.EmailUtils;
 import com.example.mail_app.viewmodel.LoggedInUserViewModel;
-
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -25,15 +21,13 @@ import java.util.Locale;
  */
 public class PersonalInfoActivity extends AppCompatActivity {
 
-    private static final int PICK_IMAGE = 101;
-
     private UserAvatarView profileImageView;
     private LoggedInUserViewModel userViewModel;
-
     private TextView nameTextView;
     private TextView birthdayTextView;
     private TextView genderTextView;
     private TextView emailTextView;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +40,15 @@ public class PersonalInfoActivity extends AppCompatActivity {
         birthdayTextView = findViewById(R.id.text_birthday);
         genderTextView = findViewById(R.id.text_gender);
         emailTextView = findViewById(R.id.text_email);
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh);
+        swipeRefreshLayout.setOnChildScrollUpCallback((parent, child) -> false);
 
         // ViewModel
         userViewModel = new ViewModelProvider(this).get(LoggedInUserViewModel.class);
 
         // Observe user data
         userViewModel.getUser().observe(this, user -> {
+            swipeRefreshLayout.setRefreshing(false); // Stop spinner when data loads
             Log.d("PersonalInfo", "observed user = " + user);
             if (user != null) {
                 nameTextView.setText(user.getName());
@@ -74,14 +71,10 @@ public class PersonalInfoActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ProfilePictureActivity.class);
             startActivity(intent);
         });
-    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null) {
-            Uri imageUri = data.getData();
-            profileImageView.setImageUri(imageUri);
-        }
+        // Refresh user data on swipe-down
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            userViewModel.reload(); // We don't need a callback
+        });
     }
 }

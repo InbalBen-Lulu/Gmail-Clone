@@ -64,4 +64,11 @@ public class LoggedInUserViewModel extends ViewModel {
     public void getPublicUserInfo(String userId, Callback<PublicUser> callback) {
         repository.getPublicUserInfo(userId, callback);
     }
+
+    /**
+     * Refreshes the logged-in user's data from the server.
+     */
+    public void reload() {
+        repository.reload();
+    }
 }

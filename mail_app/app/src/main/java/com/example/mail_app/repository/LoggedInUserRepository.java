@@ -59,8 +59,8 @@ public class LoggedInUserRepository {
     /**
      * Triggers a reload of user data from the server and updates the local state.
      */
-    public void reload(Callback<LoggedInUser> callback) {
-        api.get(callback);
+    public void reload() {
+        api.get(null);
     }
 
     /**
