@@ -133,6 +133,10 @@ public class LoginActivity extends AppCompatActivity {
                     if (response.isSuccessful() && response.body() != null) {
                         Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
                         // TODO: Navigate to main screen
+                        Intent intent = new Intent(LoginActivity.this, PersonalInfoActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
                     } else {
                         showPasswordError("Incorrect password. Try again.");
                     }
