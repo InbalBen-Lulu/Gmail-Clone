@@ -1,7 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.Mail_app" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <style name="Theme.Mail_app" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Dark theme colors -->
+        <item name="colorPrimary">@color/input_outline</item>         <item name="colorOnBackground">#FFFFFF</item>
+        <item name="colorSecondary">#BBBBBB</item>
+        <item name="dividerColor">#444444</item>
+
+        <item name="textColor">#FEFEFE </item>
+        <item name="backgroundColor">#111111 </item>
     </style>
 </resources>
