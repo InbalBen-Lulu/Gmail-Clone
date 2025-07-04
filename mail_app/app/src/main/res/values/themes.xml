@@ -18,5 +18,10 @@
         <item name="profile_screen_bg">#f8fafd</item>
 
         <item name="colorSurface">#FFFFFF</item>
+
+
+        <item name="textColor">#202124 </item>
+        <item name="backgroundColor">#f8fafd </item>
+        <item name="colorPrimary">@color/input_outline</item>
     </style>
 </resources>

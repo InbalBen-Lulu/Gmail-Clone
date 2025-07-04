@@ -1,12 +1,12 @@
 <resources>
-    <!-- ───────────── BASE URLS FOR RETROFIT ───────────── -->
-    <string name="BaseUrl">http://localhost:4000/api/</string>
-    <string name="BaseUrlEmulator">http://10.0.2.2:4000/api/</string>
-    <string name="BaseUrlMoria">http://172.31.160.1:4000/api/</string>
 
-    <!-- ───────────── APP-WIDE STRINGS ───────────── -->
-    <string name="email_domain">\@mailme.com</string>
+    <!-- 🏷App-level constants -->
     <string name="app_name">MailMe</string>
+    <string name="BaseUrl">http://10.0.2.2:4000/api/</string> <!-- Used for emulator access -->
+    <string name="BaseUrlMoria">http://172.31.160.1:4000/api/</string> <!-- Used for real device access -->
+    <string name="email_domain">/@mailme.com</string> <!-- Used to auto-append domain to username -->
+    <string name="BaseUrlEmulator">http://10.0.2.2:4000/api/</string>
+
 
     <!-- ───────────── PERSONAL INFO SCREEN ───────────── -->
     <string name="title_personal_info">Personal info</string>
@@ -32,4 +32,78 @@
     <string name="mailme">MailMe</string>
     <string name="account">Account</string>
     <string name="profile_image">Profile image</string>
+
+    <!-- Sign-In / Login screen -->
+    <string name="email_or_phone">Email or phone</string>
+    <string name="create_account">Create account</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_in_subtitle">Use your MailMe Account. The account will be added to this device.</string>
+    <string name="welcome">Welcome</string>
+    <string name="enter_password">Enter your password</string>
+    <string name="show_password">Show password</string>
+    <string name="next">Next</string>
+    <string name="user_not_found">User not found</string>
+
+    <!-- Registration flow titles and labels -->
+    <string name="register_title">Create your MailMe account</string>
+    <string name="choose_email">Choose your email address</string>
+    <string name="create_password">Create a password</string>
+    <string name="confirm_password">Confirm your password</string>
+    <string name="retype_password">Re-type password</string>
+    <string name="enter_name">Enter your name</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="enter_birthday_and_gender">Enter your birthday and gender</string>
+    <string name="day">Day</string>
+    <string name="year">Year</string>
+    <string name="gender_info">To learn more about why we ask for birthday and gender,\ngo to g.co/age-gender in your browser</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+
+    <!-- Dropdowns for month and gender -->
+    <string name="month_prompt">Month</string>
+    <string name="gender_prompt">Gender</string>
+
+    <string-array name="months_array">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+
+    <string-array name="gender_array">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
+
+    <!-- Error messages used throughout registration -->
+    <string name="error_incomplete_birthday">Please fill in a complete birthday</string>
+    <string name="error_invalid_date">Please enter a valid date</string>
+    <string name="error_select_gender">Please select your gender</string>
+    <string name="error_password_short">Use 8 characters or more for your password</string>
+    <string name="error_password_too_short">Use 8 characters or more for your password</string> <!-- duplicated: you can remove one -->
+    <string name="error_passwords_dont_match">Those passwords didn’t match. Try again.</string>
+    <string name="error_required">Required</string>
+    <string name="error_username_taken">Username already exists</string>
+
+    <!-- Step labels for RegisterActivity -->
+    <string name="step2_subtitle">Enter your birthday and gender</string>
+    <string name="step3_subtitle">Choose your email address</string>
+    <string name="step4_subtitle">Create a password</string>
+
+    <!-- Registration result -->
+    <string name="register_button_text">Register</string>
+    <string name="registration_success">Registration successful!</string>
+    <string name="registration_failed">Registration failed</string>
+    <string name="generic_error">Error: %1$s</string> <!-- Reusable error for showing Retrofit failures -->
+
 </resources>

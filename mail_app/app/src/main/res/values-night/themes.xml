@@ -18,5 +18,10 @@
         <item name="profile_screen_bg">#202124</item>
 
         <item name="colorSurface">#303134</item>
+
+
+        <item name="textColor">#FEFEFE </item>
+        <item name="backgroundColor">#111111 </item>
+        <item name="colorPrimary">@color/input_outline</item>
     </style>
 </resources>
