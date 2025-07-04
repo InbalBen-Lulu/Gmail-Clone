@@ -3,6 +3,7 @@ package com.example.mail_app.ui.user;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -48,6 +49,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
 
         // Observe user data
         userViewModel.getUser().observe(this, user -> {
+            Log.d("PersonalInfo", "observed user = " + user);
             if (user != null) {
                 nameTextView.setText(user.getName());
                 birthdayTextView.setText(user.getBirthDate().toString());

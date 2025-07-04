@@ -1,6 +1,6 @@
 <resources>
 
-    <!-- 🏷App-level constants -->
+    <!-- App-level constants -->
     <string name="app_name">MailMe</string>
     <string name="BaseUrl">http://10.0.2.2:4000/api/</string> <!-- Used for emulator access -->
     <string name="BaseUrlMoria">http://172.31.160.1:4000/api/</string> <!-- Used for real device access -->

@@ -37,6 +37,7 @@ public class LoggedInUserRepository {
     class UserLiveData extends MutableLiveData<LoggedInUser> {
         public UserLiveData() {
             super();
+            setValue(null);
         }
 
         @Override
