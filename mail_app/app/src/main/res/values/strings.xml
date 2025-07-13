@@ -1,5 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
     <!-- App-level constants -->
     <string name="app_name">MailMe</string>
@@ -34,7 +33,7 @@
     <string name="account">Account</string>
     <string name="profile_image">Profile image</string>
 
-    <!-- Sign-In / Login screen -->
+    <!-- ───────────── SIGN-IN / LOGIN SCREEN ───────────── -->
     <string name="email_or_phone">Email or phone</string>
     <string name="create_account">Create account</string>
     <string name="sign_in">Sign in</string>
@@ -105,6 +104,20 @@
     <string name="register_button_text">Register</string>
     <string name="registration_success">Registration successful!</string>
     <string name="registration_failed">Registration failed</string>
-    <string name="generic_error">Error: %1$s</string> <!-- Reusable error for showing Retrofit failures -->
+    <string name="generic_error">Error: %1$s</string>
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="previous">Previous</string>
+
+    <!-- ───────────── SEARCH SCREEN ───────────── -->
+    <string name="search_in_mail">Search in mail</string>
+    <string name="quick_results">Quick Results</string>
+    <string name="no_subject">(No Subject)</string>
+    <string name="unknown_sender">(Unknown Sender)</string>
+    <string name="no_results_found">No results found.</string>
+
+
 
 </resources>

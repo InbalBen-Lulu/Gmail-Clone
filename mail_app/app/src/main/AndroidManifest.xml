@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -14,14 +15,20 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.Mail_app"
         android:usesCleartextTraffic="true">
-
+        <activity
+            android:name=".ui.search.SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.mail.MailPageActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Mail_app" />
         <activity
             android:name=".ui.auth.auth.LoginActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="true">
-
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -29,17 +36,14 @@
             android:name=".ui.auth.auth.RegisterActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".ui.user.PersonalInfoActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".ui.user.ProfilePictureActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-
     </application>
 
 </manifest>

@@ -1,27 +1,33 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <style name="Theme.Mail_app" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Dark theme colors -->
-        <item name="colorOnBackground">#FFFFFF</item>
-        <item name="colorBackground">#202124</item>
-        <item name="colorSecondary">#BBBBBB</item>
-        <item name="dividerColor">#444444</item>
 
-        <!-- Personal Info Screen -->
-        <item name="avatarBackground">#666699</item>
-        <item name="colorLabel">#E8EAED</item>
+        <!-- ═══════ BACKGROUNDS ═══════ -->
+        <item name="color_background">#121318</item>         <!-- screen background -->
+        <item name="colorSurface">#131314</item>            <!-- cards, surfaces -->
+        <item name="profile_screen_bg">#1B1B1B</item>       <!-- specific: profile screen -->
+        <item name="search_background">#282A2F</item>       <!-- search bar background -->
 
-        <!-- Profile picture button (Add/Change/Remove) -->
-        <item name="profile_action_bg">#004A77</item>      <!-- button background -->
-        <item name="profile_action_color">#E3E3E3</item>   <!-- button text/icon -->
+        <!-- ═══════ TEXT COLORS ═══════ -->
+        <item name="text_color">#FEFEFE</item>               <!-- main text -->
+        <item name="colorSecondary">#BBBBBB</item>          <!-- secondary text -->
+        <item name="color_label">#E8EAED</item>              <!-- label text -->
+        <item name="text_color_hint">#C0C1CB</item>
 
-        <!-- Profile screen background -->
-        <item name="profile_screen_bg">#202124</item>
+        <!-- ═══════ DIVIDERS / BORDERS ═══════ -->
+        <item name="dividerColor">#444444</item>            <!-- profile info divider -->
+        <item name="search_divider_color">#3E4045</item>            <!-- search divider -->
 
-        <item name="colorSurface">#303134</item>
+        <!-- ═══════ BUTTONS & ACTIONS ═══════ -->
+        <item name="profile_action_bg">#004A77</item>       <!-- button background -->
+        <item name="profile_action_color">#E3E3E3</item>    <!-- button text/icon -->
 
+        <!-- ═══════ ICONS ═══════ -->
+        <item name="icon_color">#E2E2E9</item>              <!-- color for main icons -->
 
-        <item name="textColor">#FEFEFE </item>
-        <item name="backgroundColor">#111111 </item>
+        <!-- ═══════ PRIMARY COLOR ═══════ -->
         <item name="colorPrimary">@color/input_outline</item>
+
     </style>
+
 </resources>

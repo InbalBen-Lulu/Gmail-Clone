@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="textColor" format="color"/>
-    <attr name="backgroundColor" format="color"/>
+    <!-- Text colors -->
+    <attr name="text_color" format="color"/>
+    <attr name="text_color_hint" format="color" />
 
     <!-- General colors -->
-    <attr name="colorLabel" format="color" />
-    <attr name="colorBackground" format="color" />
-    <attr name="avatarBackground" format="color" />
+    <attr name="color_label" format="color" />
+    <attr name="color_background" format="color" />
+    <attr name="icon_color" format="color" />
 
     <!-- Profile picture button colors -->
     <attr name="profile_action_bg" format="color" />       <!-- background color of profile action buttons -->
     <attr name="profile_action_color" format="color" />    <!-- text/icon color of profile action buttons -->
     <attr name="profile_screen_bg" format="color" />
+
+    <!-- Search Bar Custom Attributes -->
+    <attr name="search_background" format="color" />
+    <attr name="search_divider_color" format="color" />
 </resources>
