@@ -5,15 +5,16 @@
     android:layout_height="match_parent"
     android:background="?attr/profile_screen_bg">
 
-    <!-- ────────── Top bar: back + title ────────── -->    <LinearLayout
+    <!-- ────────── Top bar: back + title ────────── -->
+    <LinearLayout
         android:id="@+id/top_bar"
-        android:layout_width="397dp"
-        android:layout_height="79dp"
+        android:layout_width="396dp"
+        android:layout_height="88dp"
         android:layout_marginTop="4dp"
         android:background="?attr/colorSurface"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingTop="30dp"
+        android:paddingStart="20dp"
+        android:paddingTop="36dp"
         android:paddingEnd="16dp"
         android:paddingBottom="12dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,9 +26,10 @@
             android:id="@+id/back_button"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:layout_marginTop="2dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/baseline_arrow_back_24"
-            app:tint="?attr/colorOnBackground" />
+            app:tint="?attr/icon_color" />
 
         <TextView
             android:id="@+id/title_mailme"
@@ -36,7 +38,7 @@
             android:layout_marginStart="8dp"
             android:fontFamily="sans-serif-medium"
             android:text="@string/mailme"
-            android:textColor="?attr/colorOnBackground"
+            android:textColor="?attr/text_color"
             android:textSize="20sp" />
 
         <TextView
@@ -46,30 +48,31 @@
             android:layout_marginStart="2dp"
             android:fontFamily="sans-serif"
             android:text="@string/account"
-            android:textColor="?attr/colorOnBackground"
+            android:textColor="?attr/text_color"
             android:textSize="20sp" />
     </LinearLayout>
 
     <!-- Section title -->
-    <TextView
-        android:id="@+id/label_profile_picture"
-        style="@style/ProfilePictureTitle"
-        android:text="@string/profile_picture"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/top_bar"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp" />
 
     <!-- Subtitle under the title -->
     <TextView
+        android:id="@+id/label_profile_picture"
+        style="@style/ProfilePictureTitle"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="6dp"
+        android:text="@string/profile_picture"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_bar" />
+
+    <TextView
         android:id="@+id/label_subtext"
         style="@style/ProfilePictureSubtext"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="20dp"
         android:text="@string/profile_picture_subtext"
-        app:layout_constraintStart_toStartOf="@id/label_profile_picture"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/label_profile_picture"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="24dp" />
+        app:layout_constraintStart_toStartOf="@id/label_profile_picture"
+        app:layout_constraintTop_toBottomOf="@id/label_profile_picture" />
 
     <!-- Button: Add new profile picture -->
     <com.google.android.material.button.MaterialButton
@@ -81,35 +84,42 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="32dp"
         android:text="@string/add_profile_picture"
-        app:icon="@drawable/baseline_add_a_photo_24"
-        app:layout_constraintStart_toStartOf="parent"
+        app:icon="@drawable/outline_add_a_photo_24"
+        app:iconSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <!-- Button: Change existing picture -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/change_picture_button"
         style="@style/ProfileActionButton"
-        android:layout_width="155dp"
-        android:layout_height="46dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
+        android:layout_marginEnd="12dp"
         android:layout_marginBottom="32dp"
         android:text="@string/change_profile_picture"
-        app:icon="@drawable/baseline_edit_24"
+        app:icon="@drawable/outline_edit_24"
+        app:iconSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/remove_picture_button" />
 
     <!-- Button: Remove current picture -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/remove_picture_button"
         style="@style/ProfileActionButton"
-        android:layout_width="155dp"
-        android:layout_height="46dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="32dp"
         android:text="@string/remove_profile_picture"
         app:icon="@drawable/outline_delete_24"
+        app:iconSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/change_picture_button"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Avatar view (large profile image) -->
