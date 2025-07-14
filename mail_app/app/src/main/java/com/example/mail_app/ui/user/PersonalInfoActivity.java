@@ -3,6 +3,7 @@ package com.example.mail_app.ui.user;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -34,19 +35,22 @@ public class PersonalInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_info);
 
-        // Views
+        // Initialize views
         profileImageView = findViewById(R.id.profile_image);
         nameTextView = findViewById(R.id.text_name);
         birthdayTextView = findViewById(R.id.text_birthday);
         genderTextView = findViewById(R.id.text_gender);
         emailTextView = findViewById(R.id.text_email);
+        ImageButton btnClose = findViewById(R.id.btn_close);
         swipeRefreshLayout = findViewById(R.id.swipe_refresh);
-        swipeRefreshLayout.setOnChildScrollUpCallback((parent, child) -> false);
 
-        // ViewModel
+        swipeRefreshLayout.setOnChildScrollUpCallback((parent, child) -> false);
+        btnClose.setOnClickListener(v -> finish());
+
+        // Initialize ViewModel
         userViewModel = new ViewModelProvider(this).get(LoggedInUserViewModel.class);
 
-        // Observe user data
+        // Observe and display user data
         userViewModel.getUser().observe(this, user -> {
             swipeRefreshLayout.setRefreshing(false); // Stop spinner when data loads
             Log.d("PersonalInfo", "observed user = " + user);
@@ -72,7 +76,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Refresh user data on swipe-down
+        // Swipe to refresh user data
         swipeRefreshLayout.setOnRefreshListener(() -> {
             userViewModel.reload(); // We don't need a callback
         });

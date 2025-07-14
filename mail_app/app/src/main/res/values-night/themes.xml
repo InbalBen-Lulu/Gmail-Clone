@@ -4,29 +4,32 @@
 
         <!-- ═══════ BACKGROUNDS ═══════ -->
         <item name="color_background">#121318</item>         <!-- screen background -->
-        <item name="colorSurface">#131314</item>            <!-- cards, surfaces -->
-        <item name="profile_screen_bg">#1B1B1B</item>       <!-- specific: profile screen -->
-        <item name="search_background">#282A2F</item>       <!-- search bar background -->
+        <item name="colorSurface">#131314</item>             <!-- cards, surfaces -->
+        <item name="profile_screen_bg">#1B1B1B</item>        <!-- specific: profile screen -->
+        <item name="search_background">#282A2F</item>        <!-- search bar background -->
+        <item name="outer_box_background">#1E1F25</item>     <!-- outer box in profile dialog -->
+        <item name="inner_box_background">#0D0E13</item>     <!-- inner box in profile dialog -->
 
         <!-- ═══════ TEXT COLORS ═══════ -->
         <item name="text_color">#FEFEFE</item>               <!-- main text -->
-        <item name="colorSecondary">#BBBBBB</item>          <!-- secondary text -->
+        <item name="colorSecondary">#BBBBBB</item>           <!-- secondary text -->
         <item name="color_label">#E8EAED</item>              <!-- label text -->
-        <item name="text_color_hint">#C0C1CB</item>
+        <item name="text_color_hint">#C0C1CB</item>          <!-- hint text -->
+        <item name="dialog_profile_text">#E3E2E9</item>      <!-- text/icons in profile dialog -->
 
         <!-- ═══════ DIVIDERS / BORDERS ═══════ -->
-        <item name="dividerColor">#444444</item>            <!-- profile info divider -->
-        <item name="search_divider_color">#3E4045</item>            <!-- search divider -->
+        <item name="dividerColor">#444444</item>             <!-- profile info divider -->
+        <item name="search_divider_color">#3E4045</item>     <!-- search divider -->
 
         <!-- ═══════ BUTTONS & ACTIONS ═══════ -->
-        <item name="profile_action_bg">#004A77</item>       <!-- button background -->
-        <item name="profile_action_color">#E3E3E3</item>    <!-- button text/icon -->
+        <item name="profile_action_bg">#004A77</item>        <!-- button background -->
+        <item name="profile_action_color">#E3E3E3</item>     <!-- button text/icon -->
 
         <!-- ═══════ ICONS ═══════ -->
-        <item name="icon_color">#E2E2E9</item>              <!-- color for main icons -->
+        <item name="icon_color">#E2E2E9</item>               <!-- color for main icons -->
 
         <!-- ═══════ PRIMARY COLOR ═══════ -->
-        <item name="colorPrimary">@color/input_outline</item>
+        <item name="colorPrimary">@color/input_outline</item> <!-- primary app color -->
 
     </style>
 

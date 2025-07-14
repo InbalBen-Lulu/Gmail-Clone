@@ -23,7 +23,7 @@
             android:exported="false"
             android:theme="@style/Theme.Mail_app" />
         <activity
-            android:name=".ui.auth.auth.LoginActivity"
+            android:name=".ui.auth.LoginActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.auth.auth.RegisterActivity"
+            android:name=".ui.auth.RegisterActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity

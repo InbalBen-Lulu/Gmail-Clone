@@ -127,4 +127,33 @@
     <style name="CircleImageView" parent="">
         <item name="cornerSize">50%</item>
     </style>
+
+    <!-- Outlined button style for profile dialog (e.g., "View personal info") -->
+    <style name="MyOutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">?attr/dialog_profile_text</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">?attr/dialog_profile_text</item>
+        <item name="cornerRadius">6dp</item>
+        <item name="android:paddingLeft">14dp</item>
+        <item name="android:paddingRight">14dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+    </style>
+
+    <!-- Text button with icon for profile dialog (e.g., "Sign out" button) -->
+    <style name="MyTextButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">?attr/dialog_profile_text</item>
+        <item name="iconTint">?attr/dialog_profile_text</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:paddingLeft">16dp</item>
+    </style>
+
+    <!-- Dialog style with background dimming when open -->
+    <style name="CustomDialog" parent="Theme.Material3.DayNight.Dialog">
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.3</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+
 </resources>

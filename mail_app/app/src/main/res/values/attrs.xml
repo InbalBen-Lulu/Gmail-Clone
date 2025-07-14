@@ -17,4 +17,9 @@
     <!-- Search Bar Custom Attributes -->
     <attr name="search_background" format="color" />
     <attr name="search_divider_color" format="color" />
+
+    <!-- Profile dialog box colors -->
+    <attr name="outer_box_background" format="color" />
+    <attr name="inner_box_background" format="color" />
+    <attr name="dialog_profile_text" format="color" />
 </resources>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -40,6 +41,7 @@
             android:background="@android:color/transparent"
             android:inputType="text"
             android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:imeOptions="actionSearch"
             android:textSize="14sp"
             android:textColor="?attr/text_color"
@@ -49,6 +51,16 @@
             android:cursorVisible="false"
             android:clickable="true"
             app:layout_constraintStart_toEndOf="@id/menu_icon"
+            app:layout_constraintEnd_toStartOf="@id/avatar_button"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- User avatar button -->
+        <com.example.mail_app.ui.view.UserAvatarView
+            android:id="@+id/avatar_button"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />

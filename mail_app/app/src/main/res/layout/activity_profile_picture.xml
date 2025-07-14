@@ -31,6 +31,7 @@
             android:src="@drawable/baseline_arrow_back_24"
             app:tint="?attr/icon_color" />
 
+        <!-- Section title -->
         <TextView
             android:id="@+id/title_mailme"
             android:layout_width="wrap_content"
@@ -51,8 +52,6 @@
             android:textColor="?attr/text_color"
             android:textSize="20sp" />
     </LinearLayout>
-
-    <!-- Section title -->
 
     <!-- Subtitle under the title -->
     <TextView
