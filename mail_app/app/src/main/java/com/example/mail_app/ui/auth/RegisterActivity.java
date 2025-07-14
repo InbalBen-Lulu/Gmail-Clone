@@ -1,4 +1,4 @@
-package com.example.mail_app.ui.auth.auth;
+package com.example.mail_app.ui.auth;
 
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;

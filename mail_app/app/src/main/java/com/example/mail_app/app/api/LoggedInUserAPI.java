@@ -1,6 +1,8 @@
 package com.example.mail_app.app.api;
 
 import androidx.lifecycle.MutableLiveData;
+
+import com.example.mail_app.LocalDatabase;
 import com.example.mail_app.MyApp;
 import com.example.mail_app.app.network.AuthWebService;
 import com.example.mail_app.app.network.PublicWebService;
@@ -13,7 +15,9 @@ import com.example.mail_app.data.dto.RegisterRequest;
 import com.example.mail_app.data.entity.LoggedInUser;
 import com.example.mail_app.data.entity.PublicUser;
 import com.example.mail_app.data.remote.LoggedInUserWebService;
+
 import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -252,7 +256,13 @@ public class LoggedInUserAPI {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 AuthManager.clearAll(MyApp.getInstance());
-                new Thread(() -> dao.clear()).start();
+                new Thread(() -> {
+                    LocalDatabase db = MyApp.getInstance().getDatabase();
+                    db.userDao().clear();
+                    db.mailDao().clearAllMails();
+                    db.publicUserDao().clearAllUsers();
+                    db.labelDao().clear();
+                }).start();
                 callback.onResponse(call, response);
             }
 
