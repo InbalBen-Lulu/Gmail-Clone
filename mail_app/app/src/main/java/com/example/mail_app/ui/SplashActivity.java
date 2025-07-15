@@ -2,11 +2,9 @@ package com.example.mail_app.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.example.mail_app.ui.auth.LoginActivity;
 import com.example.mail_app.ui.mail.MailPageActivity;
 import com.example.mail_app.viewmodel.LoggedInUserViewModel;
@@ -19,6 +17,10 @@ public class SplashActivity extends AppCompatActivity {
 
     private LoggedInUserViewModel userViewModel;
 
+    /**
+     * Initializes the splash screen, checks login state,
+     * and navigates to the appropriate screen.
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
