@@ -22,4 +22,11 @@
     <attr name="outer_box_background" format="color" />
     <attr name="inner_box_background" format="color" />
     <attr name="dialog_profile_text" format="color" />
+
+    <!-- Sidebar colors -->
+    <attr name="menu_item_bg" format="color" />
+    <attr name="menu_item_select_bg" format="color" />
+
+
 </resources>
+

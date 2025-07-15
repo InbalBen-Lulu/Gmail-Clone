@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?attr/menu_item_bg"
+    android:paddingTop="24dp"
+    android:paddingBottom="24dp">
+
+    <!-- Title at the top -->
+    <TextView
+        android:id="@+id/sidebar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:text="@string/app_name"
+        android:textColor="?attr/color_label"
+        android:textStyle="bold"
+        android:textSize="20sp" />
+
+    <!-- Spacer -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="28dp" />
+
+    <!-- RecyclerView holding the menu items -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/sidebar_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp" />
+
+</LinearLayout>

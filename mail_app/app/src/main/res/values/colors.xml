@@ -11,4 +11,7 @@
     <color name="link_button">#1E64D4</color>
     <color name="input_error_outline">#D93025</color>
     <color name="transparent">#00000000</color>
+
+    <color name="scrim_overlay">#4D000000</color>
+
 </resources>

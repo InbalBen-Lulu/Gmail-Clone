@@ -122,4 +122,12 @@
     <string name="view_personal_info">View personal info</string>
     <string name="sign_out">Sign out</string>
 
+    <!-- ───────────── SIDEBAR FRAGMENT ───────────── -->
+    <string name="sidebar_inbox">Inbox</string>
+    <string name="sidebar_starred">Starred</string>
+    <string name="sidebar_sent">Sent</string>
+    <string name="sidebar_drafts">Drafts</string>
+    <string name="sidebar_all_mail">All Mail</string>
+    <string name="sidebar_spam">Spam</string>
+
 </resources>

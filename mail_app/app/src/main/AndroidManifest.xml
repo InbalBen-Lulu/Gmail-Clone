@@ -15,31 +15,41 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.Mail_app"
         android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".ui.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Mail_app">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".ui.search.SearchActivity"
             android:exported="false" />
+
         <activity
             android:name=".ui.mail.MailPageActivity"
             android:exported="false"
             android:theme="@style/Theme.Mail_app" />
+
         <activity
             android:name=".ui.auth.LoginActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".ui.auth.RegisterActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".ui.user.PersonalInfoActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".ui.user.ProfilePictureActivity"
             android:exported="false"
