@@ -9,11 +9,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+
 import com.example.mail_app.R;
 import com.example.mail_app.data.entity.FullMail;
+import com.example.mail_app.utils.AppConstants;
 import com.example.mail_app.viewmodel.MailViewModel;
+
 import java.util.List;
 
 /**
@@ -40,7 +44,6 @@ public class SearchActivity extends AppCompatActivity {
         quickResultsTitle = findViewById(R.id.quick_results_label);
         recentSearchRow = findViewById(R.id.recent_search_row);
         recentSearchText = findViewById(R.id.recent_search_text);
-        debugMailsText = findViewById(R.id.debug_mails_text);
         clearButton = findViewById(R.id.clear_button);
         ImageButton backButton = findViewById(R.id.back_button);
 
@@ -51,6 +54,9 @@ public class SearchActivity extends AppCompatActivity {
         quickResultsTitle.setVisibility(View.GONE);
         recentSearchRow.setVisibility(View.GONE);
         clearButton.setVisibility(View.GONE);
+
+        // [TEMPORARY DEBUG DISPLAY — REMOVE BEFORE PRODUCTION]
+        debugMailsText = findViewById(R.id.debug_mails_text);
         debugMailsText.setVisibility(View.GONE);
 
         // Get ViewModel instance
@@ -82,7 +88,7 @@ public class SearchActivity extends AppCompatActivity {
 
                     // Run search after 300ms (debounce)
                     searchRunnable = () -> viewModel.searchMails(query, 5, 0);
-                    handler.postDelayed(searchRunnable, 300);
+                    handler.postDelayed(searchRunnable, AppConstants.SEARCH_DEBOUNCE_DELAY_MS);
                 }
             }
 
