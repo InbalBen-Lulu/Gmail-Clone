@@ -23,15 +23,27 @@
     <string name="desc_camera_icon">Camera icon</string>
 
     <!-- ───────────── PROFILE PICTURE SCREEN ───────────── -->
-    <string name="mailme_account">MailMe Account</string>
     <string name="profile_picture">Profile Picture</string>
     <string name="profile_picture_subtext">A picture helps people recognize you and lets you know when you’re signed in to your account</string>
     <string name="add_profile_picture">Add profile picture</string>
     <string name="change_profile_picture">Change</string>
     <string name="remove_profile_picture">Remove</string>
-    <string name="mailme">MailMe</string>
     <string name="account">Account</string>
     <string name="profile_image">Profile image</string>
+
+    <!-- Messages shown as Snackbars on profile picture actions -->
+    <string name="image_too_large">Selected image is too large (max 5MB)</string>
+    <string name="unable_to_check_image_size">Could not verify image size</string>
+    <string name="failed_to_process_image">Could not process image</string>
+    <string name="failed_to_upload_image">Could not upload image</string>
+    <string name="failed_to_delete_image">Could not delete image</string>
+    <string name="profile_picture_updated">Profile picture updated</string>
+    <string name="unsupported_image_type">Unsupported image format</string>
+    <string name="choose_image">Choose Image Source</string>
+    <string name="failed_to_get_image">Failed to get image</string>
+    <string name="camera_not_available">Camera not available on this device</string>
+    <string name="failed_to_create_temp_file">Failed to create temp file</string>
+    <string name="failed_to_check_image_size">Failed to check image size</string>
 
     <!-- ───────────── SIGN-IN / LOGIN SCREEN ───────────── -->
     <string name="email_or_phone">Email or phone</string>
@@ -121,6 +133,7 @@
     <!-- ───────────── PROFILE DIALOG ───────────── -->
     <string name="view_personal_info">View personal info</string>
     <string name="sign_out">Sign out</string>
+    <string name="signed_out">Signed out successfully</string>
 
     <!-- ───────────── SIDEBAR FRAGMENT ───────────── -->
     <string name="sidebar_inbox">Inbox</string>

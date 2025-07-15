@@ -22,6 +22,15 @@ public final class ImageUtils {
             Arrays.asList("image/jpeg", "image/png", "image/webp")
     );
 
+    /** Final image size in pixels (square crop). */
+    public static final int TARGET_SIZE = 256;
+
+    /** PNG compression quality (0–100). */
+    public static final int PNG_QUALITY = 100;
+
+    /** Prefix for base64-encoded PNG string. */
+    public static final String BASE64_PREFIX = "data:image/png;base64,";
+
     private ImageUtils() {
         /* Utility class – no instances. */
     }
@@ -54,12 +63,12 @@ public final class ImageUtils {
         original.recycle(); // free native memory
 
         // 4 – Resize to 256 × 256
-        Bitmap resized = Bitmap.createScaledBitmap(square, 256, 256, true);
+        Bitmap resized = Bitmap.createScaledBitmap(square, TARGET_SIZE, TARGET_SIZE, true);
         square.recycle();
 
         // 5 – Compress to PNG & encode Base64 (NO_WRAP ⇒ no line-breaks)
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        resized.compress(Bitmap.CompressFormat.PNG, /* quality */ 100, bos);
+        resized.compress(Bitmap.CompressFormat.PNG, PNG_QUALITY, bos);
         resized.recycle();
 
         String base64 = Base64.encodeToString(bos.toByteArray(), Base64.NO_WRAP);

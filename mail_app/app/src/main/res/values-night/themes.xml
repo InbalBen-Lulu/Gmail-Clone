@@ -9,8 +9,8 @@
         <item name="search_background">#282A2F</item>        <!-- search bar background -->
         <item name="outer_box_background">#1E1F25</item>     <!-- outer box in profile dialog -->
         <item name="inner_box_background">#0D0E13</item>     <!-- inner box in profile dialog -->
-        <item name="menu_item_bg">#1F212B</item>
-        <item name="menu_item_select_bg">#414659</item>
+        <item name="menu_item_bg">#1F212B</item>             <!-- sidebar menu item background -->
+        <item name="menu_item_select_bg">#414659</item>      <!-- selected sidebar menu item background -->
 
         <!-- ═══════ TEXT COLORS ═══════ -->
         <item name="text_color">#FEFEFE</item>               <!-- main text -->
@@ -32,7 +32,5 @@
 
         <!-- ═══════ PRIMARY COLOR ═══════ -->
         <item name="colorPrimary">@color/input_outline</item> <!-- primary app color -->
-
     </style>
-
 </resources>

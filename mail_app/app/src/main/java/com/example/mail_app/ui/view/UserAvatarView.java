@@ -76,6 +76,7 @@ public class UserAvatarView extends FrameLayout {
                 .load(fullUrl)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
+                .error(R.drawable.default_avatar)
                 .into(imageView);
     }
 

@@ -1,28 +1,40 @@
 package com.example.mail_app.ui.user;
 
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
+
 import com.example.mail_app.R;
 import com.example.mail_app.ui.view.UserAvatarView;
+import com.example.mail_app.utils.AppConstants;
 import com.example.mail_app.utils.ImageUtils;
 import com.example.mail_app.viewmodel.LoggedInUserViewModel;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.io.File;
+import java.io.IOException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
  * Activity for updating the user's profile picture.
- * Allows picking an image from gallery or removing the current image.
- * Handles image size check and base64 conversion before upload.
+ * Allows picking an image from gallery or camera, removing the current image,
+ * and uploading a processed Base64 image to the server.
  */
 public class ProfilePictureActivity extends AppCompatActivity {
 
@@ -30,25 +42,39 @@ public class ProfilePictureActivity extends AppCompatActivity {
     private Button addButton, changeButton, removeButton;
     private LoggedInUserViewModel userViewModel;
 
-    // Launcher to pick an image from the gallery
+    /** Temporary URI used to store captured image from camera before upload. */
+    private Uri tempCameraImageUri;
+
+    /**
+     * Activity result launcher handling image picking result from gallery or camera,
+     * including image size check, Base64 conversion, and upload.
+     */
     private final ActivityResultLauncher<Intent> pickImageLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    Uri imageUri = result.getData().getData();
+                if (result.getResultCode() == RESULT_OK) {
+                    Uri imageUri = result.getData() != null ? result.getData().getData() : tempCameraImageUri;
 
-                    avatarView.setLoading(true); // Spinner start
+                    if (imageUri == null) {
+                        showMessage(getString(R.string.failed_to_get_image));
+                        return;
+                    }
 
-                    try {
-                        long sizeInBytes = getContentResolver()
-                                .openAssetFileDescriptor(imageUri, "r")
-                                .getLength();
-                        if (sizeInBytes > 5 * 1024 * 1024) {
-                            showError("Selected image is too large (max 5MB)");
+                    avatarView.setLoading(true); // Show spinner
+
+                    try (AssetFileDescriptor afd = getContentResolver().openAssetFileDescriptor(imageUri, "r")) {
+                        if (afd == null) {
+                            showMessage(getString(R.string.failed_to_check_image_size));
+                            avatarView.setLoading(false);
+                            return;
+                        }
+                        long sizeInBytes = afd.getLength();
+                        if (sizeInBytes > AppConstants.MAX_IMAGE_SIZE_BYTES) {
+                            showMessage(getString(R.string.image_too_large));
                             avatarView.setLoading(false);
                             return;
                         }
                     } catch (Exception e) {
-                        showError("Unable to check image size");
+                        showMessage(getString(R.string.unable_to_check_image_size));
                         avatarView.setLoading(false);
                         return;
                     }
@@ -60,27 +86,37 @@ public class ProfilePictureActivity extends AppCompatActivity {
                             runOnUiThread(() -> {
                                 userViewModel.uploadProfileImage(base64Image, new Callback<Void>() {
                                     @Override
-                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                    public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                                         avatarView.setLoading(false);
+                                        showMessage(getString(R.string.profile_picture_updated));
                                     }
 
                                     @Override
-                                    public void onFailure(Call<Void> call, Throwable t) {
+                                    public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                                         avatarView.setLoading(false);
-                                        showError("Failed to upload image");
+                                        showMessage(getString(R.string.failed_to_upload_image));
                                     }
                                 });
                             });
+                        } catch (IllegalArgumentException e) {
+                            runOnUiThread(() -> {
+                                avatarView.setLoading(false);
+                                showMessage(getString(R.string.unsupported_image_type));
+                            });
                         } catch (Exception e) {
                             runOnUiThread(() -> {
-                                showError("Failed to process image");
                                 avatarView.setLoading(false);
+                                showMessage(getString(R.string.failed_to_process_image));
                             });
                         }
                     }).start();
                 }
             });
 
+    /**
+     * Initializes the activity, binds views, sets up listeners,
+     * and observes user profile data.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +130,7 @@ public class ProfilePictureActivity extends AppCompatActivity {
 
         userViewModel = new ViewModelProvider(this).get(LoggedInUserViewModel.class);
 
-        // Observe user to update UI state
+        // Observe user to update UI state (avatar image and button visibility)
         userViewModel.getUser().observe(this, user -> {
             if (user == null) return;
             if (user.getProfileImage() != null)
@@ -113,33 +149,70 @@ public class ProfilePictureActivity extends AppCompatActivity {
             avatarView.setLoading(true);
             userViewModel.deleteProfileImage(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                     avatarView.setLoading(false);
+                    showMessage(getString(R.string.profile_picture_updated));
                 }
 
                 @Override
-                public void onFailure(Call<Void> call, Throwable t) {
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                     avatarView.setLoading(false);
-                    showError("Failed to delete image");
+                    showMessage(getString(R.string.failed_to_delete_image));
                 }
             });
         });
     }
 
     /**
-     * Opens the image picker to select a new profile photo.
+     * Opens an intent chooser to select a new profile photo from gallery or camera.
      */
     private void pickImage() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        pickImageLauncher.launch(intent);
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+        galleryIntent.setType(AppConstants.INTENT_TYPE_IMAGE);
+        galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, AppConstants.ALLOWED_MIME_TYPES);
+
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        tempCameraImageUri = createTempImageUri();
+        if (tempCameraImageUri == null) {
+            showMessage(getString(R.string.failed_to_create_temp_file));
+            return;
+        }
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempCameraImageUri);
+
+        Intent chooser;
+        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+            chooser = Intent.createChooser(galleryIntent, getString(R.string.choose_image));
+            chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{cameraIntent});
+        } else {
+            chooser = galleryIntent;
+            showMessage(getString(R.string.camera_not_available));
+        }
+
+        pickImageLauncher.launch(chooser);
     }
 
     /**
-     * Displays an error message via Toast.
+     * Creates a temporary file URI to store the camera image.
+     *
+     * @return URI for the temporary image file.
      */
-    private void showError(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    private Uri createTempImageUri() {
+        try {
+            File tempFile = File.createTempFile("profile_image_", ".jpg", getCacheDir());
+            return FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", tempFile);
+        } catch (IOException e) {
+            Log.e("ProfilePictureActivity", "Failed to create temp image file", e);
+            showMessage(getString(R.string.failed_to_create_temp_file));
+            return null;
+        }
+    }
+
+    /**
+     * Displays a Snackbar message at the bottom of the screen.
+     *
+     * @param message The message to display.
+     */
+    private void showMessage(String message) {
+        Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show();
     }
 }
-

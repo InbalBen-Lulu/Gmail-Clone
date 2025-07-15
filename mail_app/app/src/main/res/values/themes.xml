@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.Mail_app" parent="Theme.Material3.DayNight.NoActionBar">
+
         <!-- ═══════ BACKGROUNDS ═══════ -->
         <item name="color_background">#FAF8FF</item>        <!-- screen background -->
         <item name="colorSurface">#FFFFFF</item>            <!-- cards, surfaces -->
@@ -8,8 +9,8 @@
         <item name="search_background">#E8E7EF</item>       <!-- search bar background -->
         <item name="outer_box_background">#EBEBF7</item>    <!-- outer box in profile dialog -->
         <item name="inner_box_background">#F9F8FE</item>    <!-- inner box in profile dialog -->
-        <item name="menu_item_bg">#EBEBF6</item>
-        <item name="menu_item_select_bg">#DDE2F9</item>
+        <item name="menu_item_bg">#EBEBF6</item>            <!-- sidebar menu item background -->
+        <item name="menu_item_select_bg">#DDE2F9</item>     <!-- selected sidebar menu item background -->
 
         <!-- ═══════ TEXT COLORS ═══════ -->
         <item name="text_color">#202124</item>              <!-- main text -->

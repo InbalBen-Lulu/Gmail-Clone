@@ -2,7 +2,6 @@ package com.example.mail_app.ui.user;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.mail_app.R;
 import com.example.mail_app.ui.view.UserAvatarView;
+import com.example.mail_app.utils.AppConstants;
 import com.example.mail_app.utils.EmailUtils;
 import com.example.mail_app.viewmodel.LoggedInUserViewModel;
 import java.text.SimpleDateFormat;
@@ -53,10 +53,9 @@ public class PersonalInfoActivity extends AppCompatActivity {
         // Observe and display user data
         userViewModel.getUser().observe(this, user -> {
             swipeRefreshLayout.setRefreshing(false); // Stop spinner when data loads
-            Log.d("PersonalInfo", "observed user = " + user);
             if (user != null) {
                 nameTextView.setText(user.getName());
-                String formattedDate = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+                String formattedDate = new SimpleDateFormat(AppConstants.DATE_FORMAT_DISPLAY, Locale.getDefault())
                         .format(user.getBirthDate());
                 birthdayTextView.setText(formattedDate);
                 genderTextView.setText(user.getGender());
