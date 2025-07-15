@@ -16,7 +16,9 @@ import com.example.mail_app.R;
 import com.example.mail_app.data.dto.LoginResponse;
 import com.example.mail_app.data.entity.PublicUser;
 import com.example.mail_app.ui.mail.MailPageActivity;
+import com.example.mail_app.utils.AppConstants;
 import com.example.mail_app.viewmodel.LoggedInUserViewModel;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -33,7 +35,6 @@ public class LoginActivity extends AppCompatActivity {
     private Button nextButton;
     private CheckBox showPasswordCheckBox;
     private LoggedInUserViewModel userViewModel;
-
     private Button createAccountButton;
     private int step = 1;
     private String email = "";
@@ -42,6 +43,10 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        if (getIntent().getBooleanExtra(AppConstants.EXTRA_SHOW_SIGN_OUT_MESSAGE, false)) {
+            Snackbar.make(findViewById(android.R.id.content), getString(R.string.signed_out), Snackbar.LENGTH_LONG).show();
+        }
 
         userViewModel = new LoggedInUserViewModel();
 

@@ -4,9 +4,7 @@ import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.*;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.mail_app.R;
 import com.example.mail_app.utils.DateUtils;
 import com.example.mail_app.viewmodel.LoggedInUserViewModel;
@@ -14,9 +12,7 @@ import com.example.mail_app.data.dto.LoginResponse;
 import com.example.mail_app.data.entity.PublicUser;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-
 import java.util.*;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

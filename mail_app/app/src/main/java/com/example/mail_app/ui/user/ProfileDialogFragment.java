@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.mail_app.R;
 import com.example.mail_app.ui.auth.LoginActivity;
 import com.example.mail_app.ui.view.UserAvatarView;
+import com.example.mail_app.utils.AppConstants;
 import com.example.mail_app.viewmodel.LoggedInUserViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -57,7 +58,7 @@ public class ProfileDialogFragment extends DialogFragment {
         userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 userName.setText(user.getName());
-                String emailDomain = getString(R.string.email_domain); // e.g., "@mailme.com"
+                String emailDomain = getString(R.string.email_domain);
                 userEmail.setText(user.getUserId() + emailDomain);
 
                 if (user.getProfileImage() != null && !user.getProfileImage().isEmpty()) {
@@ -124,6 +125,7 @@ public class ProfileDialogFragment extends DialogFragment {
     private void navigateToLogin() {
         Intent intent = new Intent(requireContext(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra(AppConstants.EXTRA_SHOW_SIGN_OUT_MESSAGE, true);
         startActivity(intent);
         dismiss();
     }
