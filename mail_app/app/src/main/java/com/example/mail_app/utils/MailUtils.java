@@ -1,5 +1,9 @@
 package com.example.mail_app.utils;
 
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,4 +29,12 @@ public class MailUtils {
 
         return formatter.format(date);
     }
+
+    public static Drawable getRoundedLabelDrawable(String colorHex) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(Color.parseColor(colorHex));
+        drawable.setCornerRadius(10f);
+        return drawable;
+    }
+
 }

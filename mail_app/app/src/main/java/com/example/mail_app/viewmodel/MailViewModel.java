@@ -250,6 +250,4 @@ public class MailViewModel extends ViewModel {
     public int getCurrentOffset() {
         return currentOffset;
     }
-
-
 }

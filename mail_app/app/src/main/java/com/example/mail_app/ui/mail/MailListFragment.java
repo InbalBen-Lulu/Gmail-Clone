@@ -89,7 +89,6 @@ public class MailListFragment extends Fragment {
 
         // עדכון המיילים
         viewModel.getMails().observe(getViewLifecycleOwner(), mails -> {
-            Log.d("MailListFragment", "קיבלתי " + mails.size() + " מיילים");
             swipeRefresh.setRefreshing(false);
             isLoading = false;
 

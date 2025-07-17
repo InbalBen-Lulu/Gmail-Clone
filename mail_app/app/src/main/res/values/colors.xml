@@ -17,4 +17,6 @@
 
     <color name="star_yellow">#FFD700</color> <!-- זהב -->
     <color name="gray">#888888</color> <!-- אפור רגיל -->
+
+    <color name="draft_red">#D93025</color>
 </resources>

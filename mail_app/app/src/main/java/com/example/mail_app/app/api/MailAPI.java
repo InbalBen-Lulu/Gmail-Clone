@@ -80,7 +80,6 @@ public class MailAPI {
                             }
                         }
 
-                        postToMain(() -> mailListData.setValue(mails));
                     }).start();
                 } else {
                     postToMain(() -> mailListData.setValue(Collections.emptyList()));

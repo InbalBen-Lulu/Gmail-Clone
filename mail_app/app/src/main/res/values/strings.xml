@@ -143,4 +143,9 @@
     <string name="sidebar_all_mail">All Mail</string>
     <string name="sidebar_spam">Spam</string>
 
+
+
+    <string name="draft_label">Draft</string>
+    <string name="no_mails_message">No emails found</string>
+
 </resources>
