@@ -59,7 +59,7 @@ public class LabelAPI {
     /**
      * Returns a label by its ID from the local database.
      */
-//    public Label getById(String id) {
-//        return dao.getById(id);
-//    }
+    public Label getById(String id) {
+        return dao.getById(id);
+    }
 }

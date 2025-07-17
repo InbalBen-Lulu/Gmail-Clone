@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipe_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="24dp"
+        android:background="?attr/color_background">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Close button (top-left X) -->
+            <ImageButton
+                android:id="@+id/btn_close"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="5dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/outline_close_24"
+                app:tint="?attr/icon_color" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- ─────────── Header title ─────────── -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="12dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/title_personal_info"
+                    android:textColor="?attr/text_color"
+                    android:textSize="24sp" />
+
+                <!-- ─────────── Header description ─────────── -->
+                <TextView
+                    android:id="@+id/text_header_sub"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:letterSpacing="0.02"
+                    android:lineSpacingExtra="2dp"
+                    android:text="@string/desc_personal_info"
+                    android:textColor="?attr/colorSecondary"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="?attr/dividerColor" />
+
+                <!-- ─────────── Section: Basic Info ─────────── -->
+                <TextView
+                    style="@style/SectionTitle"
+                    android:text="@string/section_basic_info" />
+
+                <!-- Profile picture section with preview -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingVertical="10dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/InfoRowLabel"
+                            android:text="@string/label_profile_picture" />
+
+                        <TextView
+                            style="@style/InfoRowSubtext"
+                            android:text="@string/subtext_profile_picture" />
+                    </LinearLayout>
+
+                    <!-- Circular image + camera icon -->
+                    <include
+                        layout="@layout/view_profile_image_button" />
+                </LinearLayout>
+
+                <!-- User information rows -->
+                <TextView
+                    style="@style/InfoRowLabel"
+                    android:text="@string/label_name" />
+
+                <TextView
+                    style="@style/InfoRowValue"
+                    android:id="@+id/text_name"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    style="@style/InfoRowLabel"
+                    android:text="@string/label_birthday" />
+
+                <TextView
+                    style="@style/InfoRowValue"
+                    android:id="@+id/text_birthday"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    style="@style/InfoRowLabel"
+                    android:text="@string/label_gender" />
+
+                <TextView
+                    style="@style/InfoRowValue"
+                    android:id="@+id/text_gender"
+                    android:layout_marginBottom="32dp" />
+
+                <!-- ─────────── Section: Contact Info ─────────── -->
+                <TextView
+                    style="@style/SectionTitle"
+                    android:text="@string/section_contact_info" />
+
+                <TextView
+                    style="@style/InfoRowLabel"
+                    android:text="@string/label_email" />
+
+                <TextView
+                    style="@style/InfoRowValue"
+                    android:id="@+id/text_email"
+                    android:layout_marginBottom="12dp" />
+
+            </LinearLayout>
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

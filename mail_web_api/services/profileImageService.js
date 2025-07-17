@@ -73,6 +73,7 @@ async function removeProfileImage(user) {
             hasCustomImage: false
         }
     );
+    return { imageUrl: defaultImage };
 }
 
 /**

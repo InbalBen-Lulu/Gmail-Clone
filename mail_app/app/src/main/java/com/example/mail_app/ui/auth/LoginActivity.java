@@ -1,17 +1,24 @@
-package com.example.mail_app.ui.auth.auth;
+package com.example.mail_app.ui.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mail_app.R;
 import com.example.mail_app.data.dto.LoginResponse;
 import com.example.mail_app.data.entity.PublicUser;
+import com.example.mail_app.ui.mail.MailPageActivity;
+import com.example.mail_app.utils.AppConstants;
 import com.example.mail_app.viewmodel.LoggedInUserViewModel;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -28,7 +35,6 @@ public class LoginActivity extends AppCompatActivity {
     private Button nextButton;
     private CheckBox showPasswordCheckBox;
     private LoggedInUserViewModel userViewModel;
-
     private Button createAccountButton;
     private int step = 1;
     private String email = "";
@@ -37,6 +43,10 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        if (getIntent().getBooleanExtra(AppConstants.EXTRA_SHOW_SIGN_OUT_MESSAGE, false)) {
+            Snackbar.make(findViewById(android.R.id.content), getString(R.string.signed_out), Snackbar.LENGTH_LONG).show();
+        }
 
         userViewModel = new LoggedInUserViewModel();
 
@@ -132,7 +142,10 @@ public class LoginActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     if (response.isSuccessful() && response.body() != null) {
                         Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
-                        // TODO: Navigate to main screen
+                        Intent intent = new Intent(LoginActivity.this, MailPageActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
                     } else {
                         showPasswordError("Incorrect password. Try again.");
                     }

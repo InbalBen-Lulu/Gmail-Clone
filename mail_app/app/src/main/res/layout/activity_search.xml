@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/color_background">
+
+    <!-- ────────── Top bar ────────── -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/search_background"
+        android:paddingStart="4dp"
+        android:paddingTop="32dp"
+        android:paddingBottom="18dp"
+        android:paddingEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Back arrow button -->
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/baseline_arrow_back_24"
+            app:tint="?attr/icon_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- Search input -->
+        <EditText
+            android:id="@+id/search_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="12dp"
+            android:background="@android:color/transparent"
+            android:hint="@string/search_in_mail"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:textColor="?attr/text_color"
+            android:textColorHint="?attr/text_color_hint"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/back_button"
+            app:layout_constraintEnd_toStartOf="@id/clear_button"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- Clear (X) button -->
+        <ImageButton
+            android:id="@+id/clear_button"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/outline_close_24"
+            app:tint="?attr/icon_color"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@id/search_input"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <!-- Divider line below top bar -->
+        <View
+            android:id="@+id/top_bar_divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="?attr/search_divider_color"
+            app:layout_constraintTop_toBottomOf="@id/top_bar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!-- ────────── Recent search row ────────── -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/recent_search_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        app:layout_constraintTop_toBottomOf="@id/top_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Search icon -->
+        <ImageView
+            android:id="@+id/recent_search_icon"
+            android:layout_marginTop="2dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/outline_search_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:tint="?attr/text_color_hint" />
+
+        <!-- Search text -->
+        <TextView
+            android:id="@+id/recent_search_text"
+            android:layout_width="0dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="30dp"
+            android:textColor="?attr/colorSecondary"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.481"
+            app:layout_constraintStart_toEndOf="@id/recent_search_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- ────────── Quick results label ────────── -->
+    <TextView
+        android:id="@+id/quick_results_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="16dp"
+        android:text="@string/quick_results"
+        android:textSize="12sp"
+        android:textColor="?attr/text_color_hint"
+        android:fontFamily="sans-serif-medium"
+        app:layout_constraintTop_toBottomOf="@id/recent_search_row"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- ────────── Debug text (temporary) - result mail list (future) ────────── -->
+    <TextView
+        android:id="@+id/debug_mails_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:padding="16dp"
+        android:textSize="12sp"
+        android:textColor="?attr/colorSecondary"
+        android:maxLines="10"
+        android:ellipsize="end"
+        app:layout_constraintTop_toBottomOf="@id/quick_results_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

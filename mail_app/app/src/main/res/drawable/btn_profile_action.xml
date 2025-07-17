@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Ripple background drawable for profile action buttons
+    Defines button background color + ripple effect with rounded corners
+-->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?attr/colorControlHighlight">
+
+    <!-- Base shape: rounded rectangle with background color -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="32dp"/>
+            <solid android:color="?attr/profile_action_bg"/>
+        </shape>
+    </item>
+
+    <!-- Ripple mask (required ≥ API 21) -->
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <corners android:radius="32dp"/>
+            <solid android:color="@color/white" />
+        </shape>
+    </item>
+</ripple>

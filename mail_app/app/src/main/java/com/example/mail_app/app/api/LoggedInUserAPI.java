@@ -1,58 +1,76 @@
 package com.example.mail_app.app.api;
+
+import androidx.lifecycle.MutableLiveData;
+
+import com.example.mail_app.LocalDatabase;
 import com.example.mail_app.MyApp;
 import com.example.mail_app.app.network.AuthWebService;
 import com.example.mail_app.app.network.PublicWebService;
 import com.example.mail_app.auth.AuthManager;
 import com.example.mail_app.data.dao.LoggedInUserDao;
+import com.example.mail_app.data.dto.ImageUploadRequest;
 import com.example.mail_app.data.dto.LoginRequest;
 import com.example.mail_app.data.dto.LoginResponse;
 import com.example.mail_app.data.dto.RegisterRequest;
 import com.example.mail_app.data.entity.LoggedInUser;
+import com.example.mail_app.data.entity.PublicUser;
 import com.example.mail_app.data.remote.LoggedInUserWebService;
-import java.io.File;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
+
+import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
- * Handles authentication, registration, and profile image operations for the currently logged-in user.
- * Interacts with both the remote server and Room database.
+ * API class responsible for managing all operations related to the logged-in user.
+ * Handles registration, login/logout, user retrieval, and profile image updates.
  */
 public class LoggedInUserAPI {
     private final LoggedInUserDao dao;
-    private final LoggedInUserWebService api;
+    private LoggedInUserWebService api;
+    private MutableLiveData<LoggedInUser> userLiveData;
 
-    /**
-     * Initializes the DAO and Retrofit API interface with token.
-     */
-    public LoggedInUserAPI(LoggedInUserDao dao) {
+    public LoggedInUserAPI(LoggedInUserDao dao, MutableLiveData<LoggedInUser> userLiveData) {
         this.dao = dao;
+        this.userLiveData = userLiveData;
 
         String token = AuthManager.getToken(MyApp.getInstance());
-        Retrofit retrofit = AuthWebService.getInstance(token);
+        Retrofit retrofit = (token == null || token.isEmpty())
+                ? PublicWebService.getInstance()
+                : AuthWebService.getInstance(token);
         api = retrofit.create(LoggedInUserWebService.class);
     }
 
     /**
-     * Registers a new user using the public endpoint (no token required).
+     * Registers a new user and logs them in upon success.
      */
-    public void registerUser(RegisterRequest request, Callback<Void> callback) {
-        Retrofit noAuthRetrofit = AuthWebService.getInstance(null);
-        LoggedInUserWebService noAuthApi = noAuthRetrofit.create(LoggedInUserWebService.class);
-        noAuthApi.registerUser(request).enqueue(callback);
+    public void registerUser(RegisterRequest request, Callback<LoginResponse> callback) {
+        api.registerUser(request).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    login(request.getUserId(), request.getPassword(), callback);
+                } else {
+                    callback.onResponse(null, Response.error(response.code(), response.errorBody()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                callback.onFailure(null, t);
+            }
+        });
     }
 
     /**
-     * Retrieves the currently logged-in user from the server and stores it in Room.
+     * Fetches the full profile of the currently logged-in user from the server.
+     * Saves the user to the local database and updates LiveData.
      */
-    public void get() {
+    public void get(Callback<LoggedInUser> callback) {
         String userId = AuthManager.getUserId(MyApp.getInstance());
-        Call<LoggedInUser> call = api.getMyUser(userId);
-        call.enqueue(new Callback<LoggedInUser>() {
+        api.getMyUser(userId).enqueue(new Callback<LoggedInUser>() {
             @Override
             public void onResponse(Call<LoggedInUser> call, Response<LoggedInUser> response) {
                 LoggedInUser user = response.body();
@@ -60,35 +78,73 @@ public class LoggedInUserAPI {
                     new Thread(() -> {
                         dao.clear();
                         dao.insert(user);
+                        userLiveData.postValue(user);
                     }).start();
+                }
+                if (callback != null) {
+                    callback.onResponse(call, response);
                 }
             }
 
             @Override
             public void onFailure(Call<LoggedInUser> call, Throwable t) {
                 t.printStackTrace();
+                if (callback != null) {
+                    callback.onFailure(call, t);
+                }
             }
         });
     }
 
     /**
-     * Uploads a profile image for the logged-in user.
-     * On success, triggers a user re-fetch.
+     * Retrieves public user info (e.g. sender info) without requiring authentication.
      */
-    public void uploadImage(File imageFile) {
+    public void getPublicUserInfo(String userId, Callback<PublicUser> callback) {
+        Call<PublicUser> call = api.getPublicUserInfo(userId);
+        call.enqueue(new Callback<PublicUser>() {
+            @Override
+            public void onResponse(Call<PublicUser> call, Response<PublicUser> response) {
+                if (callback != null) {
+                    callback.onResponse(call, response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PublicUser> call, Throwable t) {
+                if (callback != null) {
+                    callback.onFailure(call, t);
+                }
+            }
+        });
+    }
+
+    /**
+     * Uploads a profile image to the server and refreshes local user data.
+     */
+    public void uploadImage(String base64, Callback<Void> callback) {
         String userId = AuthManager.getUserId(MyApp.getInstance());
+        ImageUploadRequest request = new ImageUploadRequest(base64);
 
-        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), imageFile);
-        MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", imageFile.getName(), requestFile);
-
-        api.uploadProfileImage(userId, imagePart).enqueue(new Callback<Void>() {
+        api.uploadProfileImage(userId, request).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     System.out.println("[Upload Image] Success");
-                    get();
+                    get(new Callback<LoggedInUser>() {
+                        @Override
+                        public void onResponse(Call<LoggedInUser> call2, Response<LoggedInUser> response2) {
+                            callback.onResponse(call, response);
+                        }
+
+                        @Override
+                        public void onFailure(Call<LoggedInUser> call2, Throwable t2) {
+                            callback.onFailure(call, t2);
+                        }
+                    });
                 } else {
-                    System.out.println("[Upload Image] Failed with code " + response.code());
+                    if (callback != null) {
+                        callback.onResponse(call, response);
+                    }
                 }
             }
 
@@ -96,14 +152,17 @@ public class LoggedInUserAPI {
             public void onFailure(Call<Void> call, Throwable t) {
                 System.out.println("[Upload Image] Failed");
                 t.printStackTrace();
+                if (callback != null) {
+                    callback.onFailure(call, t);
+                }
             }
         });
     }
 
     /**
-     * Deletes the profile image of the logged-in user and refreshes the user object.
+     * Deletes the user's profile image and refreshes local user data.
      */
-    public void deleteImage() {
+    public void deleteImage(Callback<Void> callback) {
         String userId = AuthManager.getUserId(MyApp.getInstance());
 
         api.deleteProfileImage(userId).enqueue(new Callback<Void>() {
@@ -111,9 +170,19 @@ public class LoggedInUserAPI {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     System.out.println("[Delete Image] Success");
-                    get();
+                    get(new Callback<LoggedInUser>() {
+                        @Override
+                        public void onResponse(Call<LoggedInUser> call2, Response<LoggedInUser> response2) {
+                            callback.onResponse(call, response);
+                        }
+
+                        @Override
+                        public void onFailure(Call<LoggedInUser> call2, Throwable t2) {
+                            callback.onFailure(call, t2);
+                        }
+                    });
                 } else {
-                    System.out.println("[Delete Image] Failed with code " + response.code());
+                    callback.onResponse(call, response);
                 }
             }
 
@@ -121,28 +190,55 @@ public class LoggedInUserAPI {
             public void onFailure(Call<Void> call, Throwable t) {
                 System.out.println("[Delete Image] Failed");
                 t.printStackTrace();
+                callback.onFailure(call, t);
             }
         });
     }
 
     /**
-     * Logs in the user, saves the token and user ID, then fetches the user profile.
+     * Logs in a user and stores the token and userId on success.
      */
     public void login(String userId, String password, Callback<LoginResponse> callback) {
-        Retrofit noAuthRetrofit = PublicWebService.getInstance();
-        LoggedInUserWebService noAuthApi = noAuthRetrofit.create(LoggedInUserWebService.class);
         LoginRequest request = new LoginRequest(userId, password);
 
-        noAuthApi.login(request).enqueue(new Callback<LoginResponse>() {
+        api.login(request).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse loginResponse = response.body();
                     AuthManager.saveToken(MyApp.getInstance(), loginResponse.getToken());
                     AuthManager.saveUserId(MyApp.getInstance(), loginResponse.getUser().getUserId());
-                    get();
+
+                    Retrofit retrofit = AuthWebService.getInstance(loginResponse.getToken());
+                    api = retrofit.create(LoggedInUserWebService.class);
+
+                    get(new Callback<LoggedInUser>() {
+                        @Override
+                        public void onResponse(Call<LoggedInUser> call2, Response<LoggedInUser> response2) {
+                            callback.onResponse(call, response);
+                        }
+
+                        @Override
+                        public void onFailure(Call<LoggedInUser> call2, Throwable t2) {
+                            callback.onFailure(call, t2);
+                        }
+                    });
+                } else {
+                    String errorMsg = "Login failed.";
+                    try {
+                        if (response.errorBody() != null) {
+                            String errorJson = response.errorBody().string();
+                            JSONObject json = new JSONObject(errorJson);
+                            if (json.has("error")) {
+                                errorMsg = json.getString("error");
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    callback.onFailure(call, new Throwable(errorMsg));
                 }
-                callback.onResponse(call, response);
             }
 
             @Override
@@ -153,14 +249,20 @@ public class LoggedInUserAPI {
     }
 
     /**
-     * Logs out the user by calling the API and clearing local user data.
+     * Logs out the current user and clears local data.
      */
     public void logout(Callback<Void> callback) {
         api.logout().enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 AuthManager.clearAll(MyApp.getInstance());
-                new Thread(() -> dao.clear()).start();
+                new Thread(() -> {
+                    LocalDatabase db = MyApp.getInstance().getDatabase();
+                    db.userDao().clear();
+                    db.mailDao().clearAllMails();
+                    db.publicUserDao().clearAllUsers();
+                    db.labelDao().clear();
+                }).start();
                 callback.onResponse(call, response);
             }
 
