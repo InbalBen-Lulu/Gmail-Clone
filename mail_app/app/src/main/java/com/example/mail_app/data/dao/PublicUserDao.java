@@ -37,5 +37,5 @@ public interface PublicUserDao {
      * Clears all public users from the database.
      */
     @Query("DELETE FROM public_users")
-    void clearAllUesrs();
+    void clearAllUsers();
 }

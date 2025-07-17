@@ -50,9 +50,9 @@ public class LabelRepository {
     }
 
     /** Returns a single label by ID, fetched from the local database. */
-//    public Label getById(String id) {
-//        return api.getById(id);
-//    }
+    public Label getById(String id) {
+        return api.getById(id);
+    }
 
     /** Reloads the label list from the remote server via API. */
     public void reload() {

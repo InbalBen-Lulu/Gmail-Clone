@@ -11,7 +11,6 @@ body.light-mode {
     --menu-bg: #F8FAFD;                     /* Shared background for top and side menus */
     --signin-box-bg: #ffffff;               /* Background color for the signin/signup form container */
     --signin-bg: #e8f0fe;                   /* Background color for the signin/signup background */
-    --search-background: #e9eef6;           /* Background for search bar */
     --dropdownlist-bg: #e9eef6;             /* Background for dropdown lists (e.g. gender) */
     --secondary-bg: #ffffff;                /* Used for general secondary backgrounds */
     --compose-title-bg: #f2f6fc;            /* Compose mail title background */
@@ -103,7 +102,6 @@ body.dark-mode {
     --menu-bg: #111111;                     /* Shared background for top and side menus */
     --signin-box-bg: #000000;               /* Background color for the signin/signup form container */
     --signin-bg: #202124;                   /* Background color for the signin/signup background */
-    --search-background: #474747;           /* Background for search bar */
     --dropdownlist-bg: #474747;             /* Background for dropdownlist */
     --secondary-bg: #000000;                /* General secondary background */
     --compose-title-bg: #f2f2f2;            /* Background for compose mail title */

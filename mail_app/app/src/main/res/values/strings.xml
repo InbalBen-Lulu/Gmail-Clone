@@ -1,12 +1,51 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
-    <!-- 🏷App-level constants -->
+    <!-- App-level constants -->
     <string name="app_name">MailMe</string>
     <string name="BaseUrl">http://10.0.2.2:4000/api/</string> <!-- Used for emulator access -->
     <string name="BaseUrlMoria">http://172.31.160.1:4000/api/</string> <!-- Used for real device access -->
-    <string name="email_domain">/@mailme.com</string> <!-- Used to auto-append domain to username -->
+    <string name="email_domain">@mailme.com</string> <!-- Used to auto-append domain to username -->
+    <string name="BaseUrlEmulator">http://10.0.2.2:4000/api/</string>
 
-    <!-- Sign-In / Login screen -->
+
+    <!-- ───────────── PERSONAL INFO SCREEN ───────────── -->
+    <string name="title_personal_info">Personal info</string>
+    <string name="desc_personal_info">Personal info and options to manage it. You can make some of this info, like your contact details, visible to others so they can reach you easily. You can also see a summary of your profiles.</string>
+    <string name="section_basic_info">Basic info</string>
+    <string name="section_contact_info">Contact info</string>
+    <string name="label_name">Name</string>
+    <string name="label_birthday">Birthday</string>
+    <string name="label_gender">Gender</string>
+    <string name="label_email">Email</string>
+    <string name="label_profile_picture">Profile picture</string>
+    <string name="subtext_profile_picture">Add a profile picture to personalize your account</string>
+    <string name="desc_profile_image">Profile image</string>
+    <string name="desc_camera_icon">Camera icon</string>
+
+    <!-- ───────────── PROFILE PICTURE SCREEN ───────────── -->
+    <string name="profile_picture">Profile Picture</string>
+    <string name="profile_picture_subtext">A picture helps people recognize you and lets you know when you’re signed in to your account</string>
+    <string name="add_profile_picture">Add profile picture</string>
+    <string name="change_profile_picture">Change</string>
+    <string name="remove_profile_picture">Remove</string>
+    <string name="account">Account</string>
+    <string name="profile_image">Profile image</string>
+
+    <!-- Messages shown as Snackbars on profile picture actions -->
+    <string name="image_too_large">Selected image is too large (max 5MB)</string>
+    <string name="unable_to_check_image_size">Could not verify image size</string>
+    <string name="failed_to_process_image">Could not process image</string>
+    <string name="failed_to_upload_image">Could not upload image</string>
+    <string name="failed_to_delete_image">Could not delete image</string>
+    <string name="profile_picture_updated">Profile picture updated</string>
+    <string name="unsupported_image_type">Unsupported image format</string>
+    <string name="choose_image">Choose Image Source</string>
+    <string name="failed_to_get_image">Failed to get image</string>
+    <string name="camera_not_available">Camera not available on this device</string>
+    <string name="failed_to_create_temp_file">Failed to create temp file</string>
+    <string name="failed_to_check_image_size">Failed to check image size</string>
+
+    <!-- ───────────── SIGN-IN / LOGIN SCREEN ───────────── -->
     <string name="email_or_phone">Email or phone</string>
     <string name="create_account">Create account</string>
     <string name="sign_in">Sign in</string>
@@ -77,7 +116,32 @@
     <string name="register_button_text">Register</string>
     <string name="registration_success">Registration successful!</string>
     <string name="registration_failed">Registration failed</string>
-    <string name="generic_error">Error: %1$s</string> <!-- Reusable error for showing Retrofit failures -->
+    <string name="generic_error">Error: %1$s</string>
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="previous">Previous</string>
+
+    <!-- ───────────── SEARCH SCREEN ───────────── -->
+    <string name="search_in_mail">Search in mail</string>
+    <string name="quick_results">Quick Results</string>
+    <string name="no_subject">(No Subject)</string>
+    <string name="unknown_sender">(Unknown Sender)</string>
+    <string name="no_results_found">No results found.</string>
+
+    <!-- ───────────── PROFILE DIALOG ───────────── -->
+    <string name="view_personal_info">View personal info</string>
+    <string name="sign_out">Sign out</string>
+    <string name="signed_out">Signed out successfully</string>
+
+    <!-- ───────────── SIDEBAR FRAGMENT ───────────── -->
+    <string name="sidebar_inbox">Inbox</string>
+    <string name="sidebar_starred">Starred</string>
+    <string name="sidebar_sent">Sent</string>
+    <string name="sidebar_drafts">Drafts</string>
+    <string name="sidebar_all_mail">All Mail</string>
+    <string name="sidebar_spam">Spam</string>
 
     <string name="profile_image">Profile image</string>
 </resources>

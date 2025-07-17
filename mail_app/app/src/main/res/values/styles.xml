@@ -1,10 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- ───────────── PERSONAL INFO STYLES ───────────── -->
+
+    <!-- Section title: e.g., "Basic Info", "Contact Info" -->
+    <style name="SectionTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">?attr/text_color</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+
+    <!-- Small gray text below a label (e.g., under "Profile picture") -->
+    <style name="InfoRowSubtext">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+        <item name="android:layout_marginTop">6dp</item>
+    </style>
+
+    <!-- Label above a value (e.g., "Name", "Birthday") -->
+    <style name="InfoRowLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">?attr/color_label</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <!-- Value below a label (e.g., actual name, birthday, etc.) -->
+    <style name="InfoRowValue">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">?attr/text_color</item>
+    </style>
+
+    <!-- Shape used to make ImageViews fully circular -->
+    <style name="CircleImageShape" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+
+    <!-- ───────────── PROFILE PICTURE SCREEN ───────────── -->
+
+    <!-- Header: "Profile Picture" text above image -->
+    <style name="ProfilePictureTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">?attr/text_color</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Gray subtitle below the title, smaller text -->
+    <style name="ProfilePictureSubtext">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- Button style for Add / Change / Remove image -->
+    <style name="ProfileActionButton" parent="Widget.Material3.Button">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:background">@drawable/btn_profile_action</item>
+        <item name="backgroundTint">@null</item>
+        <item name="useMaterialThemeColors">false</item>
+        <item name="android:textColor">?attr/profile_action_color</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="iconTint">?attr/profile_action_color</item>
+        <item name="iconPadding">6dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="android:minHeight">20dp</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">6dp</item>
+    </style>
 
     <!-- Title text style -->
     <style name="TitleText">
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">?attr/textColor</item>
+        <item name="android:textColor">?attr/text_color</item>
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:textAlignment">center</item>
     </style>
@@ -39,6 +121,38 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:backgroundTint">@color/blue</item>
         <item name="cornerRadius">8dp</item>
+    </style>
+
+    <!-- Applies a 50% corner radius to make any ImageView perfectly circular -->
+    <style name="CircleImageView" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- Outlined button style for profile dialog (e.g., "View personal info") -->
+    <style name="MyOutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">?attr/dialog_profile_text</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">?attr/dialog_profile_text</item>
+        <item name="cornerRadius">6dp</item>
+        <item name="android:paddingLeft">14dp</item>
+        <item name="android:paddingRight">14dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+    </style>
+
+    <!-- Text button with icon for profile dialog (e.g., "Sign out" button) -->
+    <style name="MyTextButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">?attr/dialog_profile_text</item>
+        <item name="iconTint">?attr/dialog_profile_text</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:paddingLeft">16dp</item>
+    </style>
+
+    <!-- Dialog style with background dimming when open -->
+    <style name="CustomDialog" parent="Theme.Material3.DayNight.Dialog">
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.3</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
 </resources>

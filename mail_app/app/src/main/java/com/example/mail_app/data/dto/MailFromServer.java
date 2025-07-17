@@ -100,9 +100,11 @@ public class MailFromServer {
                 this.isStar(),
                 this.isRead()
         );
+
         fullMail.setMail(mail);
         fullMail.setToUserIds(this.getTo());
         fullMail.setLabels(this.getLabels());
+        fullMail.setFromUser(this.getFromUser());
 
         return fullMail;
     }

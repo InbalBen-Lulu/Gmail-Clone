@@ -32,9 +32,9 @@ public class LabelViewModel extends ViewModel {
     /**
      * Retrieves a label by its ID.
      */
-//    public Label getById(String id) {
-//        return repository.getById(id);
-//    }
+    public Label getById(String id) {
+        return repository.getById(id);
+    }
 
     /**
      * Reloads the label list from the server.

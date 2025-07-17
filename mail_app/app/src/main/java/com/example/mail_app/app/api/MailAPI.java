@@ -68,7 +68,7 @@ public class MailAPI {
 
                         // Clear local database
                         mailDao.clearAllMails();
-                        publicUserDao.clearAllUesrs();
+                        publicUserDao.clearAllUsers();
 
                         // Save users and mails
                         publicUserDao.insertAll(extractPublicUsers(mails));

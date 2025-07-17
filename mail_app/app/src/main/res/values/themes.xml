@@ -1,11 +1,36 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.Mail_app" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Light theme colors -->
-        <item name="colorPrimary">@color/input_outline</item>         <item name="colorOnBackground">#202124</item> <!-- primary text -->
-        <item name="colorSecondary">#5F6368</item>     <!-- secondary text -->
-        <item name="dividerColor">#DDDDDD</item>
 
-        <item name="textColor">#202124 </item>
-        <item name="backgroundColor">#f8fafd </item>
+    <style name="Theme.Mail_app" parent="Theme.Material3.DayNight.NoActionBar">
+
+        <!-- ═══════ BACKGROUNDS ═══════ -->
+        <item name="color_background">#FAF8FF</item>        <!-- screen background -->
+        <item name="colorSurface">#FFFFFF</item>            <!-- cards, surfaces -->
+        <item name="profile_screen_bg">#f8fafd</item>       <!-- specific: profile screen -->
+        <item name="search_background">#E8E7EF</item>       <!-- search bar background -->
+        <item name="outer_box_background">#EBEBF7</item>    <!-- outer box in profile dialog -->
+        <item name="inner_box_background">#F9F8FE</item>    <!-- inner box in profile dialog -->
+        <item name="menu_item_bg">#EBEBF6</item>            <!-- sidebar menu item background -->
+        <item name="menu_item_select_bg">#DDE2F9</item>     <!-- selected sidebar menu item background -->
+
+        <!-- ═══════ TEXT COLORS ═══════ -->
+        <item name="text_color">#202124</item>              <!-- main text -->
+        <item name="colorSecondary">#5F6368</item>          <!-- secondary text -->
+        <item name="color_label">#555555</item>             <!-- label text -->
+        <item name="text_color_hint">#44464F</item>         <!-- hint text -->
+        <item name="dialog_profile_text">#3A3A3E</item>     <!-- text/icons in profile dialog -->
+
+        <!-- ═══════ DIVIDERS / BORDERS ═══════ -->
+        <item name="dividerColor">#dadce0</item>            <!-- profile info divider -->
+        <item name="search_divider_color">#CFCED6</item>    <!-- search divider -->
+
+        <!-- ═══════ BUTTONS & ACTIONS ═══════ -->
+        <item name="profile_action_bg">#C2E7FF</item>       <!-- button background -->
+        <item name="profile_action_color">#001D35</item>    <!-- button text/icon -->
+
+        <!-- ═══════ ICONS ═══════ -->
+        <item name="icon_color">#1A1B20</item>              <!-- color for main icons -->
+
+        <!-- ═══════ PRIMARY COLOR ═══════ -->
+        <item name="colorPrimary">@color/input_outline</item> <!-- primary app color -->
     </style>
 </resources>
