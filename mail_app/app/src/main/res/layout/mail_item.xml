@@ -2,12 +2,11 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/mailItemCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp"
+    android:layout_marginVertical="4dp"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp"
     android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
@@ -18,25 +17,23 @@
         android:gravity="center_vertical">
 
         <!-- Avatar -->
-        <ImageView
+        <com.example.mail_app.ui.view.UserAvatarView
             android:id="@+id/mailAvatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/circle_background"
-            android:scaleType="centerCrop"
-            android:contentDescription="Sender Avatar" />
+            android:layout_marginEnd="12dp" />
 
         <!-- Sender + Subject -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_marginStart="12dp">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/mailSender"
-                android:text="Sender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:textColor="@color/black"
@@ -45,24 +42,26 @@
 
             <TextView
                 android:id="@+id/mailSubject"
-                android:text="Subject"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:textSize="14sp"
+                android:textColor="@color/text_secondary"
                 android:maxLines="1"
                 android:ellipsize="end" />
-
         </LinearLayout>
 
         <!-- Date + Star -->
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center"
-            android:layout_marginStart="8dp">
+            android:gravity="end|center_vertical"
+            android:layout_marginStart="12dp">
 
             <TextView
                 android:id="@+id/mailDate"
-                android:text="4 Jul"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:textColor="@color/text_secondary"
                 android:gravity="end" />
@@ -72,8 +71,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/outline_star"
-                android:contentDescription="Star"
-                android:tint="@color/gray"
+                app:tint="@color/gray"
                 android:layout_marginTop="4dp" />
         </LinearLayout>
 

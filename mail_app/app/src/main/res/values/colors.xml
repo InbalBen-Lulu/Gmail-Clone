@@ -14,4 +14,7 @@
 
     <color name="scrim_overlay">#4D000000</color>
 
+
+    <color name="star_yellow">#FFD700</color> <!-- זהב -->
+    <color name="gray">#888888</color> <!-- אפור רגיל -->
 </resources>

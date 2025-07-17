@@ -82,6 +82,8 @@ public class MailAPI {
 
                         postToMain(() -> mailListData.setValue(mails));
                     }).start();
+                } else {
+                    postToMain(() -> mailListData.setValue(Collections.emptyList()));
                 }
             }
 
@@ -128,11 +130,15 @@ public class MailAPI {
 
                         postToMain(() -> mailListData.setValue(mails));
                     }).start();
+                } else {
+                    Log.w("MailAPI", logTag + " | Response failed or empty body");
+                    postToMain(() -> mailListData.setValue(Collections.emptyList()));
                 }
             }
 
             @Override
             public void onFailure(Call<MailListResponse> call, Throwable t) {
+                postToMain(() -> mailListData.setValue(Collections.emptyList()));
                 Log.e("MailAPI", logTag + " failed: " + t.getMessage());
             }
         });
@@ -209,12 +215,15 @@ public class MailAPI {
                         List<FullMail> updatedResults = mailDao.getMailsByLabel(labelId);
                         postToMain(() -> mailListData.setValue(updatedResults));
                     }).start();
+                } else {
+                    postToMain(() -> mailListData.setValue(Collections.emptyList()));
                 }
             }
 
             @Override
             public void onFailure(Call<MailListResponse> call, Throwable t) {
                 Log.e("MailAPI", "loadMailsByLabelWithoutSaving failed: " + t.getMessage());
+                postToMain(() -> mailListData.setValue(Collections.emptyList()));
             }
         });
     }
@@ -236,12 +245,16 @@ public class MailAPI {
                         List<FullMail> updatedResults = mailDao.searchMails(query);
                         postToMain(() -> mailListData.setValue(updatedResults));
                     }).start();
+                } else {
+                    postToMain(() -> mailListData.setValue(Collections.emptyList()));
                 }
+
             }
 
             @Override
             public void onFailure(Call<MailListResponse> call, Throwable t) {
                 Log.e("MailAPI", "searchMailsWithoutSaving failed: " + t.getMessage());
+                postToMain(() -> mailListData.setValue(Collections.emptyList()));
             }
         });
     }
@@ -281,46 +294,45 @@ public class MailAPI {
 
     // Loads inbox mails from the server with offset and limit
     public void loadInboxMails(int offset, int limit) {
-        api.getInboxMails(limit, offset).enqueue(loadMailListCallback());
+        api.getInboxMails(limit, offset).enqueue(loadMailListCallback(() -> mailDao.getInboxMails()));
     }
 
     // Loads sent mails from the server with offset and limit
     public void loadSentMails(int offset, int limit) {
-        api.getSentMails(limit, offset).enqueue(loadMailListCallback());
+        api.getSentMails(limit, offset).enqueue(loadMailListCallback(() -> mailDao.getSentMails()));
     }
 
     // Loads draft mails from the server with offset and limit
     public void loadDraftMails(int offset, int limit) {
-        api.getDraftMails(limit, offset).enqueue(loadMailListCallback());
+        api.getDraftMails(limit, offset).enqueue(loadMailListCallback(() -> mailDao.getDraftMails()));
     }
 
     // Loads spam mails from the server with offset and limit
     public void loadSpamMails(int offset, int limit) {
-        api.getSpamMails(limit, offset).enqueue(loadMailListCallback());
+        api.getSpamMails(limit, offset).enqueue(loadMailListCallback(() -> mailDao.getSpamMails()));
     }
 
     // Loads starred mails from the server with offset and limit
     public void loadStarredMails(int offset, int limit) {
-        api.getStarredMails(limit, offset).enqueue(loadMailListCallback());
+        api.getStarredMails(limit, offset).enqueue(loadMailListCallback(() -> mailDao.getStarredMails()));
     }
 
     // Loads all mails from the server with offset and limit
     public void loadAllMails(int offset, int limit) {
-        api.getAllMails(limit, offset).enqueue(loadMailListCallback());
+        api.getAllMails(limit, offset).enqueue(loadMailListCallback(() -> mailDao.getAllMails()));
     }
 
     // Loads mails by label from the server with offset and limit
     public void loadMailsByLabel(String labelId, int offset, int limit) {
-        api.getMailsByLabel(labelId, limit, offset).enqueue(loadMailListCallback());
+        api.getMailsByLabel(labelId, limit, offset).enqueue(loadMailListCallback(() -> mailDao.getMailsByLabel(labelId)));
     }
 
     // Searches mails from the server with offset and limit
     public void searchMails(String query, int offset, int limit) {
-        api.searchMails(query, limit, offset).enqueue(loadMailListCallback());
+        api.searchMails(query, limit, offset).enqueue(loadMailListCallback(() -> mailDao.searchMails(query)));
     }
 
-    // General callback to handle mail list responses and save to Room
-    private Callback<MailListResponse> loadMailListCallback() {
+    private Callback<MailListResponse> loadMailListCallback(Supplier<List<FullMail>> roomFetcher) {
         return new Callback<MailListResponse>() {
             @Override
             public void onResponse(Call<MailListResponse> call, Response<MailListResponse> response) {
@@ -328,15 +340,17 @@ public class MailAPI {
                     List<MailFromServer> mails = response.body().getMails();
                     new Thread(() -> {
                         saveMailsFromResponse(mails);
-                        List<FullMail> updatedMails = mailDao.getAllMails(); // can be changed for category
+                        List<FullMail> updatedMails = roomFetcher.get(); // ✔ מציג רק את המיילים המתאימים לקטגוריה
                         postToMain(() -> mailListData.setValue(updatedMails));
                     }).start();
+                } else {
+                    postToMain(() -> mailListData.setValue(Collections.emptyList()));
                 }
             }
 
             @Override
             public void onFailure(Call<MailListResponse> call, Throwable t) {
-                Log.e("MailAPI", "load mails failed: " + t.getMessage());
+                postToMain(() -> mailListData.setValue(Collections.emptyList()));
             }
         };
     }
