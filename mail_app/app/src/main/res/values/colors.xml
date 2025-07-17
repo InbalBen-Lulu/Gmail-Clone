@@ -19,4 +19,6 @@
     <color name="gray">#888888</color> <!-- אפור רגיל -->
 
     <color name="draft_red">#D93025</color>
+    <color name="selected_blue">#E0F2FF</color>
+
 </resources>

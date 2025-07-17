@@ -147,5 +147,6 @@
 
     <string name="draft_label">Draft</string>
     <string name="no_mails_message">No emails found</string>
-
+    <string name="action_delete">Delete</string>
+    <string name="action_label">Label as</string>
 </resources>

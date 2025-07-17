@@ -2,6 +2,9 @@ package com.example.mail_app.ui.mail;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,7 +22,6 @@ import com.example.mail_app.ui.view.MailListAdapter;
 import com.example.mail_app.viewmodel.MailViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Fragment that displays a list of mails based on current ViewModel state.
@@ -35,6 +37,10 @@ public class MailListFragment extends Fragment {
 
     private static final String ARG_CATEGORY = "category";
     private String category;
+
+    private ActionMode actionMode;
+
+    private FullMail selectedMail;
 
     public static MailListFragment newInstance(String category) {
         MailListFragment fragment = new MailListFragment();
@@ -59,14 +65,21 @@ public class MailListFragment extends Fragment {
         swipeRefresh = view.findViewById(R.id.swipeRefresh);
 
         adapter = new MailListAdapter(new ArrayList<>(), new MailListAdapter.OnMailClickListener() {
-            @Override
             public void onClick(FullMail mail) {
-                onMailClick(mail);
+                if (actionMode != null) {
+                    actionMode.finish(); // לחיצה רגילה יוצאת ממצב הבחירה
+                } else {
+                    onMailClick(mail);
+                }
             }
 
             @Override
             public void onLongClick(FullMail mail) {
-                onMailLongClick(mail);
+                if (actionMode == null) {
+                    selectedMail = mail;
+                    adapter.setSelectedMailId(mail.getMail().getId());
+                    actionMode = requireActivity().startActionMode(actionModeCallback);
+                }
             }
 
             @Override
@@ -129,7 +142,52 @@ public class MailListFragment extends Fragment {
         MailDetailsActivity.open(requireContext(), mail.getMail().getId());
     }
 
-    private void onMailLongClick(FullMail mail) {
-        // TODO: הצגת תפריט לחיצה ארוכה (מחיקה, סימון וכו’)
-    }
+    private final ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.mail_action_menu, menu);
+
+            // ⬅️ הסתרת שורת החיפוש
+            View searchBar = requireActivity().findViewById(R.id.search_bar_wrapper);
+            if (searchBar != null) searchBar.setVisibility(View.GONE);
+
+            return true;
+        }
+
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false; // אין שינוי
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            if (selectedMail != null) {
+                int itemId = item.getItemId();
+
+                if (itemId == R.id.action_delete) {
+                    viewModel.deleteMail(selectedMail.getMail().getId());
+                    mode.finish();
+                    return true;
+                } else if (itemId == R.id.action_label) {
+                    Log.d("ActionMode", "Label clicked");
+                    mode.finish();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            actionMode = null;
+            selectedMail = null;
+            adapter.clearSelection();
+
+            // ⬅️ החזרת שורת החיפוש
+            View searchBar = requireActivity().findViewById(R.id.search_bar_wrapper);
+            if (searchBar != null) searchBar.setVisibility(View.VISIBLE);
+        }
+    };
+
 }

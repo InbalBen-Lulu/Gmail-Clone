@@ -1,12 +1,8 @@
 package com.example.mail_app.ui.view;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +29,8 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MailVi
     private final Consumer<String> onToggleStar;
     private final OnMailClickListener listener;
 
+    private String selectedMailId = null;
+
     public MailListAdapter(List<FullMail> mails, OnMailClickListener listener) {
         this.mails = mails;
         this.listener = listener;
@@ -55,6 +53,11 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MailVi
     public void onBindViewHolder(@NonNull MailViewHolder holder, int position) {
         FullMail mail = mails.get(position);
         holder.bind(mail);
+        holder.itemView.setBackgroundColor(
+                mail.getMail().getId().equals(selectedMailId)
+                        ? ContextCompat.getColor(holder.itemView.getContext(), R.color.selected_blue)
+                        : Color.TRANSPARENT
+        );
     }
 
     @Override
@@ -134,6 +137,8 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MailVi
                 starIcon.setVisibility(View.GONE);
             } else {
                 starIcon.setVisibility(View.VISIBLE);
+                starIcon.setFocusable(true);
+                starIcon.setClickable(true);
                 boolean isStarred = mail.getMail().isStar();
                 starIcon.setImageResource(isStarred ? R.drawable.baseline_star : R.drawable.outline_star);
                 starIcon.setColorFilter(ContextCompat.getColor(context, isStarred ? R.color.star_yellow : R.color.gray));
@@ -185,9 +190,20 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MailVi
         }
     }
 
-        public interface OnMailClickListener {
+    public interface OnMailClickListener {
         void onClick(FullMail mail);
         void onLongClick(FullMail mail);
         void onToggleStar(String mailId);
     }
+
+    public void setSelectedMailId(String id) {
+        this.selectedMailId = id;
+        notifyDataSetChanged();
+    }
+
+    public void clearSelection() {
+        this.selectedMailId = null;
+        notifyDataSetChanged();
+    }
+
 }
