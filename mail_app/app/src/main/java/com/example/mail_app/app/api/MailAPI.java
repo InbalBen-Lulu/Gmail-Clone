@@ -102,13 +102,13 @@ public class MailAPI {
             Call<MailListResponse> apiCall,
             String logTag) {
 
-        // Show local mails immediately
+        // טען מקומית מיד
         new Thread(() -> {
             List<FullMail> local = roomFetcher.get();
             postToMain(() -> mailListData.setValue(local));
         }).start();
 
-        // Then request updated mails from the server
+        // ואז נסה לטעון מהשרת
         apiCall.enqueue(new Callback<MailListResponse>() {
             @Override
             public void onResponse(Call<MailListResponse> call, Response<MailListResponse> response) {
@@ -120,7 +120,6 @@ public class MailAPI {
                             mails.add(mail.toFullMail());
                         }
 
-                        // Update local database
                         for (FullMail mail : mails) {
                             mailDao.insertMail(mail.getMail());
                             mailDao.insertRecipients(mail.getRecipientRefs());
@@ -133,18 +132,25 @@ public class MailAPI {
                         postToMain(() -> mailListData.setValue(mails));
                     }).start();
                 } else {
-                    Log.w("MailAPI", logTag + " | Response failed or empty body");
-                    postToMain(() -> mailListData.setValue(Collections.emptyList()));
+                    Log.w("MailAPI", logTag + " | empty or failed response");
+                    new Thread(() -> {
+                        List<FullMail> fallback = roomFetcher.get();
+                        postToMain(() -> mailListData.setValue(fallback));
+                    }).start();
                 }
             }
 
             @Override
             public void onFailure(Call<MailListResponse> call, Throwable t) {
-                postToMain(() -> mailListData.setValue(Collections.emptyList()));
                 Log.e("MailAPI", logTag + " failed: " + t.getMessage());
+                new Thread(() -> {
+                    List<FullMail> fallback = roomFetcher.get();
+                    postToMain(() -> mailListData.setValue(fallback));
+                }).start();
             }
         });
     }
+
 
     // Loads inbox mails from Room then from server
     public void loadInboxMailsFromRoomThenServer() {
@@ -218,17 +224,24 @@ public class MailAPI {
                         postToMain(() -> mailListData.setValue(updatedResults));
                     }).start();
                 } else {
-                    postToMain(() -> mailListData.setValue(Collections.emptyList()));
+                    new Thread(() -> {
+                        List<FullMail> fallback = mailDao.getMailsByLabel(labelId);
+                        postToMain(() -> mailListData.setValue(fallback));
+                    }).start();
                 }
             }
 
             @Override
             public void onFailure(Call<MailListResponse> call, Throwable t) {
                 Log.e("MailAPI", "loadMailsByLabelWithoutSaving failed: " + t.getMessage());
-                postToMain(() -> mailListData.setValue(Collections.emptyList()));
+                new Thread(() -> {
+                    List<FullMail> fallback = mailDao.getMailsByLabel(labelId);
+                    postToMain(() -> mailListData.setValue(fallback));
+                }).start();
             }
         });
     }
+
 
     // Searches mails in Room first, then fetches from server without saving permanently
     public void searchMailsWithoutSaving(String query, int limit, int offset) {
@@ -248,15 +261,20 @@ public class MailAPI {
                         postToMain(() -> mailListData.setValue(updatedResults));
                     }).start();
                 } else {
-                    postToMain(() -> mailListData.setValue(Collections.emptyList()));
+                    new Thread(() -> {
+                        List<FullMail> fallback = mailDao.searchMails(query);
+                        postToMain(() -> mailListData.setValue(fallback));
+                    }).start();
                 }
-
             }
 
             @Override
             public void onFailure(Call<MailListResponse> call, Throwable t) {
                 Log.e("MailAPI", "searchMailsWithoutSaving failed: " + t.getMessage());
-                postToMain(() -> mailListData.setValue(Collections.emptyList()));
+                new Thread(() -> {
+                    List<FullMail> fallback = mailDao.searchMails(query);
+                    postToMain(() -> mailListData.setValue(fallback));
+                }).start();
             }
         });
     }
@@ -350,23 +368,31 @@ public class MailAPI {
                     List<MailFromServer> mails = response.body().getMails();
                     new Thread(() -> {
                         saveMailsFromResponse(mails);
-                        List<FullMail> updatedMails = roomFetcher.get(); // ✔ מציג רק את המיילים המתאימים לקטגוריה
+                        List<FullMail> updatedMails = roomFetcher.get();
                         postToMain(() -> mailListData.setValue(updatedMails));
                     }).start();
                 } else {
-                    postToMain(() -> mailListData.setValue(Collections.emptyList()));
+                    new Thread(() -> {
+                        List<FullMail> fallback = roomFetcher.get();
+                        postToMain(() -> mailListData.setValue(fallback));
+                    }).start();
                 }
             }
 
             @Override
             public void onFailure(Call<MailListResponse> call, Throwable t) {
-                postToMain(() -> mailListData.setValue(Collections.emptyList()));
+                Log.e("MailAPI", "loadMailListCallback failed: " + t.getMessage());
+                new Thread(() -> {
+                    List<FullMail> fallback = roomFetcher.get();
+                    postToMain(() -> mailListData.setValue(fallback));
+                }).start();
             }
         };
     }
 
+
     // Sends a request to create a new mail
-    public void createMail(Map<String, Object> body) {
+    public void createMail(Map<String, Object> body, Consumer<String> onError) {
         api.createMail(body).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -378,13 +404,13 @@ public class MailAPI {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.e("MailAPI", "createMail failed: " + t.getMessage());
+                postToMain(() -> onError.accept("Failed to create mail – check your internet connection."));
             }
         });
     }
 
     // Sends a request to send a saved draft mail
-    public void sendDraft(String mailId, Map<String, Object> body) {
+    public void sendDraft(String mailId, Map<String, Object> body, Consumer<String> onError) {
         api.sendDraft(mailId, body).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -396,12 +422,14 @@ public class MailAPI {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.e("MailAPI", "sendDraft failed: " + t.getMessage());
+                postToMain(() -> onError.accept("Failed to send draft – check your internet connection."));
             }
         });
     }
 
+
     // Sends a request to update an existing draft
-    public void updateMail(String mailId, Map<String, Object> body) {
+    public void updateMail(String mailId, Map<String, Object> body, Consumer<String> onError) {
         api.updateMail(mailId, body).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -413,12 +441,14 @@ public class MailAPI {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.e("MailAPI", "updateMail failed: " + t.getMessage());
+                postToMain(() -> onError.accept("Failed to update draft – check your internet connection."));
             }
         });
     }
 
+
     // Sends a request to delete a mail and removes it from Room and LiveData
-    public void deleteMail(String mailId) {
+    public void deleteMail(String mailId, Consumer<String> onError) {
         api.deleteMail(mailId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -438,6 +468,7 @@ public class MailAPI {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.e("MailAPI", "deleteMail failed: " + t.getMessage());
+                postToMain(() -> onError.accept("Failed to delete mail – check your internet connection."));
             }
         });
     }
@@ -464,7 +495,7 @@ public class MailAPI {
     }
 
     // Toggles the star status of a mail
-    public void toggleStar(String mailId) {
+    public void toggleStar(String mailId, Consumer<String> onError) {
         api.toggleStar(mailId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -477,12 +508,13 @@ public class MailAPI {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.e("MailAPI", "toggleStar failed: " + t.getMessage());
+                postToMain(() -> onError.accept("Failed to toggle star – check your internet connection."));
             }
         });
     }
 
     // Toggles the spam status of a mail
-    public void setSpam(String mailId, Map<String, Boolean> body, Runnable onSuccess) {
+    public void setSpam(String mailId, Map<String, Boolean> body, Runnable onSuccess, Consumer<String> onError) {
         api.setSpam(mailId, body).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -490,63 +522,74 @@ public class MailAPI {
                     new Thread(() -> {
                         mailDao.setSpam(mailId);
                         fetchAndSaveMailById(mailId);
-                        new Handler(Looper.getMainLooper()).post(onSuccess);
+                        postToMain(onSuccess);
                     }).start();
                 } else {
-                    Log.e("MailRepository", "setSpam failed with code: " + response.code());
+                    Log.e("MailAPI", "setSpam failed: " + response.code());
+                    postToMain(() -> onError.accept("Failed to mark as spam – check your internet connection."));
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.e("MailRepository", "setSpam failed", t);
+                Log.e("MailAPI", "setSpam failed", t);
+                postToMain(() -> onError.accept("Failed to mark as spam – check your internet connection."));
             }
         });
     }
 
+
     // Adds a label to a mail
-    public void addLabelToMail(String mailId, Map<String, String> body, Runnable onSuccess) {
+    public void addLabelToMail(String mailId, Map<String, String> body, Runnable onSuccess, Consumer<String> onError) {
         api.addLabelToMail(mailId, body).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if (body.containsKey("labelId")) {
+                if (response.isSuccessful() && body.containsKey("labelId")) {
                     String labelId = body.get("labelId");
                     new Thread(() -> {
                         mailDao.insertLabelToMail(new MailLabelCrossRef(mailId, labelId));
                         fetchAndSaveMailById(mailId);
-                        new Handler(Looper.getMainLooper()).post(onSuccess);
+                        postToMain(onSuccess);
                     }).start();
+                } else {
+                    postToMain(() -> onError.accept("Failed to add label – check your internet connection."));
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.e("MailAPI", "addLabelToMail failed: " + t.getMessage());
+                postToMain(() -> onError.accept("Failed to add label – check your internet connection."));
             }
         });
     }
 
+
     // Removes a label from a mail
-    public void removeLabelFromMail(String mailId, Map<String, String> body, Runnable onSuccess) {
+    public void removeLabelFromMail(String mailId, Map<String, String> body, Runnable onSuccess, Consumer<String> onError) {
         api.removeLabelFromMail(mailId, body).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if (body.containsKey("labelId")) {
+                if (response.isSuccessful() && body.containsKey("labelId")) {
                     String labelId = body.get("labelId");
                     new Thread(() -> {
                         mailDao.removeLabelFromMail(mailId, labelId);
                         fetchAndSaveMailById(mailId);
-                        new Handler(Looper.getMainLooper()).post(onSuccess);
+                        postToMain(onSuccess);
                     }).start();
+                } else {
+                    postToMain(() -> onError.accept("Failed to remove label – check your internet connection."));
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.e("MailAPI", "removeLabelFromMail failed: " + t.getMessage());
+                postToMain(() -> onError.accept("Failed to remove label – check your internet connection."));
             }
         });
     }
+
 
     // Fetches a mail by ID from the server and saves it to Room
     public void fetchAndSaveMailById(String mailId) {

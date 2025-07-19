@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import android.util.Log;
 
@@ -134,51 +135,54 @@ public class MailViewModel extends ViewModel {
     }
 
     // Mail operations
-    public void toggleStar(String mailId) {
-        repository.toggleStar(mailId);
+    public void toggleStar(String mailId, Consumer<String> onError) {
+        repository.toggleStar(mailId, onError);
     }
 
-    public void deleteMail(String mailId) {
-        repository.deleteMail(mailId);
+    public void deleteMail(String mailId, Consumer<String> onError) {
+        repository.deleteMail(mailId, onError);
     }
 
     public void refreshSingleMail(String mailId) {
         repository.refreshSingleMail(mailId);
     }
 
-    public void sendDraft(String mailId, Map<String, Object> body) {
-        repository.sendDraft(mailId, body);
+    public void sendDraft(String mailId, Map<String, Object> body, Consumer<String> onError) {
+        repository.sendDraft(mailId, body, onError);
     }
 
-    public void createMail(Map<String, Object> body) {
-        repository.createMail(body);
+    public void createMail(Map<String, Object> body, Consumer<String> onError) {
+        repository.createMail(body, onError);
     }
 
-    public void updateMail(String mailId, Map<String, Object> body) {
-        repository.updateMail(mailId, body);
+    public void updateMail(String mailId, Map<String, Object> body, Consumer<String> onError) {
+        repository.updateMail(mailId, body, onError);
     }
 
     public void loadMailById(String mailId) {
         repository.loadMailById(mailId);
     }
 
-    public void addLabelToMail(String mailId, String labelId, Runnable onSuccess) {
+    public void addLabelToMail(String mailId, String labelId, Runnable onSuccess,
+                               Consumer<String> onError) {
         Map<String, String> body = new HashMap<>();
         body.put("labelId", labelId);
-        repository.addLabelToMail(mailId, body, onSuccess);
+        repository.addLabelToMail(mailId, body, onSuccess, onError);
     }
 
-    public void removeLabelFromMail(String mailId, String labelId, Runnable onSuccess) {
+    public void removeLabelFromMail(String mailId, String labelId, Runnable onSuccess,
+                                    Consumer<String> onError) {
         Map<String, String> body = new HashMap<>();
         body.put("labelId", labelId);
-        repository.removeLabelFromMail(mailId, body, onSuccess);
+        repository.removeLabelFromMail(mailId, body, onSuccess, onError);
     }
 
 
-    public void setSpam(String mailId, boolean isSpam, Runnable onSuccess) {
+    public void setSpam(String mailId, boolean isSpam, Runnable onSuccess,
+                        Consumer<String> onError) {
         Map<String, Boolean> body = new HashMap<>();
         body.put("isSpam", isSpam);
-        repository.setSpam(mailId, body, onSuccess);
+        repository.setSpam(mailId, body, onSuccess, onError);
     }
 
     // --- Basic Loads (reset offset)
@@ -245,23 +249,6 @@ public class MailViewModel extends ViewModel {
 
     public void scrollSearchMails(String query, int offset, int limit) {
         repository.scrollSearchMails(query, offset, limit);
-    }
-
-    // Getters for current state (useful for Fragment/debug/logging)
-    public String getCurrentCategoryTitle() {
-        return currentCategoryTitle;
-    }
-
-    public String getCurrentLabelId() {
-        return currentLabelId;
-    }
-
-    public boolean isLabelMode() {
-        return isLabelMode;
-    }
-
-    public int getCurrentOffset() {
-        return currentOffset;
     }
 
     public LiveData<FullMail> getLiveMailById(String mailId) {

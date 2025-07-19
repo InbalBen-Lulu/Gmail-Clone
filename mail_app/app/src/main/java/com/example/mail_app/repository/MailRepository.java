@@ -13,6 +13,7 @@ import com.example.mail_app.data.entity.FullMail;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Repository for managing mail operations via MailAPI and local Room database.
@@ -109,23 +110,23 @@ public class MailRepository {
     }
 
     /** Sends a draft mail (PATCH + fetch updated mail). */
-    public void sendDraft(String mailId, Map<String, Object> body) {
-        api.sendDraft(mailId, body);
+    public void sendDraft(String mailId, Map<String, Object> body, Consumer<String> onError) {
+        api.sendDraft(mailId, body, onError);
     }
 
     /** Creates a new mail. */
-    public void createMail(Map<String, Object> body) {
-        api.createMail(body);
+    public void createMail(Map<String, Object> body, Consumer<String> onError) {
+        api.createMail(body, onError);
     }
 
     /** Updates a specific mail by ID. */
-    public void updateMail(String mailId, Map<String, Object> body) {
-        api.updateMail(mailId, body);
+    public void updateMail(String mailId, Map<String, Object> body, Consumer<String> onError) {
+        api.updateMail(mailId, body, onError);
     }
 
     /** Deletes a specific mail by ID. */
-    public void deleteMail(String mailId) {
-        api.deleteMail(mailId);
+    public void deleteMail(String mailId, Consumer<String> onError) {
+        api.deleteMail(mailId, onError);
     }
 
     public void refreshSingleMail(String mailId) {
@@ -133,23 +134,26 @@ public class MailRepository {
     }
 
     /** Toggles the star status of a mail. */
-    public void toggleStar(String mailId) {
-        api.toggleStar(mailId);
+    public void toggleStar(String mailId, Consumer<String> onError) {
+        api.toggleStar(mailId, onError);
     }
 
     /** Marks a mail as spam or not. */
-    public void setSpam(String mailId, Map<String, Boolean> body, Runnable onSuccess) {
-        api.setSpam(mailId, body, onSuccess);
+    public void setSpam(String mailId, Map<String, Boolean> body, Runnable onSuccess,
+                        Consumer<String> onError) {
+        api.setSpam(mailId, body, onSuccess, onError);
     }
 
     /** Adds a label to a mail. */
-    public void addLabelToMail(String mailId, Map<String, String> body, Runnable onSuccess) {
-        api.addLabelToMail(mailId, body, onSuccess);
+    public void addLabelToMail(String mailId, Map<String, String> body, Runnable onSuccess,
+                               Consumer<String> onError) {
+        api.addLabelToMail(mailId, body, onSuccess, onError);
     }
 
     /** Removes a label from a mail. */
-    public void removeLabelFromMail(String mailId, Map<String, String> body, Runnable onSuccess) {
-        api.removeLabelFromMail(mailId, body, onSuccess);
+    public void removeLabelFromMail(String mailId, Map<String, String> body, Runnable onSuccess,
+                                    Consumer<String> onError) {
+        api.removeLabelFromMail(mailId, body, onSuccess, onError);
     }
 
     /** Scroll-loads inbox mails from server (no Room update). */

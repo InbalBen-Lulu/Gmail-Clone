@@ -151,6 +151,7 @@
 
 package com.example.mail_app.ui.mail;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -171,6 +172,7 @@ import com.example.mail_app.data.entity.FullMail;
 import com.example.mail_app.ui.mail.component.LabelChip;
 import com.example.mail_app.ui.mail.component.MailMenu;
 import com.example.mail_app.ui.view.UserAvatarView;
+import com.example.mail_app.utils.UiUtils;
 import com.example.mail_app.viewmodel.MailViewModel;
 
 public class MailDetailsActivity extends AppCompatActivity {
@@ -277,7 +279,9 @@ public class MailDetailsActivity extends AppCompatActivity {
             updateStarIcon(mail.getMail().isStar());
 
             mailStar.setOnClickListener(v -> {
-                viewModel.toggleStar(mail.getMail().getId());
+                viewModel.toggleStar(mail.getMail().getId(), msg -> {
+                    UiUtils.showMessage(MailDetailsActivity.this, msg);
+                });
                 updateStarIcon(!mail.getMail().isStar()); // שינוי מיידי ב־UI
             });
         }

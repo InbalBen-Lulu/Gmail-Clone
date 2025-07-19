@@ -17,6 +17,7 @@ import com.example.mail_app.R;
 import com.example.mail_app.data.entity.FullMail;
 import com.example.mail_app.ui.mail.action.MailActionModeCallback;
 import com.example.mail_app.ui.mail.adapter.MailListAdapter;
+import com.example.mail_app.utils.UiUtils;
 import com.example.mail_app.viewmodel.MailViewModel;
 
 import java.util.ArrayList;
@@ -93,7 +94,8 @@ public class MailListFragment extends Fragment {
 
             @Override
             public void onToggleStar(String mailId) {
-                viewModel.toggleStar(mailId);
+                viewModel.toggleStar(mailId, msg -> UiUtils.showMessage(requireActivity(), msg));
+
             }
         });
 
