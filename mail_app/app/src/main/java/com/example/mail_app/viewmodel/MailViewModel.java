@@ -9,6 +9,8 @@ import com.example.mail_app.data.entity.FullMail;
 import com.example.mail_app.repository.MailRepository;
 import com.example.mail_app.utils.AppConstants;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -156,16 +158,23 @@ public class MailViewModel extends ViewModel {
         repository.loadMailById(mailId);
     }
 
-    public void addLabelToMail(String mailId, Map<String, String> body) {
-        repository.addLabelToMail(mailId, body);
+    public void addLabelToMail(String mailId, String labelId, Runnable onSuccess) {
+        Map<String, String> body = new HashMap<>();
+        body.put("labelId", labelId);
+        repository.addLabelToMail(mailId, body, onSuccess);
     }
 
-    public void removeLabelFromMail(String mailId, Map<String, String> body) {
-        repository.removeLabelFromMail(mailId, body);
+    public void removeLabelFromMail(String mailId, String labelId, Runnable onSuccess) {
+        Map<String, String> body = new HashMap<>();
+        body.put("labelId", labelId);
+        repository.removeLabelFromMail(mailId, body, onSuccess);
     }
 
-    public void setSpam(String mailId, Map<String, Boolean> body) {
-        repository.setSpam(mailId, body);
+
+    public void setSpam(String mailId, boolean isSpam, Runnable onSuccess) {
+        Map<String, Boolean> body = new HashMap<>();
+        body.put("isSpam", isSpam);
+        repository.setSpam(mailId, body, onSuccess);
     }
 
     // --- Basic Loads (reset offset)
@@ -250,4 +259,5 @@ public class MailViewModel extends ViewModel {
     public int getCurrentOffset() {
         return currentOffset;
     }
+
 }

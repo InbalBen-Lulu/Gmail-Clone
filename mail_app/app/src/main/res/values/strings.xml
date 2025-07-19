@@ -149,4 +149,10 @@
     <string name="no_mails_message">No emails found</string>
     <string name="action_delete">Delete</string>
     <string name="action_label">Label as</string>
+    <string name="action_report">Mark as spam</string>
+    <string name="action_unspam">Mark as not spam</string>
+    <string name="label_name_checkbox">Label name</string>
+    <string name="label_dialog_title">Label as</string>
+    <string name="label_dialog_ok">OK</string>
+    <string name="label_dialog_cancel">Cancel</string>
 </resources>

@@ -134,18 +134,18 @@ public class MailRepository {
     }
 
     /** Marks a mail as spam or not. */
-    public void setSpam(String mailId, Map<String, Boolean> body) {
-        api.setSpam(mailId, body);
+    public void setSpam(String mailId, Map<String, Boolean> body, Runnable onSuccess) {
+        api.setSpam(mailId, body, onSuccess);
     }
 
     /** Adds a label to a mail. */
-    public void addLabelToMail(String mailId, Map<String, String> body) {
-        api.addLabelToMail(mailId, body);
+    public void addLabelToMail(String mailId, Map<String, String> body, Runnable onSuccess) {
+        api.addLabelToMail(mailId, body, onSuccess);
     }
 
     /** Removes a label from a mail. */
-    public void removeLabelFromMail(String mailId, Map<String, String> body) {
-        api.removeLabelFromMail(mailId, body);
+    public void removeLabelFromMail(String mailId, Map<String, String> body, Runnable onSuccess) {
+        api.removeLabelFromMail(mailId, body, onSuccess);
     }
 
     /** Scroll-loads inbox mails from server (no Room update). */

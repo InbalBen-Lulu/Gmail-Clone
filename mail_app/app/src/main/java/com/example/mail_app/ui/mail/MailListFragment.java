@@ -58,7 +58,6 @@ public class MailListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // קבלת הקטגוריה מה־arguments
         category = getArguments() != null ? getArguments().getString(ARG_CATEGORY) : null;
 
         RecyclerView recyclerView = view.findViewById(R.id.mailRecyclerView);
@@ -78,9 +77,22 @@ public class MailListFragment extends Fragment {
                 if (actionMode == null) {
                     selectedMail = mail;
                     adapter.setSelectedMailId(mail.getMail().getId());
-                    actionMode = requireActivity().startActionMode(actionModeCallback);
+
+                    actionMode = requireActivity().startActionMode(
+                            new com.example.mail_app.ui.view.MailActionModeCallback(
+                                    requireContext(),
+                                    selectedMail,
+                                    viewModel,
+                                    adapter,
+                                    () -> {
+                                        actionMode = null;
+                                        selectedMail = null;
+                                    }
+                            )
+                    );
                 }
             }
+
 
             @Override
             public void onToggleStar(String mailId) {
@@ -100,7 +112,6 @@ public class MailListFragment extends Fragment {
 
         TextView emptyTextView = view.findViewById(R.id.emptyTextView);
 
-        // עדכון המיילים
         viewModel.getMails().observe(getViewLifecycleOwner(), mails -> {
             swipeRefresh.setRefreshing(false);
             isLoading = false;
@@ -115,12 +126,10 @@ public class MailListFragment extends Fragment {
         });
 
 
-        // רענון ידני מלמעלה
         swipeRefresh.setOnRefreshListener(() -> {
             viewModel.reloadCurrentCategory(); // דורש שתהיה פונקציה כזו ב־ViewModel
         });
 
-        // גלילה אינסופית
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
@@ -141,53 +150,4 @@ public class MailListFragment extends Fragment {
     private void onMailClick(FullMail mail) {
         MailDetailsActivity.open(requireContext(), mail.getMail().getId());
     }
-
-    private final ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mode.getMenuInflater().inflate(R.menu.mail_action_menu, menu);
-
-            // ⬅️ הסתרת שורת החיפוש
-            View searchBar = requireActivity().findViewById(R.id.search_bar_wrapper);
-            if (searchBar != null) searchBar.setVisibility(View.GONE);
-
-            return true;
-        }
-
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false; // אין שינוי
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            if (selectedMail != null) {
-                int itemId = item.getItemId();
-
-                if (itemId == R.id.action_delete) {
-                    viewModel.deleteMail(selectedMail.getMail().getId());
-                    mode.finish();
-                    return true;
-                } else if (itemId == R.id.action_label) {
-                    Log.d("ActionMode", "Label clicked");
-                    mode.finish();
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            actionMode = null;
-            selectedMail = null;
-            adapter.clearSelection();
-
-            // ⬅️ החזרת שורת החיפוש
-            View searchBar = requireActivity().findViewById(R.id.search_bar_wrapper);
-            if (searchBar != null) searchBar.setVisibility(View.VISIBLE);
-        }
-    };
-
 }

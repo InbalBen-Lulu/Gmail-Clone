@@ -270,19 +270,23 @@ public class MailAPI {
     // Saves a single mail (converted from server format) to Room
     private void saveMailFromServer(MailFromServer mail) {
         FullMail fullMail = mail.toFullMail();
+        String mailId = fullMail.getMail().getId();
 
         mailDao.insertMail(fullMail.getMail());
 
         if (!fullMail.getMail().isDraft()) {
+            mailDao.deleteRecipientsByMailId(mailId);
             mailDao.insertRecipients(fullMail.getRecipientRefs());
         }
 
+        mailDao.deleteLabelsByMailId(mailId);
         for (MailLabelCrossRef ref : fullMail.getLabelRefs()) {
             mailDao.insertLabelToMail(ref);
         }
 
         publicUserDao.insert(fullMail.getFromUser());
     }
+
 
     // Saves a list of mails (converted from server format) to Room
     private void saveMailsFromResponse(List<MailFromServer> mails) {
@@ -471,33 +475,39 @@ public class MailAPI {
     }
 
     // Toggles the spam status of a mail
-    public void setSpam(String mailId, Map<String, Boolean> body) {
+    public void setSpam(String mailId, Map<String, Boolean> body, Runnable onSuccess) {
         api.setSpam(mailId, body).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                new Thread(() -> {
-                    mailDao.setSpam(mailId);
-                    refreshSingleMail(mailId);
-                }).start();
+                if (response.isSuccessful()) {
+                    new Thread(() -> {
+                        mailDao.setSpam(mailId);
+                        fetchAndSaveMailById(mailId);
+                        new Handler(Looper.getMainLooper()).post(onSuccess);
+                    }).start();
+                } else {
+                    Log.e("MailRepository", "setSpam failed with code: " + response.code());
+                }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.e("MailAPI", "setSpam failed: " + t.getMessage());
+                Log.e("MailRepository", "setSpam failed", t);
             }
         });
     }
 
     // Adds a label to a mail
-    public void addLabelToMail(String mailId, Map<String, String> body) {
+    public void addLabelToMail(String mailId, Map<String, String> body, Runnable onSuccess) {
         api.addLabelToMail(mailId, body).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if (body.containsKey("id")) {
-                    String labelId = body.get("id");
+                if (body.containsKey("labelId")) {
+                    String labelId = body.get("labelId");
                     new Thread(() -> {
                         mailDao.insertLabelToMail(new MailLabelCrossRef(mailId, labelId));
-                        refreshSingleMail(mailId);
+                        fetchAndSaveMailById(mailId);
+                        new Handler(Looper.getMainLooper()).post(onSuccess);
                     }).start();
                 }
             }
@@ -510,15 +520,16 @@ public class MailAPI {
     }
 
     // Removes a label from a mail
-    public void removeLabelFromMail(String mailId, Map<String, String> body) {
+    public void removeLabelFromMail(String mailId, Map<String, String> body, Runnable onSuccess) {
         api.removeLabelFromMail(mailId, body).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if (body.containsKey("id")) {
-                    String labelId = body.get("id");
+                if (body.containsKey("labelId")) {
+                    String labelId = body.get("labelId");
                     new Thread(() -> {
                         mailDao.removeLabelFromMail(mailId, labelId);
-                        refreshSingleMail(mailId);
+                        fetchAndSaveMailById(mailId);
+                        new Handler(Looper.getMainLooper()).post(onSuccess);
                     }).start();
                 }
             }
@@ -577,4 +588,20 @@ public class MailAPI {
             }
         });
     }
+
+//    public void updateMailInList(FullMail updatedMail) {
+//        List<FullMail> current = mailListData.getValue();
+//        if (current == null) return;
+//
+//        List<FullMail> updatedList = new ArrayList<>(current);
+//        for (int i = 0; i < updatedList.size(); i++) {
+//            if (updatedList.get(i).getMail().getId().equals(updatedMail.getMail().getId())) {
+//                updatedList.set(i, updatedMail);
+//                break;
+//            }
+//        }
+//
+//        mailListData.postValue(updatedList);
+//    }
+
 }

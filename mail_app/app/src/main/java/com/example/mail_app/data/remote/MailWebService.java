@@ -9,6 +9,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -45,7 +46,8 @@ public interface MailWebService {
     Call<Void> addLabelToMail(@Path("id") String mailId, @Body Map<String, String> body);
 
     // Removes a label from a mail
-    @DELETE("mails/{id}/labels")
+//    @DELETE("mails/{id}/labels")
+    @HTTP(method = "DELETE", path = "mails/{id}/labels/", hasBody = true)
     Call<Void> removeLabelFromMail(@Path("id") String mailId, @Body Map<String, String> body);
 
     // Retrieves a single mail by ID
