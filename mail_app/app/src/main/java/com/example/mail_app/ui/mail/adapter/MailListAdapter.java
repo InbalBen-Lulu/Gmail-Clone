@@ -1,25 +1,14 @@
-package com.example.mail_app.ui.view;
+package com.example.mail_app.ui.mail.adapter;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mail_app.R;
 import com.example.mail_app.data.entity.FullMail;
-import com.example.mail_app.data.entity.Label;
-import com.example.mail_app.utils.MailUtils;
 
 import java.util.List;
 import java.util.function.Consumer;

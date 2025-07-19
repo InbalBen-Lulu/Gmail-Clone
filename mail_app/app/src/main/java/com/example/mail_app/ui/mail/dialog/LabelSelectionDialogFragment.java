@@ -1,4 +1,4 @@
-package com.example.mail_app.ui.dialog;
+package com.example.mail_app.ui.mail.dialog;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -19,27 +19,25 @@ import com.example.mail_app.viewmodel.LabelViewModel;
 import com.example.mail_app.viewmodel.MailViewModel;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class LabelSelectionDialogFragment extends DialogFragment {
 
-    private static final String ARG_MAIL_ID = "mailId";
+    private Consumer<FullMail> updatedCallback;
 
-    public static LabelSelectionDialogFragment newInstance(String mailId) {
+    public static LabelSelectionDialogFragment newInstance(FullMail mail, Consumer<FullMail> callback) {
         LabelSelectionDialogFragment fragment = new LabelSelectionDialogFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_MAIL_ID, mailId);
+        args.putSerializable("mail", mail);
         fragment.setArguments(args);
+        fragment.updatedCallback = callback;
         return fragment;
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        assert getArguments() != null;
-        String mailId = getArguments().getString(ARG_MAIL_ID);
-
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_label_selection, null);
         LinearLayout checkboxContainer = dialogView.findViewById(R.id.labelCheckboxContainer);
 
@@ -47,26 +45,20 @@ public class LabelSelectionDialogFragment extends DialogFragment {
         LabelViewModel labelViewModel = new ViewModelProvider(activity).get(LabelViewModel.class);
         MailViewModel mailViewModel = new ViewModelProvider(activity).get(MailViewModel.class);
 
-        FullMail mail = null;
-        List<FullMail> currentMails = mailViewModel.getMails().getValue();
-        if (currentMails != null) {
-            for (FullMail m : currentMails) {
-                if (m.getMail().getId().equals(mailId)) {
-                    mail = m;
-                    break;
-                }
-            }
+        FullMail mail = (FullMail) getArguments().getSerializable("mail");
+        if (mail == null) {
+            return new AlertDialog.Builder(requireContext())
+                    .setTitle("Label as")
+                    .setMessage("Mail data not loaded yet.")
+                    .setNegativeButton("Cancel", null)
+                    .create();
         }
-
-        FullMail finalMail = mail;
 
         labelViewModel.getLabels().observe(this, labels -> {
             checkboxContainer.removeAllViews();
             Set<String> currentLabelIds = new HashSet<>();
-            if (finalMail != null) {
-                for (Label l : finalMail.getLabels()) {
-                    currentLabelIds.add(l.getId());
-                }
+            for (Label l : mail.getLabels()) {
+                currentLabelIds.add(l.getId());
             }
 
             for (Label label : labels) {
@@ -84,6 +76,7 @@ public class LabelSelectionDialogFragment extends DialogFragment {
                 .setView(dialogView)
                 .setPositiveButton(getString(R.string.label_dialog_ok), (dialog, which) -> {
                     int[] pendingOps = {0};
+                    boolean[] labelsChanged = {false};
 
                     for (int i = 0; i < checkboxContainer.getChildCount(); i++) {
                         View child = checkboxContainer.getChildAt(i);
@@ -92,39 +85,57 @@ public class LabelSelectionDialogFragment extends DialogFragment {
                             String labelId = (String) cb.getTag();
                             boolean checked = cb.isChecked();
 
-                            if (finalMail != null) {
-                                boolean alreadyHasLabel = false;
-                                for (Label l : finalMail.getLabels()) {
-                                    if (l.getId().equals(labelId)) {
-                                        alreadyHasLabel = true;
-                                        break;
-                                    }
+                            boolean alreadyHasLabel = false;
+                            for (Label l : mail.getLabels()) {
+                                if (l.getId().equals(labelId)) {
+                                    alreadyHasLabel = true;
+                                    break;
                                 }
+                            }
 
-                                if (checked && !alreadyHasLabel) {
-                                    pendingOps[0]++;
-                                    mailViewModel.addLabelToMail(mailId, labelId, () -> {
-                                        if (--pendingOps[0] == 0) {
-                                            mailViewModel.reloadCurrentCategory();
-                                        }
-                                    });
-                                } else if (!checked && alreadyHasLabel) {
-                                    pendingOps[0]++;
-                                    mailViewModel.removeLabelFromMail(mailId, labelId, () -> {
-                                        if (--pendingOps[0] == 0) {
-                                            mailViewModel.reloadCurrentCategory();
-                                        }
-                                    });
-                                }
+                            if (checked && !alreadyHasLabel) {
+                                pendingOps[0]++;
+                                labelsChanged[0] = true;
+                                mailViewModel.addLabelToMail(mail.getMail().getId(), labelId, () -> {
+                                    handleLabelOpsCompletion(mailViewModel, mail.getMail().getId(), pendingOps, labelsChanged);
+                                });
+                            } else if (!checked && alreadyHasLabel) {
+                                pendingOps[0]++;
+                                labelsChanged[0] = true;
+                                mailViewModel.removeLabelFromMail(mail.getMail().getId(), labelId, () -> {
+                                    handleLabelOpsCompletion(mailViewModel, mail.getMail().getId(), pendingOps, labelsChanged);
+                                });
                             }
                         }
                     }
 
+                    // אם לא הייתה פעולה בכלל
                     if (pendingOps[0] == 0) {
                         mailViewModel.reloadCurrentCategory();
+                        mailViewModel.refreshSingleMail(mail.getMail().getId());
+                        notifyCallbackIfNeeded(mailViewModel, mail.getMail().getId(), labelsChanged[0]);
                     }
                 })
                 .setNegativeButton(getString(R.string.label_dialog_cancel), null)
                 .create();
+    }
+
+    private void handleLabelOpsCompletion(MailViewModel mailViewModel, String mailId, int[] pendingOps, boolean[] labelsChanged) {
+        pendingOps[0]--;
+        if (pendingOps[0] == 0) {
+//            mailViewModel.reloadCurrentCategory();
+//            mailViewModel.refreshSingleMail(mailId);
+            notifyCallbackIfNeeded(mailViewModel, mailId, labelsChanged[0]);
+        }
+    }
+
+    private void notifyCallbackIfNeeded(MailViewModel viewModel, String mailId, boolean shouldNotify) {
+        if (shouldNotify && updatedCallback != null) {
+            viewModel.getLiveMailById(mailId).observe(this, updated -> {
+                if (updated != null) {
+                    updatedCallback.accept(updated);
+                }
+            });
+        }
     }
 }

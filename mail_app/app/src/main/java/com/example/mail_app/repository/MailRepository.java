@@ -128,6 +128,10 @@ public class MailRepository {
         api.deleteMail(mailId);
     }
 
+    public void refreshSingleMail(String mailId) {
+        api.refreshSingleMail(mailId);
+    }
+
     /** Toggles the star status of a mail. */
     public void toggleStar(String mailId) {
         api.toggleStar(mailId);
@@ -186,5 +190,9 @@ public class MailRepository {
     /** Scroll-loads search result mails from server (no Room update). */
     public void scrollSearchMails(String query, int offset, int limit) {
         api.searchMails(query, offset, limit);
+    }
+
+    public LiveData<FullMail> getLiveMailById(String mailId) {
+        return  api.getLiveMailById(mailId);
     }
 }

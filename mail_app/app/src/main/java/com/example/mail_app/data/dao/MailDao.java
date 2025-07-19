@@ -1,5 +1,6 @@
 package com.example.mail_app.data.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -20,6 +21,10 @@ public interface MailDao {
     @Transaction
     @Query("SELECT * FROM mail WHERE id = :mailId")
     FullMail getMailById(String mailId);
+
+    @Transaction
+    @Query("SELECT * FROM mail WHERE id = :mailId")
+    LiveData<FullMail> getLiveMailById(String mailId);
 
     // Retrieves all non-spam mails with recipients and labels
     @Transaction

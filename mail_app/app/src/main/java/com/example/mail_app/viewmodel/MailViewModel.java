@@ -142,6 +142,10 @@ public class MailViewModel extends ViewModel {
         repository.deleteMail(mailId);
     }
 
+    public void refreshSingleMail(String mailId) {
+        repository.refreshSingleMail(mailId);
+    }
+
     public void sendDraft(String mailId, Map<String, Object> body) {
         repository.sendDraft(mailId, body);
     }
@@ -260,4 +264,7 @@ public class MailViewModel extends ViewModel {
         return currentOffset;
     }
 
+    public LiveData<FullMail> getLiveMailById(String mailId) {
+        return repository.getLiveMailById(mailId);
+    }
 }

@@ -1,10 +1,7 @@
 package com.example.mail_app.ui.mail;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ActionMode;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -18,7 +15,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mail_app.R;
 import com.example.mail_app.data.entity.FullMail;
-import com.example.mail_app.ui.view.MailListAdapter;
+import com.example.mail_app.ui.mail.action.MailActionModeCallback;
+import com.example.mail_app.ui.mail.adapter.MailListAdapter;
 import com.example.mail_app.viewmodel.MailViewModel;
 
 import java.util.ArrayList;
@@ -79,7 +77,7 @@ public class MailListFragment extends Fragment {
                     adapter.setSelectedMailId(mail.getMail().getId());
 
                     actionMode = requireActivity().startActionMode(
-                            new com.example.mail_app.ui.view.MailActionModeCallback(
+                            new MailActionModeCallback(
                                     requireContext(),
                                     selectedMail,
                                     viewModel,
@@ -92,7 +90,6 @@ public class MailListFragment extends Fragment {
                     );
                 }
             }
-
 
             @Override
             public void onToggleStar(String mailId) {

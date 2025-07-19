@@ -3,6 +3,8 @@ package com.example.mail_app.app.api;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.example.mail_app.MyApp;
 import com.example.mail_app.app.network.AuthWebService;
@@ -21,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -335,6 +338,10 @@ public class MailAPI {
         api.searchMails(query, limit, offset).enqueue(loadMailListCallback(() -> mailDao.searchMails(query)));
     }
 
+    public LiveData<FullMail> getLiveMailById(String mailId) {
+        return mailDao.getLiveMailById(mailId);
+    }
+
     private Callback<MailListResponse> loadMailListCallback(Supplier<List<FullMail>> roomFetcher) {
         return new Callback<MailListResponse>() {
             @Override
@@ -436,7 +443,7 @@ public class MailAPI {
     }
 
     // Refreshes a single mail inside the current LiveData list
-    private void refreshSingleMail(String mailId) {
+    public void refreshSingleMail(String mailId) {
         new Thread(() -> {
             FullMail updated = mailDao.getMailById(mailId);
             if (updated == null) return;
@@ -588,20 +595,4 @@ public class MailAPI {
             }
         });
     }
-
-//    public void updateMailInList(FullMail updatedMail) {
-//        List<FullMail> current = mailListData.getValue();
-//        if (current == null) return;
-//
-//        List<FullMail> updatedList = new ArrayList<>(current);
-//        for (int i = 0; i < updatedList.size(); i++) {
-//            if (updatedList.get(i).getMail().getId().equals(updatedMail.getMail().getId())) {
-//                updatedList.set(i, updatedMail);
-//                break;
-//            }
-//        }
-//
-//        mailListData.postValue(updatedList);
-//    }
-
 }

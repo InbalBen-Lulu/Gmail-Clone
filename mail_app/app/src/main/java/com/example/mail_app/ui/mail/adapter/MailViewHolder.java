@@ -1,11 +1,10 @@
-package com.example.mail_app.ui.view;
+package com.example.mail_app.ui.mail.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,7 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mail_app.R;
 import com.example.mail_app.data.entity.FullMail;
-import com.example.mail_app.data.entity.Label;
+import com.example.mail_app.ui.mail.component.LabelChip;
+import com.example.mail_app.ui.view.UserAvatarView;
 import com.example.mail_app.utils.MailUtils;
 
 import java.util.function.Consumer;
@@ -102,31 +102,7 @@ public class MailViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void setupLabels(FullMail mail, Context context) {
-        labelContainer.removeAllViews();
-        int maxLabels = 3, added = 0, totalWidthPx = 0;
-        int maxWidthPx = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.5);
-
-        for (Label label : mail.getLabels()) {
-            if (added >= maxLabels || totalWidthPx > maxWidthPx) break;
-
-            TextView labelView = new TextView(context);
-            labelView.setText(label.getName());
-            labelView.setTextColor(resolveThemeColor(context, R.attr.text_color));
-            labelView.setTextSize(12f);
-            labelView.setPadding(24, 8, 24, 8);
-            labelView.setBackground(MailUtils.getRoundedLabelDrawable(label.getColor()));
-
-            ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMarginEnd(8);
-            labelView.setLayoutParams(params);
-
-            labelContainer.addView(labelView);
-            labelView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-            totalWidthPx += labelView.getMeasuredWidth() + params.getMarginEnd();
-            added++;
-        }
+        LabelChip.displayLabelChips(context, labelContainer, mail.getLabels());
     }
 
     private int resolveThemeColor(Context context, int attrId) {
