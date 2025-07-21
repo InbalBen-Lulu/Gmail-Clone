@@ -7,13 +7,13 @@
     android:fitsSystemWindows="true"
     android:layout_height="match_parent">
 
-    <!-- Main content -->
+    <!-- Root container for the main screen content -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- עטיפה של פס החיפוש -->
+        <!-- Container for the top search bar -->
         <LinearLayout
             android:id="@+id/search_bar_wrapper"
             android:layout_width="match_parent"
@@ -21,12 +21,13 @@
             android:orientation="vertical"
             app:layout_constraintTop_toTopOf="parent">
 
+            <!-- Includes the custom search bar view -->
             <include
                 layout="@layout/view_search_bar"
                 android:id="@+id/view_search_bar" />
         </LinearLayout>
 
-        <!-- Main fragment content -->
+        <!-- Host fragment for mail list or other main content -->
         <FrameLayout
             android:id="@+id/main_content"
             android:layout_width="0dp"
@@ -36,6 +37,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Floating action button for composing a new mail -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/composeButton"
             android:layout_width="wrap_content"
@@ -51,7 +53,7 @@
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Sidebar fragment using FragmentContainerView -->
+    <!-- Sidebar navigation fragment shown when drawer is open -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/sidebar_fragment"
         android:name="com.example.mail_app.ui.mail.SidebarFragment"

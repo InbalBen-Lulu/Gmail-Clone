@@ -24,24 +24,26 @@ import com.example.mail_app.viewmodel.MailViewModel;
 import java.util.ArrayList;
 
 /**
- * Fragment that displays a list of mails based on current ViewModel state.
- * Supports infinite scroll and pull-to-refresh.
+ * Fragment that displays a list of mails (inbox, sent, drafts, etc.)
+ * Supports infinite scroll, pull-to-refresh, and long-click actions.
  */
 public class MailListFragment extends Fragment {
 
     private MailViewModel viewModel;
     private MailListAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
-    private boolean isLoading = false; // prevent double load
-    private static final int VISIBLE_THRESHOLD = 4;
+    private boolean isLoading = false; // Prevents duplicate loading
+    private static final int VISIBLE_THRESHOLD = 4; // When to trigger "load more"
 
     private static final String ARG_CATEGORY = "category";
     private String category;
 
-    private ActionMode actionMode;
-
+    private ActionMode actionMode; // Action bar for long-press actions
     private FullMail selectedMail;
 
+    /**
+     * Factory method to create a new instance with a specific category.
+     */
     public static MailListFragment newInstance(String category) {
         MailListFragment fragment = new MailListFragment();
         Bundle args = new Bundle();
@@ -50,10 +52,16 @@ public class MailListFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Constructor that inflates the fragment layout.
+     */
     public MailListFragment() {
         super(R.layout.fragment_mail_list);
     }
 
+    /**
+     * Called after the view is created – initializes UI components and listeners.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -63,10 +71,12 @@ public class MailListFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.mailRecyclerView);
         swipeRefresh = view.findViewById(R.id.swipeRefresh);
 
+        // Setup RecyclerView adapter with mail click listeners
         adapter = new MailListAdapter(new ArrayList<>(), new MailListAdapter.OnMailClickListener() {
+            @Override
             public void onClick(FullMail mail) {
                 if (actionMode != null) {
-                    actionMode.finish(); // לחיצה רגילה יוצאת ממצב הבחירה
+                    actionMode.finish(); // Exit selection mode on normal click
                 } else {
                     onMailClick(mail);
                 }
@@ -96,10 +106,10 @@ public class MailListFragment extends Fragment {
             @Override
             public void onToggleStar(String mailId) {
                 viewModel.toggleStar(mailId, msg -> UiUtils.showMessage(requireActivity(), msg));
-
             }
         });
 
+        // Setup RecyclerView layout manager and attach adapter
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -107,29 +117,27 @@ public class MailListFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(MailViewModel.class);
 
         if (category != null) {
-            viewModel.setCategory(category);
+            viewModel.setCategory(category); // Filters mails by category
         }
 
         TextView emptyTextView = view.findViewById(R.id.emptyTextView);
 
+        // Observe mails from ViewModel and update UI accordingly
         viewModel.getMails().observe(getViewLifecycleOwner(), mails -> {
             swipeRefresh.setRefreshing(false);
             isLoading = false;
 
             adapter.setMails(mails);
 
-            if (mails.isEmpty()) {
-                emptyTextView.setVisibility(View.VISIBLE);
-            } else {
-                emptyTextView.setVisibility(View.GONE);
-            }
+            emptyTextView.setVisibility(mails.isEmpty() ? View.VISIBLE : View.GONE);
         });
 
-
+        // Enable pull-to-refresh
         swipeRefresh.setOnRefreshListener(() -> {
-            viewModel.reloadCurrentCategory(); // דורש שתהיה פונקציה כזו ב־ViewModel
+            viewModel.reloadCurrentCategory(); // Reload current mail category or label
         });
 
+        // Add scroll listener to detect when reaching the end of the list
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
@@ -139,24 +147,27 @@ public class MailListFragment extends Fragment {
 
                 if (!isLoading && totalItemCount <= (lastVisibleItem + VISIBLE_THRESHOLD)) {
                     isLoading = true;
-                    viewModel.loadMoreMails(); // יזהה לפי המצב הנוכחי (קטגוריה או label)
+                    viewModel.loadMoreMails(); // Loads more based on current state
                 }
             }
         });
-
-
     }
 
+    /**
+     * Handles mail item click.
+     * If it's a draft, opens ComposeActivity to edit.
+     * Otherwise, opens MailDetailsActivity to view mail.
+     */
     private void onMailClick(FullMail mail) {
         String mailId = mail.getMail().getId();
 
         if (mail.getMail().isDraft()) {
-            // פתח את Compose לעריכת טיוטה
+            // Open Compose screen for editing draft
             Intent intent = new Intent(requireContext(), ComposeActivity.class);
             intent.putExtra(ComposeActivity.EXTRA_MAIL_ID, mailId);
             startActivity(intent);
         } else {
-            // פתח את המסך הרגיל של מייל
+            // Open full mail details screen
             MailDetailsActivity.open(requireContext(), mailId);
         }
     }

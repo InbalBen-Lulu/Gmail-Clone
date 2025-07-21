@@ -35,17 +35,22 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-// API class for managing mail data between server (Retrofit) and local database (Room)
+// Main API class responsible for mail operations between server (via Retrofit) and local Room database
 public class MailAPI {
-    private final MailDao mailDao; // DAO for accessing mail table in Room
-    private final PublicUserDao publicUserDao; // DAO for accessing public users (senders)
-    private final MutableLiveData<List<FullMail>> mailListData; // LiveData to notify UI
-    private final MailWebService api; // Retrofit API interface to the backend server
+    // DAOs for accessing Room tables
+    private final MailDao mailDao;
+    private final PublicUserDao publicUserDao;
 
-    private static final int INITIAL_MAIL_LIMIT = 100; // Number of mails to load initially
-    private static final int CATEGORY_MAIL_LIMIT = 20; // Default page size for category queries
+    // LiveData to expose current mail list to the UI
+    private final MutableLiveData<List<FullMail>> mailListData;
 
-    // Constructor – sets up DAOs and Retrofit with auth token
+    // Retrofit interface to perform HTTP calls
+    private final MailWebService api;
+
+    private static final int INITIAL_MAIL_LIMIT = 100; // for initial sync
+    private static final int CATEGORY_MAIL_LIMIT = 20; // for category-specific pagination
+
+    // Constructor sets up DAOs and Retrofit instance with auth token
     public MailAPI(MutableLiveData<List<FullMail>> mailListData, MailDao mailDao, PublicUserDao publicUserDao) {
         this.mailDao = mailDao;
         this.publicUserDao = publicUserDao;
@@ -107,13 +112,13 @@ public class MailAPI {
             Call<MailListResponse> apiCall,
             String logTag) {
 
-        // טען מקומית מיד
+        // Fetch and post local results immediately
         new Thread(() -> {
             List<FullMail> local = roomFetcher.get();
             postToMain(() -> mailListData.setValue(local));
         }).start();
 
-        // ואז נסה לטעון מהשרת
+        // Then try to fetch fresh data from API and overwrite Room + UI
         apiCall.enqueue(new Callback<MailListResponse>() {
             @Override
             public void onResponse(Call<MailListResponse> call, Response<MailListResponse> response) {
@@ -138,6 +143,7 @@ public class MailAPI {
                     }).start();
                 } else {
                     Log.w("MailAPI", logTag + " | empty or failed response");
+                    // Falls back to local results on failure
                     new Thread(() -> {
                         List<FullMail> fallback = roomFetcher.get();
                         postToMain(() -> mailListData.setValue(fallback));
@@ -148,6 +154,7 @@ public class MailAPI {
             @Override
             public void onFailure(Call<MailListResponse> call, Throwable t) {
                 Log.e("MailAPI", logTag + " failed: " + t.getMessage());
+                // Falls back to local results on failure
                 new Thread(() -> {
                     List<FullMail> fallback = roomFetcher.get();
                     postToMain(() -> mailListData.setValue(fallback));
@@ -361,10 +368,12 @@ public class MailAPI {
         api.searchMails(query, limit, offset).enqueue(loadMailListCallback(() -> mailDao.searchMails(query)));
     }
 
+    // Returns a LiveData object for observing a specific mail by ID
     public LiveData<FullMail> getLiveMailById(String mailId) {
         return mailDao.getLiveMailById(mailId);
     }
 
+    // Reusable callback for list-based responses (updates Room + LiveData)
     private Callback<MailListResponse> loadMailListCallback(Supplier<List<FullMail>> roomFetcher) {
         return new Callback<MailListResponse>() {
             @Override
@@ -510,7 +519,7 @@ public class MailAPI {
 
                     postToMain(() -> {
                         mailListData.setValue(updated);
-                        onError.accept(null); // ← הצלחה
+                        onError.accept(null);
                     });
                 }).start();
             }
@@ -692,7 +701,7 @@ public class MailAPI {
     private String extractErrorMessage(Response<?> response, String fallbackMessage) {
         try {
             if (response.errorBody() != null) {
-                String errorJson = response.errorBody().string();  // 👈 קרא רק פעם אחת!
+                String errorJson = response.errorBody().string();
                 Log.d("MailAPI", "Raw error JSON: " + errorJson);
 
                 if (!errorJson.isEmpty()) {

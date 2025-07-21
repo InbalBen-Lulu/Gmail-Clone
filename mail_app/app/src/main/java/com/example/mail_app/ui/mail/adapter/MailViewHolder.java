@@ -21,6 +21,10 @@ import com.example.mail_app.utils.ThemeUtils;
 
 import java.util.function.Consumer;
 
+/**
+ * ViewHolder class for displaying a single mail item inside the RecyclerView.
+ * Binds mail data to the views and handles click interactions.
+ */
 public class MailViewHolder extends RecyclerView.ViewHolder {
 
     private final TextView senderView, subjectView, dateView, bodyView;
@@ -28,6 +32,9 @@ public class MailViewHolder extends RecyclerView.ViewHolder {
     private final UserAvatarView avatarView;
     private final LinearLayout labelContainer;
 
+    /**
+     * Constructor initializes all views used to display the mail.
+     */
     public MailViewHolder(View itemView) {
         super(itemView);
         senderView = itemView.findViewById(R.id.mailSender);
@@ -39,18 +46,22 @@ public class MailViewHolder extends RecyclerView.ViewHolder {
         labelContainer = itemView.findViewById(R.id.mailLabelContainer);
     }
 
+    /**
+     * Binds a FullMail object to the UI, including avatar, subject, sender, labels, etc.
+     * Also handles click and long-click events.
+     */
     public void bind(FullMail mail, String selectedMailId, MailListAdapter.OnMailClickListener listener, Consumer<String> onToggleStar) {
         Context context = itemView.getContext();
         if (mail == null || mail.getMail() == null) return;
 
-        // background
+        // Highlight background if mail is selected
         itemView.setBackgroundColor(
                 mail.getMail().getId().equals(selectedMailId)
                         ? ContextCompat.getColor(context, R.color.selected_blue)
                         : Color.TRANSPARENT
         );
 
-        // Sender
+        // Sender: show "Draft" label if mail is a draft, otherwise sender's name
         if (mail.getMail().isDraft()) {
             senderView.setText(context.getString(R.string.draft_label));
             senderView.setTextColor(ContextCompat.getColor(context, R.color.draft_red));
@@ -61,18 +72,18 @@ public class MailViewHolder extends RecyclerView.ViewHolder {
             senderView.setTypeface(null, mail.getMail().isRead() ? Typeface.NORMAL : Typeface.BOLD);
         }
 
-        // Subject
+        // Subject text and style
         subjectView.setText(mail.getMail().getSubject());
         subjectView.setTextColor(ThemeUtils.resolveThemeColor(context, R.attr.text_color));
         subjectView.setTypeface(null, mail.getMail().isRead() ? Typeface.NORMAL : Typeface.BOLD);
 
-        // Body
+        // Mail body preview
         bodyView.setText(mail.getMail().getBody());
 
-        // Date
+        // Sent date
         dateView.setText(MailUtils.formatMailDate(mail.getMail().getSentAt()));
 
-        // Avatar
+        // Sender avatar (profile image or default)
         String imageUrl = mail.getFromUser().getProfileImage();
         if (imageUrl != null && !imageUrl.isEmpty()) {
             avatarView.setImageUrl(imageUrl);
@@ -80,7 +91,7 @@ public class MailViewHolder extends RecyclerView.ViewHolder {
             avatarView.setImageRes(R.drawable.default_avatar);
         }
 
-        // Star
+        // Star icon (visible only if not spam)
         if (mail.getMail().isSpam()) {
             starIcon.setVisibility(View.GONE);
         } else {
@@ -91,18 +102,23 @@ public class MailViewHolder extends RecyclerView.ViewHolder {
             starIcon.setOnClickListener(v -> onToggleStar.accept(mail.getMail().getId()));
         }
 
-        // Labels
+        // Display label chips under the mail
         setupLabels(mail, context);
 
-        // Clicks
+        // Handle mail click (open or edit)
         itemView.setOnClickListener(v -> listener.onClick(mail));
+
+        // Handle long-click (enter selection mode)
         itemView.setOnLongClickListener(v -> {
             listener.onLongClick(mail);
             return true;
         });
     }
 
+    /**
+     * Displays all label chips associated with the mail in the label container.
+     */
     private void setupLabels(FullMail mail, Context context) {
-        LabelChip.displayLabelChips(context, labelContainer, mail.getLabels());
+        LabelChip.displayLabelChips(context, labelContainer, mail.getLabels(), false);
     }
 }

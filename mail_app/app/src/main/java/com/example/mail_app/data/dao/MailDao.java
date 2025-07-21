@@ -22,6 +22,7 @@ public interface MailDao {
     @Query("SELECT * FROM mail WHERE id = :mailId")
     FullMail getMailById(String mailId);
 
+    // Returns a LiveData-wrapped FullMail object for the given mail ID
     @Transaction
     @Query("SELECT * FROM mail WHERE id = :mailId")
     LiveData<FullMail> getLiveMailById(String mailId);

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <!-- Scrollable container for the label checkboxes -->
     <LinearLayout
         android:id="@+id/labelCheckboxContainer"
         android:layout_width="match_parent"

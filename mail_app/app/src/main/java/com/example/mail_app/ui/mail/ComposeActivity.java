@@ -18,6 +18,10 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+/**
+ * Activity for composing a new mail or editing an existing draft.
+ * Handles UI input, send/back button logic, and integrates with MailViewModel.
+ */
 public class ComposeActivity extends AppCompatActivity {
 
     private EditText toInput, subjectInput, bodyInput;
@@ -26,13 +30,15 @@ public class ComposeActivity extends AppCompatActivity {
 
     public static final String EXTRA_MAIL_ID = "mailId";
 
-    private String mailId = null; // אם לא null → מצב עריכת טיוטה קיימת
+    // If not null → we're editing an existing draft
+    private String mailId = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose);
 
+        // Initialize input fields and buttons
         toInput = findViewById(R.id.to_input);
         subjectInput = findViewById(R.id.subject_input);
         bodyInput = findViewById(R.id.body_input);
@@ -41,7 +47,7 @@ public class ComposeActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(MailViewModel.class);
 
-        // קבלה מה־Intent (אם קיימת טיוטה לעריכה)
+        // Check if we're editing an existing draft
         mailId = getIntent().getStringExtra(EXTRA_MAIL_ID);
         if (mailId != null) {
             viewModel.getLiveMailById(mailId).observe(this, mail -> {
@@ -51,13 +57,18 @@ public class ComposeActivity extends AppCompatActivity {
             });
         }
 
+        // Handle clicks on send/back buttons
         sendButton.setOnClickListener(v -> handleSend());
         backButton.setOnClickListener(v -> handleBack());
     }
 
+    /**
+     * Fills input fields with content from a draft mail.
+     */
     private void fillDraftFields(FullMail draft) {
         Mail mail = draft.getMail();
 
+        // Build recipient string from cross-ref list
         List<String> toList = draft.getRecipientRefs().stream()
                 .map(MailRecipientCrossRef::getUserId)
                 .map(String::trim)
@@ -69,19 +80,23 @@ public class ComposeActivity extends AppCompatActivity {
             toInput.setText(toDisplay);
         }
 
-
-
+        // Set subject if not empty
         String subject = mail.getSubject();
         if (subject != null && !subject.isBlank()) {
             subjectInput.setText(subject);
         }
 
+        // Set body if not empty
         String body = mail.getBody();
         if (body != null && !body.isBlank()) {
             bodyInput.setText(body);
         }
     }
 
+    /**
+     * Handles the send button logic.
+     * If editing a draft → calls sendDraft, otherwise creates a new mail.
+     */
     private void handleSend() {
         String to = toInput.getText().toString().trim();
         String subject = subjectInput.getText().toString().trim();
@@ -92,11 +107,12 @@ public class ComposeActivity extends AppCompatActivity {
             return;
         }
 
+        // Common callback for success/error
         Consumer<String> callback = msg -> {
             if (msg == null || msg.isEmpty()) {
-                finish(); // הצלחה
+                finish(); // Success
             } else {
-                UiUtils.showMessage(this, msg); // שגיאה – לא יוצאים מהמסך
+                UiUtils.showMessage(this, msg); // Show error, stay on screen
             }
         };
 
@@ -107,6 +123,11 @@ public class ComposeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Handles the back button logic.
+     * If fields are empty → exits (or deletes existing draft).
+     * Otherwise → saves as draft (update or create).
+     */
     private void handleBack() {
         String to = toInput.getText().toString().trim();
         String subject = subjectInput.getText().toString().trim();
@@ -119,18 +140,18 @@ public class ComposeActivity extends AppCompatActivity {
                     finish();
                 });
             } else {
-                finish(); // אין מה לשמור או למחוק
+                finish(); // Nothing to save or delete
             }
             return;
         }
 
         if (mailId != null) {
             viewModel.updateMail(mailId, to, subject, body, msg -> {
-                UiUtils.showMessage(this, msg, this::finish); // רק אחרי שה־Snackbar נעלם
+                UiUtils.showMessage(this, msg, this::finish); // Delay finish until Snackbar closes
             });
         } else {
             viewModel.createMail(to, subject, body, true, msg -> {
-                UiUtils.showMessage(this, msg, this::finish); // אותו דבר כאן
+                UiUtils.showMessage(this, msg, this::finish);
             });
         }
     }

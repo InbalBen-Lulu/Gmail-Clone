@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Toolbar -->
+    <!-- Top action toolbar for mail options (label as, delete, etc.) -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
         android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:titleTextColor="@android:color/transparent" />
 
-    <!-- Subject + Star -->
+    <!-- Mail subject and star toggle icon -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,16 +41,24 @@
             android:layout_gravity="end" />
     </LinearLayout>
 
-    <!-- Labels container -->
-    <LinearLayout
-        android:id="@+id/labelContainer"
-        android:layout_width="wrap_content"
+    <!-- Horizontal scrollable container for label chips -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp" />
+        android:scrollbars="none"
+        android:overScrollMode="never"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
 
-    <!-- Sender info -->
+        <LinearLayout
+            android:id="@+id/labelContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="4dp" />
+    </HorizontalScrollView>
+
+    <!-- Sender avatar and sender details (name and email) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -86,7 +94,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Date -->
+    <!-- Timestamp or sent date text -->
     <TextView
         android:id="@+id/dateText"
         android:layout_width="match_parent"
@@ -95,7 +103,7 @@
         android:textSize="12sp"
         android:layout_marginTop="8dp" />
 
-    <!-- Body -->
+    <!-- Full email body text -->
     <TextView
         android:id="@+id/bodyText"
         android:layout_width="match_parent"

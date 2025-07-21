@@ -1,7 +1,5 @@
 package com.example.mail_app.ui.mail.component;
 
-import static com.example.mail_app.utils.UiUtils.showMessage;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -20,14 +18,23 @@ import com.example.mail_app.viewmodel.MailViewModel;
 
 import java.util.function.Consumer;
 
+/**
+ * Utility class for setting up and handling the Gmail-style top action menu
+ * (delete, label, report spam, etc.) for a given mail item.
+ */
 public class MailMenu {
-    public static final String LABEL_DIALOG_TAG = "label_dialog";
-    private static final String RECEIVED = "received";
 
+    public static final String LABEL_DIALOG_TAG = "label_dialog";
+    private static final String RECEIVED = "received"; // Mail type indicating an inbox message
+
+    /**
+     * Dynamically adds menu items to the top bar based on mail properties.
+     * Supports delete, label, and report/unspam.
+     */
     public static void setupMenu(Context context, Menu menu, FullMail mail) {
         menu.clear();
 
-        // מחיקה – תמיד
+        // === Delete Action ===
         Drawable deleteIcon = ContextCompat.getDrawable(context, R.drawable.outline_delete_24);
         if (deleteIcon != null) {
             deleteIcon.mutate().setTint(ThemeUtils.resolveThemeColor(context, R.attr.gray_icon));
@@ -36,7 +43,7 @@ public class MailMenu {
                 .setIcon(deleteIcon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
-        // תיוג – רק אם לא ספאם
+        // === Label Action (only if NOT spam) ===
         if (!mail.getMail().isSpam()) {
             Drawable labelIcon = ContextCompat.getDrawable(context, R.drawable.outline_label_24);
             if (labelIcon != null) {
@@ -47,7 +54,7 @@ public class MailMenu {
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
 
-        // דיווח ספאם / ביטול – רק אם זה מייל שקיבלת
+        // === Report/Unspam Action (only for received mails) ===
         if (RECEIVED.equals(mail.getMail().getType())) {
             boolean isSpam = mail.getMail().isSpam();
             int iconRes = isSpam ? R.drawable.baseline_report_off : R.drawable.outline_report_24;
@@ -61,27 +68,32 @@ public class MailMenu {
                     .setIcon(reportIcon)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
-
     }
 
+    /**
+     * Handles user click on any of the action items in the menu.
+     * Performs the corresponding ViewModel operations and calls optional callbacks.
+     */
     public static boolean handleMenuItemClick(
             Context context,
             MenuItem item,
             FullMail mail,
             MailViewModel viewModel,
-            Runnable onFinish,
-            Consumer<FullMail> onMailUpdated
+            Runnable onFinish, // callback to close ActionMode or Activity
+            Consumer<FullMail> onMailUpdated // callback to refresh mail UI (optional)
     ) {
         int itemId = item.getItemId();
 
+        // === Delete Mail ===
         if (itemId == R.id.action_delete) {
             viewModel.deleteMail(
                     mail.getMail().getId(),
                     msg -> UiUtils.showMessage((Activity) context, msg)
             );
-
             if (onFinish != null) onFinish.run();
             return true;
+
+            // === Label Dialog ===
         } else if (itemId == R.id.action_label) {
             LabelSelectionDialogFragment dialog = LabelSelectionDialogFragment.newInstance(mail, updated -> {
                 if (onMailUpdated != null) {
@@ -91,16 +103,15 @@ public class MailMenu {
             dialog.show(((AppCompatActivity) context).getSupportFragmentManager(), LABEL_DIALOG_TAG);
             return true;
 
+            // === Report Spam / Unspam ===
         } else if (itemId == R.id.action_report) {
             boolean newSpamState = !mail.getMail().isSpam();
-
             viewModel.setSpam(
                     mail.getMail().getId(),
                     newSpamState,
-                    () -> viewModel.reloadCurrentCategory(),  // onSuccess
-                    msg -> UiUtils.showMessage((Activity) context, msg)                   // onError
+                    () -> viewModel.reloadCurrentCategory(), // reload filtered mails
+                    msg -> UiUtils.showMessage((Activity) context, msg)
             );
-
             if (onFinish != null) onFinish.run();
             return true;
         }

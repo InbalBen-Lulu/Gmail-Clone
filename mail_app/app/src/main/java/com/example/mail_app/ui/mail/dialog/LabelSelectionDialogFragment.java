@@ -23,11 +23,18 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
+/**
+ * Dialog for selecting labels to apply/remove from a specific mail.
+ * Displays a checkbox list of all labels and applies changes via the ViewModel.
+ */
 public class LabelSelectionDialogFragment extends DialogFragment {
 
     private Consumer<FullMail> updatedCallback;
     private static final String ARG_MAIL = "mail";
 
+    /**
+     * Factory method to create a new instance of the dialog with a given mail and callback.
+     */
     public static LabelSelectionDialogFragment newInstance(FullMail mail,
                                                            Consumer<FullMail> callback) {
         LabelSelectionDialogFragment fragment = new LabelSelectionDialogFragment();
@@ -41,6 +48,7 @@ public class LabelSelectionDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // Inflate the custom layout
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_label_selection, null);
         LinearLayout checkboxContainer = dialogView.findViewById(R.id.labelCheckboxContainer);
 
@@ -50,6 +58,7 @@ public class LabelSelectionDialogFragment extends DialogFragment {
 
         FullMail mail = (FullMail) getArguments().getSerializable(ARG_MAIL);
         if (mail == null) {
+            // Show error dialog if mail is null
             return new AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.label_dialog_title_error))
                     .setMessage(getString(R.string.label_dialog_message_not_loaded))
@@ -57,6 +66,7 @@ public class LabelSelectionDialogFragment extends DialogFragment {
                     .create();
         }
 
+        // Observe labels and dynamically build checkboxes for each one
         labelViewModel.getLabels().observe(this, labels -> {
             checkboxContainer.removeAllViews();
             Set<String> currentLabelIds = new HashSet<>();
@@ -66,8 +76,7 @@ public class LabelSelectionDialogFragment extends DialogFragment {
 
             for (Label label : labels) {
                 CheckBox checkBox = (CheckBox) getLayoutInflater()
-                        .inflate(R.layout.item_label_checkbox, checkboxContainer,
-                                false);
+                        .inflate(R.layout.item_label_checkbox, checkboxContainer, false);
                 checkBox.setText(label.getName());
                 checkBox.setChecked(currentLabelIds.contains(label.getId()));
                 checkBox.setTag(label.getId());
@@ -75,14 +84,15 @@ public class LabelSelectionDialogFragment extends DialogFragment {
             }
         });
 
+        // Build the actual dialog
         return new AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.label_dialog_title))
                 .setView(dialogView)
-                .setPositiveButton(getString(R.string.label_dialog_ok), (dialog,
-                                                                         which) -> {
-                    int[] pendingOps = {0};
-                    boolean[] labelsChanged = {false};
+                .setPositiveButton(getString(R.string.label_dialog_ok), (dialog, which) -> {
+                    int[] pendingOps = {0};           // Tracks number of pending label ops
+                    boolean[] labelsChanged = {false}; // Tracks if labels were actually changed
 
+                    // Loop through each checkbox and apply/remove labels accordingly
                     for (int i = 0; i < checkboxContainer.getChildCount(); i++) {
                         View child = checkboxContainer.getChildAt(i);
                         if (child instanceof CheckBox) {
@@ -99,39 +109,41 @@ public class LabelSelectionDialogFragment extends DialogFragment {
                             }
 
                             if (checked && !alreadyHasLabel) {
+                                // Add new label
                                 pendingOps[0]++;
                                 labelsChanged[0] = true;
                                 mailViewModel.addLabelToMail(
                                         mail.getMail().getId(), labelId,
-                                        () -> handleLabelOpsCompletion(mailViewModel,
-                                                mail.getMail().getId(), pendingOps, labelsChanged),
+                                        () -> handleLabelOpsCompletion(mailViewModel, mail.getMail().getId(), pendingOps, labelsChanged),
                                         msg -> UiUtils.showMessage(requireActivity(), msg)
                                 );
                             } else if (!checked && alreadyHasLabel) {
+                                // Remove existing label
                                 pendingOps[0]++;
                                 labelsChanged[0] = true;
                                 mailViewModel.removeLabelFromMail(
                                         mail.getMail().getId(), labelId,
-                                        () -> handleLabelOpsCompletion(mailViewModel,
-                                                mail.getMail().getId(), pendingOps, labelsChanged),
+                                        () -> handleLabelOpsCompletion(mailViewModel, mail.getMail().getId(), pendingOps, labelsChanged),
                                         msg -> UiUtils.showMessage(requireActivity(), msg)
                                 );
                             }
                         }
                     }
 
-                    // אם לא הייתה פעולה בכלל
+                    // No changes were made – just refresh the mail list and notify
                     if (pendingOps[0] == 0) {
                         mailViewModel.reloadCurrentCategory();
                         mailViewModel.refreshSingleMail(mail.getMail().getId());
-                        notifyCallbackIfNeeded(mailViewModel, mail.getMail().getId(),
-                                labelsChanged[0]);
+                        notifyCallbackIfNeeded(mailViewModel, mail.getMail().getId(), labelsChanged[0]);
                     }
                 })
                 .setNegativeButton(getString(R.string.label_dialog_cancel), null)
                 .create();
     }
 
+    /**
+     * Called after each label operation (add/remove). When all complete, triggers the callback.
+     */
     private void handleLabelOpsCompletion(MailViewModel mailViewModel, String mailId,
                                           int[] pendingOps, boolean[] labelsChanged) {
         pendingOps[0]--;
@@ -140,6 +152,9 @@ public class LabelSelectionDialogFragment extends DialogFragment {
         }
     }
 
+    /**
+     * Notifies the UI via callback after label updates are complete.
+     */
     private void notifyCallbackIfNeeded(MailViewModel viewModel, String mailId,
                                         boolean shouldNotify) {
         if (shouldNotify && updatedCallback != null) {

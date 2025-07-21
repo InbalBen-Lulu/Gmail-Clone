@@ -130,6 +130,7 @@ public class MailRepository {
         api.deleteMail(mailId, onError);
     }
 
+    /** Refreshes a specific mail inside the current LiveData list. */
     public void refreshSingleMail(String mailId) {
         api.refreshSingleMail(mailId);
     }
@@ -197,6 +198,7 @@ public class MailRepository {
         api.searchMails(query, offset, limit);
     }
 
+    /** Returns observable LiveData for a single mail by ID. */
     public LiveData<FullMail> getLiveMailById(String mailId) {
         return  api.getLiveMailById(mailId);
     }

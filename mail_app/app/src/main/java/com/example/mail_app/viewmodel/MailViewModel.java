@@ -9,7 +9,6 @@ import com.example.mail_app.data.entity.FullMail;
 import com.example.mail_app.repository.MailRepository;
 import com.example.mail_app.utils.AppConstants;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -18,16 +17,18 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import android.util.Log;
-
 /**
  * ViewModel for managing mail operations with support for category/label state and pagination.
  */
 public class MailViewModel extends ViewModel {
 
+    // Repository handling data operations (Room + Retrofit)
     private final MailRepository repository;
+
+    // LiveData to observe mail list updates
     private final LiveData<List<FullMail>> mails;
 
+    // Current UI state
     private String currentCategoryTitle = null;
     private String currentLabelId = null;
     private boolean isLabelMode = false;
@@ -38,6 +39,7 @@ public class MailViewModel extends ViewModel {
         mails = repository.getLiveData();
     }
 
+    // Returns LiveData list of current mails
     public LiveData<List<FullMail>> getMails() {
         return mails;
     }
@@ -49,7 +51,9 @@ public class MailViewModel extends ViewModel {
         repository.loadInitialMails();
     }
 
-    // State Management
+    /**
+     * Updates state to a specific category (Inbox, Sent, etc.) and loads data accordingly.
+     */
     public void setCategory(String title) {
         currentCategoryTitle = title;
         currentLabelId = null;
@@ -60,27 +64,21 @@ public class MailViewModel extends ViewModel {
 
         switch (title) {
             case "Inbox":
-                Log.d("MailViewModel", "Loading inbox mails");
                 loadInboxMails();
                 break;
             case "Starred":
-                Log.d("MailViewModel", "Loading starred mails");
                 loadStarredMails();
                 break;
             case "Sent":
-                Log.d("MailViewModel", "Loading sent mails");
                 loadSentMails();
                 break;
             case "Drafts":
-                Log.d("MailViewModel", "Loading draft mails");
                 loadDraftMails();
                 break;
             case "All Mail":
-                Log.d("MailViewModel", "Loading all mails");
                 loadAllMails();
                 break;
             case "Spam":
-                Log.d("MailViewModel", "Loading spam mails");
                 loadSpamMails();
                 break;
             default:
@@ -89,7 +87,9 @@ public class MailViewModel extends ViewModel {
         }
     }
 
-
+    /**
+     * Sets label mode and loads mails by label ID.
+     */
     public void setLabel(String labelId) {
         currentLabelId = labelId;
         currentCategoryTitle = null;
@@ -99,6 +99,9 @@ public class MailViewModel extends ViewModel {
         loadMailsByLabel(labelId, AppConstants.DEFAULT_PAGE_SIZE, currentOffset);
     }
 
+    /**
+     * Reloads the current selected category or label from scratch (used after updates).
+     */
     public void reloadCurrentCategory() {
         currentOffset = 0;
         if (isLabelMode && currentLabelId != null) {
@@ -108,6 +111,9 @@ public class MailViewModel extends ViewModel {
         }
     }
 
+    /**
+     * Loads next page of mails for infinite scroll, depending on current state.
+     */
     public void loadMoreMails() {
         currentOffset += AppConstants.DEFAULT_PAGE_SIZE;
 
@@ -137,19 +143,32 @@ public class MailViewModel extends ViewModel {
         }
     }
 
-    // Mail operations
+    // --- Mail actions ---
+
+    /**
+     * Toggles star status of a mail.
+     */
     public void toggleStar(String mailId, Consumer<String> onError) {
         repository.toggleStar(mailId, onError);
     }
 
+    /**
+     * Deletes a mail by ID.
+     */
     public void deleteMail(String mailId, Consumer<String> onError) {
         repository.deleteMail(mailId, onError);
     }
 
+    /**
+     * Fetches updated data for a single mail from the local DB.
+     */
     public void refreshSingleMail(String mailId) {
         repository.refreshSingleMail(mailId);
     }
 
+    /**
+     * Sends a draft mail using the given fields.
+     */
     public void sendDraft(String mailId, String toRaw, String subject, String body, Consumer<String> onError) {
         List<String> recipients = Arrays.stream(toRaw.split("[,\\s]+"))
                 .map(String::trim)
@@ -169,13 +188,15 @@ public class MailViewModel extends ViewModel {
         repository.sendDraft(mailId, request, onError);
     }
 
+    /**
+     * Creates a new mail or draft depending on isDraft flag.
+     */
     public void createMail(String toRaw, String subject, String body, boolean isDraft, Consumer<String> onError) {
         List<String> recipients = Arrays.stream(toRaw.split("[,\\s]+"))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .collect(Collectors.toList());
 
-        // אם זו לא טיוטה – חובה שיהיה נמען אחד לפחות
         if (!isDraft && recipients.isEmpty()) {
             onError.accept("Please enter at least one valid recipient");
             return;
@@ -191,6 +212,9 @@ public class MailViewModel extends ViewModel {
         repository.createMail(mailData, onError);
     }
 
+    /**
+     * Updates an existing draft with new content.
+     */
     public void updateMail(String mailId, String toRaw, String subject, String body, Consumer<String> onError) {
         List<String> recipients = Arrays.stream(toRaw.split("[,\\s]+"))
                 .map(String::trim)
@@ -210,33 +234,35 @@ public class MailViewModel extends ViewModel {
         repository.updateMail(mailId, updates, onError);
     }
 
-    public void loadMailById(String mailId) {
-        repository.loadMailById(mailId);
-    }
-
-    public void addLabelToMail(String mailId, String labelId, Runnable onSuccess,
-                               Consumer<String> onError) {
+    /**
+     * Adds a label to a mail.
+     */
+    public void addLabelToMail(String mailId, String labelId, Runnable onSuccess, Consumer<String> onError) {
         Map<String, String> body = new HashMap<>();
         body.put("labelId", labelId);
         repository.addLabelToMail(mailId, body, onSuccess, onError);
     }
 
-    public void removeLabelFromMail(String mailId, String labelId, Runnable onSuccess,
-                                    Consumer<String> onError) {
+    /**
+     * Removes a label from a mail.
+     */
+    public void removeLabelFromMail(String mailId, String labelId, Runnable onSuccess, Consumer<String> onError) {
         Map<String, String> body = new HashMap<>();
         body.put("labelId", labelId);
         repository.removeLabelFromMail(mailId, body, onSuccess, onError);
     }
 
-
-    public void setSpam(String mailId, boolean isSpam, Runnable onSuccess,
-                        Consumer<String> onError) {
+    /**
+     * Marks or unmarks a mail as spam.
+     */
+    public void setSpam(String mailId, boolean isSpam, Runnable onSuccess, Consumer<String> onError) {
         Map<String, Boolean> body = new HashMap<>();
         body.put("isSpam", isSpam);
         repository.setSpam(mailId, body, onSuccess, onError);
     }
 
-    // --- Basic Loads (reset offset)
+    // --- Loaders for full refresh (reset offset)
+
     public void loadInboxMails() {
         repository.loadInboxMails();
     }
@@ -265,7 +291,8 @@ public class MailViewModel extends ViewModel {
         repository.loadMailsByLabel(labelId, limit, offset);
     }
 
-    // --- Scroll loads (load more)
+    // --- Loaders for pagination (scroll)
+
     public void scrollLoadInboxMails(int offset, int limit) {
         repository.scrollLoadInboxMails(offset, limit);
     }
@@ -294,14 +321,23 @@ public class MailViewModel extends ViewModel {
         repository.scrollLoadMailsByLabel(labelId, offset, limit);
     }
 
+    /**
+     * Starts a search by query (first page).
+     */
     public void searchMails(String query, int limit, int offset) {
         repository.searchMails(query, limit, offset);
     }
 
+    /**
+     * Loads next search page based on offset.
+     */
     public void scrollSearchMails(String query, int offset, int limit) {
         repository.scrollSearchMails(query, offset, limit);
     }
 
+    /**
+     * Gets observable LiveData for a specific mail by ID.
+     */
     public LiveData<FullMail> getLiveMailById(String mailId) {
         return repository.getLiveMailById(mailId);
     }

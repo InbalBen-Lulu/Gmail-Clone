@@ -5,10 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Container for mail list and empty state -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- Mail list shown using RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mailRecyclerView"
             android:layout_width="match_parent"
@@ -18,6 +20,7 @@
             android:padding="8dp"
             android:background="?attr/color_background" />
 
+        <!-- Message shown when no mails are available -->
         <TextView
             android:id="@+id/emptyTextView"
             android:layout_width="match_parent"

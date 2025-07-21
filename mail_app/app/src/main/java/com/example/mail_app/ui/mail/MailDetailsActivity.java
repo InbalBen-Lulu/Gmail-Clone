@@ -24,6 +24,10 @@ import com.example.mail_app.utils.MailUtils;
 import com.example.mail_app.utils.UiUtils;
 import com.example.mail_app.viewmodel.MailViewModel;
 
+/**
+ * Activity for displaying the full details of a selected mail.
+ * Includes toolbar actions, sender info, body content, and label chips.
+ */
 public class MailDetailsActivity extends AppCompatActivity {
 
     public static final String EXTRA_MAIL_ID = "mail_id";
@@ -43,14 +47,16 @@ public class MailDetailsActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(MailViewModel.class);
 
+        // Setup toolbar with back arrow and no title
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(null);  // להסרת "MailMe"
+        getSupportActionBar().setTitle(null);  // Remove default title
 
         initViews();
 
+        // Get the mail ID from intent extras
         String mailId = getIntent().getStringExtra(EXTRA_MAIL_ID);
         if (mailId == null) {
             UiUtils.showMessage(this, getString(R.string.error_mail_not_found));
@@ -58,15 +64,19 @@ public class MailDetailsActivity extends AppCompatActivity {
             return;
         }
 
+        // Observe LiveData for the given mail ID
         viewModel.getLiveMailById(mailId).observe(this, mail -> {
             if (mail != null) {
                 currentMail = mail;
                 bindData(mail);
-                invalidateOptionsMenu(); // מרענן את התפריט אם טרם הוצג
+                invalidateOptionsMenu(); // Refresh the toolbar menu
             }
         });
     }
 
+    /**
+     * Creates the toolbar menu using MailMenu helper.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (currentMail != null) {
@@ -76,6 +86,11 @@ public class MailDetailsActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * Handles toolbar item clicks.
+     * If delete is clicked, closes the screen.
+     * If mail was updated (e.g. star/spam), refreshes view.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -97,6 +112,9 @@ public class MailDetailsActivity extends AppCompatActivity {
         );
     }
 
+    /**
+     * Binds view elements from XML to class fields.
+     */
     private void initViews() {
         subjectText = findViewById(R.id.subjectText);
         fromNameText = findViewById(R.id.fromNameText);
@@ -107,18 +125,25 @@ public class MailDetailsActivity extends AppCompatActivity {
         mailStar = findViewById(R.id.mailStar);
     }
 
+    /**
+     * Binds mail data to all views: subject, sender info, body, avatar, star status, and labels.
+     */
     private void bindData(FullMail mail) {
         subjectText.setText(mail.getMail().getSubject());
         fromNameText.setText(mail.getFromUser().getName());
+
         String toLine = getString(R.string.mail_to_prefix, String.join(", ", mail.getToUserIds()));
         fromEmailText.setText(toLine);
+
         dateText.setText(
                 mail.getMail().getSentAt() != null
                         ? MailUtils.formatMailDate(mail.getMail().getSentAt())
                         : ""
         );
+
         bodyText.setText(mail.getMail().getBody());
 
+        // Load avatar image or fallback
         String uri = mail.getFromUser().getProfileImage();
         if (uri != null && !uri.isEmpty()) {
             fromAvatar.setImageUrl(uri);
@@ -126,6 +151,7 @@ public class MailDetailsActivity extends AppCompatActivity {
             fromAvatar.setImageRes(R.drawable.default_avatar);
         }
 
+        // Handle star visibility and toggle
         if (mail.getMail().isSpam()) {
             mailStar.setVisibility(View.GONE);
         } else {
@@ -136,19 +162,26 @@ public class MailDetailsActivity extends AppCompatActivity {
                 viewModel.toggleStar(mail.getMail().getId(), msg -> {
                     UiUtils.showMessage(MailDetailsActivity.this, msg);
                 });
-                updateStarIcon(!mail.getMail().isStar()); // שינוי מיידי ב־UI
+                updateStarIcon(!mail.getMail().isStar()); // Immediate UI feedback
             });
         }
 
-        LabelChip.displayLabelChips(this, findViewById(R.id.labelContainer), mail.getLabels());
+        // Display label chips
+        LabelChip.displayLabelChips(this, findViewById(R.id.labelContainer), mail.getLabels(), true);
     }
 
+    /**
+     * Updates the star icon and color based on whether the mail is starred.
+     */
     private void updateStarIcon(boolean isStarred) {
         mailStar.setImageResource(isStarred ? R.drawable.baseline_star : R.drawable.outline_star);
         int color = ContextCompat.getColor(this, isStarred ? R.color.star_yellow : R.color.gray);
         mailStar.setColorFilter(color);
     }
 
+    /**
+     * Static helper to launch this screen with the given mail ID.
+     */
     public static void open(Context context, String mailId) {
         Intent intent = new Intent(context, MailDetailsActivity.class);
         intent.putExtra(EXTRA_MAIL_ID, mailId);

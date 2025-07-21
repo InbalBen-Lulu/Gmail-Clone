@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <!-- כפתור חזור -->
+    <!-- Back button to exit the compose screen -->
     <ImageView
         android:id="@+id/back_button"
         android:layout_width="32dp"
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- כפתור שליחה -->
+    <!-- Send button to submit the email -->
     <ImageView
         android:id="@+id/send_button"
         android:layout_width="32dp"
@@ -29,7 +29,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- טופס גלילה -->
+    <!-- Scrollable form containing email fields -->
     <ScrollView
         android:id="@+id/form_scroll"
         android:layout_width="0dp"
@@ -46,7 +46,7 @@
             android:orientation="vertical"
             android:paddingTop="24dp">
 
-            <!-- שורת TO -->
+            <!-- "To" field row for entering recipients -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -64,7 +64,6 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="8dp" />
 
-
                 <EditText
                     android:id="@+id/to_input"
                     android:layout_width="0dp"
@@ -72,15 +71,15 @@
                     android:layout_weight="1"
                     style="@style/ComposeEditText"
                     android:inputType="text" />
-
             </LinearLayout>
 
+            <!-- Divider below "To" field -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="?attr/divider_gray" />
 
-            <!-- שורת SUBJECT -->
+            <!-- "Subject" field row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -99,7 +98,6 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="8dp" />
 
-
                 <EditText
                     android:id="@+id/subject_input"
                     android:layout_width="0dp"
@@ -109,12 +107,13 @@
                     android:inputType="text" />
             </LinearLayout>
 
+            <!-- Divider below "Subject" field -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="?attr/divider_gray" />
 
-            <!-- גוף ההודעה -->
+            <!-- Email body text area -->
             <EditText
                 android:id="@+id/body_input"
                 android:layout_width="match_parent"
