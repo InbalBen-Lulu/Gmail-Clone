@@ -17,6 +17,7 @@ import com.example.mail_app.data.entity.FullMail;
 import com.example.mail_app.ui.mail.component.LabelChip;
 import com.example.mail_app.ui.view.UserAvatarView;
 import com.example.mail_app.utils.MailUtils;
+import com.example.mail_app.utils.ThemeUtils;
 
 import java.util.function.Consumer;
 
@@ -56,13 +57,13 @@ public class MailViewHolder extends RecyclerView.ViewHolder {
             senderView.setTypeface(null, Typeface.NORMAL);
         } else {
             senderView.setText(mail.getFromUser().getName());
-            senderView.setTextColor(resolveThemeColor(context, R.attr.text_color));
+            senderView.setTextColor(ThemeUtils.resolveThemeColor(context, R.attr.text_color));
             senderView.setTypeface(null, mail.getMail().isRead() ? Typeface.NORMAL : Typeface.BOLD);
         }
 
         // Subject
         subjectView.setText(mail.getMail().getSubject());
-        subjectView.setTextColor(resolveThemeColor(context, R.attr.text_color));
+        subjectView.setTextColor(ThemeUtils.resolveThemeColor(context, R.attr.text_color));
         subjectView.setTypeface(null, mail.getMail().isRead() ? Typeface.NORMAL : Typeface.BOLD);
 
         // Body
@@ -103,11 +104,5 @@ public class MailViewHolder extends RecyclerView.ViewHolder {
 
     private void setupLabels(FullMail mail, Context context) {
         LabelChip.displayLabelChips(context, labelContainer, mail.getLabels());
-    }
-
-    private int resolveThemeColor(Context context, int attrId) {
-        TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(attrId, typedValue, true);
-        return typedValue.data;
     }
 }

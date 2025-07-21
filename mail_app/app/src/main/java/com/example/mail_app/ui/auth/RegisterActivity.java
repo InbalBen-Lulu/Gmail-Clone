@@ -7,6 +7,7 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.mail_app.R;
 import com.example.mail_app.utils.DateUtils;
+import com.example.mail_app.utils.UiUtils;
 import com.example.mail_app.viewmodel.LoggedInUserViewModel;
 import com.example.mail_app.data.dto.LoginResponse;
 import com.example.mail_app.data.entity.PublicUser;
@@ -20,9 +21,11 @@ import retrofit2.Response;
 public class RegisterActivity extends AppCompatActivity {
 
     private LinearLayout step1, step2, step3, step4;
-    private TextInputEditText firstNameInput, lastNameInput, dayInput, yearInput, usernameInput, passwordInput;
+    private TextInputEditText firstNameInput, lastNameInput, dayInput, yearInput,
+            usernameInput, passwordInput;
     private AutoCompleteTextView monthSpinner, genderSpinner;
-    private TextInputLayout firstNameLayout, lastNameLayout, dayLayout, yearLayout, monthLayout, genderLayout, usernameLayout, passwordLayout;
+    private TextInputLayout firstNameLayout, lastNameLayout, dayLayout, yearLayout, monthLayout,
+            genderLayout, usernameLayout, passwordLayout;
     private TextView subtitle;
     private CheckBox showPasswordCheckBox;
     private Button nextButton;
@@ -75,10 +78,14 @@ public class RegisterActivity extends AppCompatActivity {
         nextButton = findViewById(R.id.nextButton);
 
         // Set up month and gender dropdown adapters
-        ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.months_array));
+        ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line,
+                getResources().getStringArray(R.array.months_array));
         monthSpinner.setAdapter(monthAdapter);
 
-        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.gender_array));
+        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line,
+                getResources().getStringArray(R.array.gender_array));
         genderSpinner.setAdapter(genderAdapter);
 
         // Disable manual input for dropdowns
@@ -96,8 +103,10 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         // Toggle password visibility
-        showPasswordCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            passwordInput.setTransformationMethod(isChecked ? null : new PasswordTransformationMethod());
+        showPasswordCheckBox.setOnCheckedChangeListener((buttonView,
+                                                         isChecked) -> {
+            passwordInput.setTransformationMethod(isChecked ? null :
+                    new PasswordTransformationMethod());
             passwordInput.setSelection(passwordInput.getText().length());
         });
 
@@ -158,13 +167,13 @@ public class RegisterActivity extends AppCompatActivity {
                     dayLayout.setError(" ");
                     monthLayout.setError(" ");
                     yearLayout.setError(" ");
-                    Toast.makeText(this, getString(R.string.error_incomplete_birthday), Toast.LENGTH_SHORT).show();
+                    UiUtils.showMessage(this, getString(R.string.error_incomplete_birthday));
                     step2Valid = false;
                 } else if (!isDateValid) {
                     dayLayout.setError(" ");
                     monthLayout.setError(" ");
                     yearLayout.setError(" ");
-                    Toast.makeText(this, getString(R.string.error_invalid_date), Toast.LENGTH_SHORT).show();
+                    UiUtils.showMessage(this, getString(R.string.error_invalid_date));
                     step2Valid = false;
                 }
 
@@ -206,7 +215,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<PublicUser> call, Throwable t) {
-                        Toast.makeText(RegisterActivity.this, getString(R.string.generic_error, t.getMessage()), Toast.LENGTH_SHORT).show();
+                        UiUtils.showMessage(RegisterActivity.this,
+                                getString(R.string.generic_error, t.getMessage()));
                     }
                 });
                 break;
@@ -215,12 +225,13 @@ public class RegisterActivity extends AppCompatActivity {
                 // Validate password and collect all user input for registration
                 String password = passwordInput.getText().toString().trim();
                 if (password.length() < 8) {
-                    passwordLayout.setError(getString(R.string.error_password_short));
+                    passwordLayout.setError(getString(R.string.error_password_too_short));
                     return;
                 }
 
                 // Collect data
-                String fullName = firstNameInput.getText().toString().trim() + " " + lastNameInput.getText().toString().trim();
+                String fullName = firstNameInput.getText().toString().trim() + " " +
+                        lastNameInput.getText().toString().trim();
                 String gender = genderSpinner.getText().toString().trim();
                 int selectedDay = Integer.parseInt(dayInput.getText().toString());
                 int selectedYear = Integer.parseInt(yearInput.getText().toString());
@@ -233,7 +244,7 @@ public class RegisterActivity extends AppCompatActivity {
                 calendar.set(Calendar.YEAR, selectedYear);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, selectedDay);
-
+                nextButton.setEnabled(false);
                 viewModel.registerUser(
                         usernameInput.getText().toString().trim(),
                         password,
@@ -242,17 +253,21 @@ public class RegisterActivity extends AppCompatActivity {
                         calendar.getTime(),
                         new Callback<LoginResponse>() {
                             @Override
-                            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                            public void onResponse(Call<LoginResponse> call,
+                                                   Response<LoginResponse> response) {
                                 if (response.isSuccessful()) {
-                                    Toast.makeText(RegisterActivity.this, getString(R.string.registration_success), Toast.LENGTH_SHORT).show();
+                                    UiUtils.showMessage(RegisterActivity.this,
+                                            getString(R.string.registration_success));
                                 } else {
-                                    Toast.makeText(RegisterActivity.this, getString(R.string.registration_failed), Toast.LENGTH_SHORT).show();
+                                    UiUtils.showMessage(RegisterActivity.this,
+                                            getString(R.string.registration_failed));
                                 }
                             }
 
                             @Override
                             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                                Toast.makeText(RegisterActivity.this, getString(R.string.generic_error, t.getMessage()), Toast.LENGTH_SHORT).show();
+                                UiUtils.showMessage(RegisterActivity.this,
+                                        getString(R.string.generic_error, t.getMessage()));
                             }
                         }
                 );

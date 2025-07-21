@@ -17,6 +17,7 @@ import com.example.mail_app.data.dto.LoginResponse;
 import com.example.mail_app.data.entity.PublicUser;
 import com.example.mail_app.ui.mail.MailPageActivity;
 import com.example.mail_app.utils.AppConstants;
+import com.example.mail_app.utils.UiUtils;
 import com.example.mail_app.viewmodel.LoggedInUserViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -125,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<PublicUser> call, Throwable t) {
                 t.printStackTrace();
-                showEmailError("Connection error");
+                showEmailError(getString(R.string.connection_error));
             }
         });
     }
@@ -141,13 +142,13 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 runOnUiThread(() -> {
                     if (response.isSuccessful() && response.body() != null) {
-                        Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                        UiUtils.showMessage(LoginActivity.this, getString(R.string.login_successful));
                         Intent intent = new Intent(LoginActivity.this, MailPageActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
                     } else {
-                        showPasswordError("Incorrect password. Try again.");
+                        showPasswordError(getString(R.string.incorrect_password));
                     }
                 });
             }
@@ -155,7 +156,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 runOnUiThread(() ->
-                        showPasswordError(t.getMessage() != null ? t.getMessage() : "Login failed."));
+                        showPasswordError(t.getMessage() != null ? t.getMessage() :
+                                getString(R.string.login_failed)));
             }
         });
     }
@@ -168,7 +170,7 @@ public class LoginActivity extends AppCompatActivity {
         emailLayout.setError(null);
 
         if (TextUtils.isEmpty(email)) {
-            showEmailError("Email is required");
+            showEmailError(getString(R.string.email_required));
             return false;
         }
 
@@ -183,7 +185,7 @@ public class LoginActivity extends AppCompatActivity {
         String password = passwordInput.getText().toString().trim();
 
         if (TextUtils.isEmpty(password)) {
-            showPasswordError("Password is required");
+            showPasswordError(getString(R.string.password_required));
             return false;
         }
 

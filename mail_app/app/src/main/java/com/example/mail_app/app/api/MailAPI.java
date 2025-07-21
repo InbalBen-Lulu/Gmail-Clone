@@ -17,6 +17,9 @@ import com.example.mail_app.data.entity.FullMail;
 import com.example.mail_app.data.entity.MailLabelCrossRef;
 import com.example.mail_app.data.entity.PublicUser;
 import com.example.mail_app.data.remote.MailWebService;
+
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -25,6 +28,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -393,17 +398,49 @@ public class MailAPI {
 
     // Sends a request to create a new mail
     public void createMail(Map<String, Object> body, Consumer<String> onError) {
-        api.createMail(body).enqueue(new Callback<Void>() {
+        api.createMail(body).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful() && body.containsKey("id")) {
-                    String mailId = (String) body.get("id");
-                    fetchAndSaveMailById(mailId);
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        String responseStr = response.body().string();
+                        Log.d("MailAPI", "Success body: " + responseStr);
+
+                        JSONObject json = new JSONObject(responseStr);
+                        if (json.has("id")) {
+                            String mailId = json.getString("id");
+                            fetchAndSaveMailById(mailId);
+                            postToMain(() -> onError.accept(null));
+                        } else {
+                            postToMain(() -> onError.accept("Mail created, but missing ID"));
+                        }
+                    } catch (Exception e) {
+                        postToMain(() -> onError.accept("Failed to parse server response"));
+                    }
+
+                } else {
+                    try {
+                        String errorStr = response.errorBody() != null ? response.errorBody().string() : "";
+                        if (!errorStr.isEmpty()) {
+                            JSONObject json = new JSONObject(errorStr);
+                            if (json.has("error")) {
+                                String errorMsg = json.getString("error");
+                                postToMain(() -> onError.accept(errorMsg));
+                                return;
+                            }
+                        }
+
+                        postToMain(() -> onError.accept("Failed to create mail – unknown error"));
+
+                    } catch (Exception e) {
+                        postToMain(() -> onError.accept("Failed to create mail – error parsing response"));
+                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("MailAPI", "createMail failure: " + t.getMessage());
                 postToMain(() -> onError.accept("Failed to create mail – check your internet connection."));
             }
         });
@@ -411,40 +448,44 @@ public class MailAPI {
 
     // Sends a request to send a saved draft mail
     public void sendDraft(String mailId, Map<String, Object> body, Consumer<String> onError) {
-        api.sendDraft(mailId, body).enqueue(new Callback<Void>() {
+        api.sendDraft(mailId, body).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     fetchAndSaveMailById(mailId);
+                    postToMain(() -> onError.accept(null));
+                } else {
+                    postToMain(() -> onError.accept(extractErrorMessage(response, "Failed to send draft")));
                 }
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.e("MailAPI", "sendDraft failed: " + t.getMessage());
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 postToMain(() -> onError.accept("Failed to send draft – check your internet connection."));
             }
         });
     }
 
-
     // Sends a request to update an existing draft
     public void updateMail(String mailId, Map<String, Object> body, Consumer<String> onError) {
-        api.updateMail(mailId, body).enqueue(new Callback<Void>() {
+        api.updateMail(mailId, body).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     fetchAndSaveMailById(mailId);
+                    postToMain(() -> onError.accept(null));
+                } else {
+                    postToMain(() -> onError.accept(extractErrorMessage(response, "Failed to update draft")));
                 }
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.e("MailAPI", "updateMail failed: " + t.getMessage());
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 postToMain(() -> onError.accept("Failed to update draft – check your internet connection."));
             }
         });
     }
+
 
 
     // Sends a request to delete a mail and removes it from Room and LiveData
@@ -452,16 +493,25 @@ public class MailAPI {
         api.deleteMail(mailId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful()) {
+                    postToMain(() -> onError.accept("Server failed to delete mail"));
+                    return;
+                }
+
                 new Thread(() -> {
                     mailDao.deleteMailById(mailId);
                     mailDao.deleteRecipientsByMailId(mailId);
                     mailDao.deleteLabelsByMailId(mailId);
 
                     List<FullMail> current = mailListData.getValue();
-                    if (current == null) return;
+                    if (current == null) current = new ArrayList<>();
                     List<FullMail> updated = new ArrayList<>(current);
                     updated.removeIf(m -> m.getMail().getId().equals(mailId));
-                    postToMain(() -> mailListData.setValue(updated));
+
+                    postToMain(() -> {
+                        mailListData.setValue(updated);
+                        onError.accept(null); // ← הצלחה
+                    });
                 }).start();
             }
 
@@ -638,4 +688,24 @@ public class MailAPI {
             }
         });
     }
+
+    private String extractErrorMessage(Response<?> response, String fallbackMessage) {
+        try {
+            if (response.errorBody() != null) {
+                String errorJson = response.errorBody().string();  // 👈 קרא רק פעם אחת!
+                Log.d("MailAPI", "Raw error JSON: " + errorJson);
+
+                if (!errorJson.isEmpty()) {
+                    JSONObject json = new JSONObject(errorJson);
+                    if (json.has("error")) {
+                        return json.getString("error");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e("MailAPI", "Error parsing error body: " + e.getMessage());
+        }
+        return fallbackMessage;
+    }
+
 }

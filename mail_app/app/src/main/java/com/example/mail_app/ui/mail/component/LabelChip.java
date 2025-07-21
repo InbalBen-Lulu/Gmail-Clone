@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.mail_app.R;
 import com.example.mail_app.data.entity.Label;
 import com.example.mail_app.utils.MailUtils;
 
@@ -52,7 +53,7 @@ public class LabelChip {
 
     private static int resolveTextColor(Context context) {
         TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(android.R.attr.textColor, typedValue, true);
+        context.getTheme().resolveAttribute(R.attr.text_color, typedValue, true);
         return typedValue.data;
     }
 }

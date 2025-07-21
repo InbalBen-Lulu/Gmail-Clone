@@ -10,10 +10,13 @@ import com.example.mail_app.repository.MailRepository;
 import com.example.mail_app.utils.AppConstants;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import android.util.Log;
 
@@ -147,16 +150,64 @@ public class MailViewModel extends ViewModel {
         repository.refreshSingleMail(mailId);
     }
 
-    public void sendDraft(String mailId, Map<String, Object> body, Consumer<String> onError) {
-        repository.sendDraft(mailId, body, onError);
+    public void sendDraft(String mailId, String toRaw, String subject, String body, Consumer<String> onError) {
+        List<String> recipients = Arrays.stream(toRaw.split("[,\\s]+"))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+
+        if (recipients.isEmpty()) {
+            onError.accept("Please enter at least one recipient");
+            return;
+        }
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("to", recipients);
+        request.put("subject", subject);
+        request.put("body", body);
+
+        repository.sendDraft(mailId, request, onError);
     }
 
-    public void createMail(Map<String, Object> body, Consumer<String> onError) {
-        repository.createMail(body, onError);
+    public void createMail(String toRaw, String subject, String body, boolean isDraft, Consumer<String> onError) {
+        List<String> recipients = Arrays.stream(toRaw.split("[,\\s]+"))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+
+        // אם זו לא טיוטה – חובה שיהיה נמען אחד לפחות
+        if (!isDraft && recipients.isEmpty()) {
+            onError.accept("Please enter at least one valid recipient");
+            return;
+        }
+
+        Map<String, Object> mailData = new HashMap<>();
+        mailData.put("to", recipients);
+        mailData.put("subject", subject);
+        mailData.put("body", body);
+        mailData.put("id", UUID.randomUUID().toString());
+        mailData.put("isDraft", isDraft);
+
+        repository.createMail(mailData, onError);
     }
 
-    public void updateMail(String mailId, Map<String, Object> body, Consumer<String> onError) {
-        repository.updateMail(mailId, body, onError);
+    public void updateMail(String mailId, String toRaw, String subject, String body, Consumer<String> onError) {
+        List<String> recipients = Arrays.stream(toRaw.split("[,\\s]+"))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+
+        if (recipients.isEmpty()) {
+            onError.accept("Please enter at least one valid recipient");
+            return;
+        }
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("to", recipients);
+        updates.put("subject", subject);
+        updates.put("body", body);
+
+        repository.updateMail(mailId, updates, onError);
     }
 
     public void loadMailById(String mailId) {

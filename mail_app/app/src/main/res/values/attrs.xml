@@ -27,6 +27,16 @@
     <attr name="menu_item_bg" format="color" />
     <attr name="menu_item_select_bg" format="color" />
 
+    <!-- Compose button colors -->
+    <attr name="compose_button_background" format="color" />
+    <attr name="compose_button_text" format="color" />
 
+    <!-- Misc colors  -->
+    <attr name="gray_icon" format="color" />
+    <attr name="divider_gray" format="color" />
+
+    <!-- Fab (floating action button) -->
+    <attr name="fab_background" format="color" />
+    <attr name="fab_icon_tint" format="color" />
 </resources>
 

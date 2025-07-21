@@ -4,44 +4,64 @@ import static com.example.mail_app.utils.UiUtils.showMessage;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.mail_app.R;
 import com.example.mail_app.data.entity.FullMail;
 import com.example.mail_app.ui.mail.dialog.LabelSelectionDialogFragment;
+import com.example.mail_app.utils.ThemeUtils;
 import com.example.mail_app.utils.UiUtils;
 import com.example.mail_app.viewmodel.MailViewModel;
 
 import java.util.function.Consumer;
 
 public class MailMenu {
+    public static final String LABEL_DIALOG_TAG = "label_dialog";
+    private static final String RECEIVED = "received";
 
     public static void setupMenu(Context context, Menu menu, FullMail mail) {
         menu.clear();
 
         // מחיקה – תמיד
+        Drawable deleteIcon = ContextCompat.getDrawable(context, R.drawable.outline_delete_24);
+        if (deleteIcon != null) {
+            deleteIcon.mutate().setTint(ThemeUtils.resolveThemeColor(context, R.attr.gray_icon));
+        }
         menu.add(Menu.NONE, R.id.action_delete, Menu.NONE, context.getString(R.string.action_delete))
-                .setIcon(R.drawable.outline_delete_24)
+                .setIcon(deleteIcon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
         // תיוג – רק אם לא ספאם
         if (!mail.getMail().isSpam()) {
+            Drawable labelIcon = ContextCompat.getDrawable(context, R.drawable.outline_label_24);
+            if (labelIcon != null) {
+                labelIcon.mutate().setTint(ThemeUtils.resolveThemeColor(context, R.attr.gray_icon));
+            }
             menu.add(Menu.NONE, R.id.action_label, Menu.NONE, context.getString(R.string.action_label))
-                    .setIcon(R.drawable.outline_label_24)
+                    .setIcon(labelIcon)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
 
         // דיווח ספאם / ביטול – רק אם זה מייל שקיבלת
-        if ("received".equals(mail.getMail().getType())) {
+        if (RECEIVED.equals(mail.getMail().getType())) {
             boolean isSpam = mail.getMail().isSpam();
+            int iconRes = isSpam ? R.drawable.baseline_report_off : R.drawable.outline_report_24;
+            Drawable reportIcon = ContextCompat.getDrawable(context, iconRes);
+            if (reportIcon != null) {
+                reportIcon.mutate().setTint(ThemeUtils.resolveThemeColor(context, R.attr.gray_icon));
+            }
+
             menu.add(Menu.NONE, R.id.action_report, Menu.NONE,
                             context.getString(isSpam ? R.string.action_unspam : R.string.action_report))
-                    .setIcon(isSpam ? R.drawable.baseline_report_off : R.drawable.outline_report_24)
+                    .setIcon(reportIcon)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
+
     }
 
     public static boolean handleMenuItemClick(
@@ -68,7 +88,7 @@ public class MailMenu {
                     onMailUpdated.accept(updated);
                 }
             });
-            dialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "label_dialog");
+            dialog.show(((AppCompatActivity) context).getSupportFragmentManager(), LABEL_DIALOG_TAG);
             return true;
 
         } else if (itemId == R.id.action_report) {

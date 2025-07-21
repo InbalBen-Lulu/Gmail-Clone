@@ -5,6 +5,7 @@ import com.example.mail_app.data.dto.MailListResponse;
 
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -19,15 +20,15 @@ public interface MailWebService {
 
     // Creates a new mail (draft or sent)
     @POST("mails")
-    Call<Void> createMail(@Body Map<String, Object> body);
+    Call<ResponseBody> createMail(@Body Map<String, Object> body);
 
     // Sends an existing draft mail
     @PATCH("mails/{id}/send")
-    Call<Void> sendDraft(@Path("id") String mailId, @Body Map<String, Object> body);
+    Call<ResponseBody> sendDraft(@Path("id") String mailId, @Body Map<String, Object> body);
 
     // Updates an existing draft (without sending it)
     @PATCH("mails/{id}")
-    Call<Void> updateMail(@Path("id") String mailId, @Body Map<String, Object> body);
+    Call<ResponseBody> updateMail(@Path("id") String mailId, @Body Map<String, Object> body);
 
     // Deletes a mail by its ID
     @DELETE("mails/{id}")

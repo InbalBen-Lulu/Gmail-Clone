@@ -3,10 +3,9 @@
     <!-- App-level constants -->
     <string name="app_name">MailMe</string>
     <string name="BaseUrl">http://10.0.2.2:4000/api/</string> <!-- Used for emulator access -->
-    <string name="BaseUrlMoria">http://172.31.160.1:4000/api/</string> <!-- Used for real device access -->
+<!--    <string name="BaseUrl">http://192.168.222.122:4000/api/</string> &lt;!&ndash; Used for real device access &ndash;&gt;-->
     <string name="email_domain">@mailme.com</string> <!-- Used to auto-append domain to username -->
     <string name="BaseUrlEmulator">http://10.0.2.2:4000/api/</string>
-
 
     <!-- ───────────── PERSONAL INFO SCREEN ───────────── -->
     <string name="title_personal_info">Personal info</string>
@@ -46,7 +45,7 @@
     <string name="failed_to_check_image_size">Failed to check image size</string>
 
     <!-- ───────────── SIGN-IN / LOGIN SCREEN ───────────── -->
-    <string name="email_or_phone">Email or phone</string>
+    <string name="email">Email</string>
     <string name="create_account">Create account</string>
     <string name="sign_in">Sign in</string>
     <string name="sign_in_subtitle">Use your MailMe Account. The account will be added to this device.</string>
@@ -55,6 +54,12 @@
     <string name="show_password">Show password</string>
     <string name="next">Next</string>
     <string name="user_not_found">User not found</string>
+    <string name="login_successful">Login successful!</string>
+    <string name="incorrect_password">Incorrect password. Try again.</string>
+    <string name="login_failed">Login failed.</string>
+    <string name="email_required">Email is required</string>
+    <string name="password_required">Password is required</string>
+    <string name="connection_error">Connection error</string>
 
     <!-- Registration flow titles and labels -->
     <string name="register_title">Create your MailMe account</string>
@@ -101,8 +106,7 @@
     <string name="error_incomplete_birthday">Please fill in a complete birthday</string>
     <string name="error_invalid_date">Please enter a valid date</string>
     <string name="error_select_gender">Please select your gender</string>
-    <string name="error_password_short">Use 8 characters or more for your password</string>
-    <string name="error_password_too_short">Use 8 characters or more for your password</string> <!-- duplicated: you can remove one -->
+    <string name="error_password_too_short">Use 8 characters or more for your password</string>
     <string name="error_passwords_dont_match">Those passwords didn’t match. Try again.</string>
     <string name="error_required">Required</string>
     <string name="error_username_taken">Username already exists</string>
@@ -143,16 +147,39 @@
     <string name="sidebar_all_mail">All Mail</string>
     <string name="sidebar_spam">Spam</string>
 
-
-
+    <!-- ───────────── MAIL STATUS ───────────── -->
     <string name="draft_label">Draft</string>
+
+    <!-- ───────────── MAIL MESSAGES ───────────── -->
     <string name="no_mails_message">No emails found</string>
+    <string name="compose_error_no_recipient">Please enter a recipient</string>
+    <string name="error_mail_not_found">Mail not found</string>
+
+    <!-- ───────────── ACTION BAR / MAIL ACTIONS ───────────── -->
     <string name="action_delete">Delete</string>
     <string name="action_label">Label as</string>
     <string name="action_report">Mark as spam</string>
     <string name="action_unspam">Mark as not spam</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- ───────────── LABEL DIALOG ───────────── -->
     <string name="label_name_checkbox">Label name</string>
     <string name="label_dialog_title">Label as</string>
     <string name="label_dialog_ok">OK</string>
     <string name="label_dialog_cancel">Cancel</string>
+    <string name="label_dialog_title_error">Label as</string>
+    <string name="label_dialog_message_not_loaded">Mail data not loaded yet.</string>
+
+    <!-- ───────────── COMPOSE MAIL ───────────── -->
+    <string name="label_to">To:</string>
+    <string name="label_subject">Subject:</string>
+    <string name="hint_compose_email">Compose email</string>
+    <string name="desc_send">Send</string>
+    <string name="desc_new_mail">New mail</string>
+    <string name="mail_to_prefix">To: %1$s</string>
+
+    <!-- ───────────── NAVIGATION ───────────── -->
+    <string name="desc_back">Back</string>
+
+
 </resources>

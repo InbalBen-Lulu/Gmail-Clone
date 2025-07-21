@@ -22,6 +22,7 @@
         <!-- ═══════ DIVIDERS / BORDERS ═══════ -->
         <item name="dividerColor">#444444</item>             <!-- profile info divider -->
         <item name="search_divider_color">#3E4045</item>     <!-- search divider -->
+        <item name="divider_gray">#333333</item>
 
         <!-- ═══════ BUTTONS & ACTIONS ═══════ -->
         <item name="profile_action_bg">#004A77</item>        <!-- button background -->
@@ -29,8 +30,18 @@
 
         <!-- ═══════ ICONS ═══════ -->
         <item name="icon_color">#E2E2E9</item>               <!-- color for main icons -->
+        <item name="gray_icon">#B0B0B0</item>
 
         <!-- ═══════ PRIMARY COLOR ═══════ -->
         <item name="colorPrimary">@color/input_outline</item> <!-- primary app color -->
+
+        <!-- ═══════ COMPOSE BUTTON COLORS ═══════ -->
+        <item name="compose_button_background">#4A4A55</item> <!-- background of the 'compose' button -->
+        <item name="compose_button_text">#FFFFFF</item>       <!-- text/icon color of the 'compose' button -->
+
+        <!-- ═══════ FAB (FLOATING ACTION BUTTON) ═══════ -->
+        <item name="fab_background">#333333</item>           <!-- floating action button background -->
+        <item name="fab_icon_tint">#FFFFFF</item>            <!-- floating action button icon tint -->
+
     </style>
 </resources>

@@ -37,7 +37,8 @@ public class MailRepository {
         @Override
         protected void onActive() {
             super.onActive();
-            new Thread(() -> postValue(dao.getAllMails())).start();
+//            new Thread(() -> postValue(dao.getAllMails())).start();
+            new Thread(() -> postValue(dao.getInboxMails())).start();
         }
     }
 

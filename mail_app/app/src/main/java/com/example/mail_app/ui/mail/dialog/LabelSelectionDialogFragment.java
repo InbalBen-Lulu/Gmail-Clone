@@ -26,12 +26,13 @@ import java.util.function.Consumer;
 public class LabelSelectionDialogFragment extends DialogFragment {
 
     private Consumer<FullMail> updatedCallback;
+    private static final String ARG_MAIL = "mail";
 
     public static LabelSelectionDialogFragment newInstance(FullMail mail,
                                                            Consumer<FullMail> callback) {
         LabelSelectionDialogFragment fragment = new LabelSelectionDialogFragment();
         Bundle args = new Bundle();
-        args.putSerializable("mail", mail);
+        args.putSerializable(ARG_MAIL, mail);
         fragment.setArguments(args);
         fragment.updatedCallback = callback;
         return fragment;
@@ -47,12 +48,12 @@ public class LabelSelectionDialogFragment extends DialogFragment {
         LabelViewModel labelViewModel = new ViewModelProvider(activity).get(LabelViewModel.class);
         MailViewModel mailViewModel = new ViewModelProvider(activity).get(MailViewModel.class);
 
-        FullMail mail = (FullMail) getArguments().getSerializable("mail");
+        FullMail mail = (FullMail) getArguments().getSerializable(ARG_MAIL);
         if (mail == null) {
             return new AlertDialog.Builder(requireContext())
-                    .setTitle("Label as")
-                    .setMessage("Mail data not loaded yet.")
-                    .setNegativeButton("Cancel", null)
+                    .setTitle(getString(R.string.label_dialog_title_error))
+                    .setMessage(getString(R.string.label_dialog_message_not_loaded))
+                    .setNegativeButton(getString(R.string.cancel), null)
                     .create();
         }
 
@@ -135,8 +136,6 @@ public class LabelSelectionDialogFragment extends DialogFragment {
                                           int[] pendingOps, boolean[] labelsChanged) {
         pendingOps[0]--;
         if (pendingOps[0] == 0) {
-//            mailViewModel.reloadCurrentCategory();
-//            mailViewModel.refreshSingleMail(mailId);
             notifyCallbackIfNeeded(mailViewModel, mailId, labelsChanged[0]);
         }
     }

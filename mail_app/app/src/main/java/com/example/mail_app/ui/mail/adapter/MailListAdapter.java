@@ -24,7 +24,7 @@ public class MailListAdapter extends RecyclerView.Adapter<MailViewHolder> {
     public MailListAdapter(List<FullMail> mails, OnMailClickListener listener) {
         this.mails = mails;
         this.listener = listener;
-        this.onToggleStar = listener::onToggleStar; // ממפה ל־Consumer
+        this.onToggleStar = listener::onToggleStar;
     }
 
     public void setMails(List<FullMail> newMails) {

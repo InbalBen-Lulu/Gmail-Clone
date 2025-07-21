@@ -1,5 +1,6 @@
 package com.example.mail_app.ui.mail;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.View;
@@ -147,6 +148,16 @@ public class MailListFragment extends Fragment {
     }
 
     private void onMailClick(FullMail mail) {
-        MailDetailsActivity.open(requireContext(), mail.getMail().getId());
+        String mailId = mail.getMail().getId();
+
+        if (mail.getMail().isDraft()) {
+            // פתח את Compose לעריכת טיוטה
+            Intent intent = new Intent(requireContext(), ComposeActivity.class);
+            intent.putExtra(ComposeActivity.EXTRA_MAIL_ID, mailId);
+            startActivity(intent);
+        } else {
+            // פתח את המסך הרגיל של מייל
+            MailDetailsActivity.open(requireContext(), mailId);
+        }
     }
 }

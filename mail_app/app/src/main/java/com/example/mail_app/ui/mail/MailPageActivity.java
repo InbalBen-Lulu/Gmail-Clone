@@ -23,6 +23,8 @@ import com.example.mail_app.ui.view.UserAvatarView;
 import com.example.mail_app.utils.AppConstants;
 import com.example.mail_app.viewmodel.LoggedInUserViewModel;
 import com.example.mail_app.viewmodel.MailViewModel;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -43,6 +45,7 @@ public class MailPageActivity extends AppCompatActivity {
     private UserAvatarView avatarButton;
     private LoggedInUserViewModel userViewModel;
     private MailViewModel mailViewModel;
+    private FloatingActionButton composeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,16 +64,13 @@ public class MailPageActivity extends AppCompatActivity {
         params.width = targetWidth;
         sidebarFragment.setLayoutParams(params);
 
-        // Find menu icon and set click listener to open drawer
         menuIcon = findViewById(R.id.menu_icon);
         menuIcon.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
-
-        // Find search input
         searchInput = findViewById(R.id.search_input);
         searchInput.setOnClickListener(v ->  startActivity(new Intent(this, SearchActivity.class)));
-
-        // Find avatar button
         avatarButton = findViewById(R.id.avatar_button);
+
+        composeButton = findViewById(R.id.composeButton);
 
         // Set up ViewModel to observe user data
         userViewModel = new ViewModelProvider(this).get(LoggedInUserViewModel.class);
@@ -111,6 +111,11 @@ public class MailPageActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main_content, fragment)
                 .commit();
+
+        composeButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ComposeActivity.class);
+            startActivity(intent);
+        });
     }
 
     /**

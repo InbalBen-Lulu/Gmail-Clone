@@ -19,13 +19,13 @@ public class MailUtils {
                 now.get(Calendar.DAY_OF_YEAR) == then.get(Calendar.DAY_OF_YEAR);
 
         if (isToday) {
-            return new SimpleDateFormat("HH:mm", Locale.getDefault()).format(date);
+            return new SimpleDateFormat("HH:mm", Locale.ENGLISH).format(date);
         }
 
         boolean isSameYear = now.get(Calendar.YEAR) == then.get(Calendar.YEAR);
         SimpleDateFormat formatter = isSameYear
-                ? new SimpleDateFormat("d MMM", Locale.getDefault())
-                : new SimpleDateFormat("d MMM yyyy", Locale.getDefault());
+                ? new SimpleDateFormat("d MMM", Locale.ENGLISH)
+                : new SimpleDateFormat("d MMM yyyy", Locale.ENGLISH);
 
         return formatter.format(date);
     }
