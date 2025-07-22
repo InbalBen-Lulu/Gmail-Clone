@@ -93,6 +93,68 @@ public class ComposeActivity extends AppCompatActivity {
         }
     }
 
+//    /**
+//     * Handles the send button logic.
+//     * If editing a draft → calls sendDraft, otherwise creates a new mail.
+//     */
+//    private void handleSend() {
+//        String to = toInput.getText().toString().trim();
+//        String subject = subjectInput.getText().toString().trim();
+//        String body = bodyInput.getText().toString().trim();
+//
+//        if (to.isEmpty()) {
+//            UiUtils.showMessage(this, getString(R.string.compose_error_no_recipient));
+//            return;
+//        }
+//
+//        // Common callback for success/error
+//        Consumer<String> callback = msg -> {
+//            if (msg == null || msg.isEmpty()) {
+//                finish(); // Success
+//            } else {
+//                UiUtils.showMessage(this, msg); // Show error, stay on screen
+//            }
+//        };
+//
+//        if (mailId != null) {
+//            viewModel.sendDraft(mailId, to, subject, body, callback);
+//        } else {
+//            viewModel.createMail(to, subject, body, false, callback);
+//        }
+//    }
+//
+//    /**
+//     * Handles the back button logic.
+//     * If fields are empty → exits (or deletes existing draft).
+//     * Otherwise → saves as draft (update or create).
+//     */
+//    private void handleBack() {
+//        String to = toInput.getText().toString().trim();
+//        String subject = subjectInput.getText().toString().trim();
+//        String body = bodyInput.getText().toString().trim();
+//
+//        if (to.isEmpty() && subject.isEmpty() && body.isEmpty()) {
+//            if (mailId != null) {
+//                viewModel.deleteMail(mailId, msg -> {
+//                    UiUtils.showMessage(this, msg);
+//                    finish();
+//                });
+//            } else {
+//                finish(); // Nothing to save or delete
+//            }
+//            return;
+//        }
+//
+//        if (mailId != null) {
+//            viewModel.updateMail(mailId, to, subject, body, msg -> {
+//                UiUtils.showMessage(this, msg, this::finish); // Delay finish until Snackbar closes
+//            });
+//        } else {
+//            viewModel.createMail(to, subject, body, true, msg -> {
+//                UiUtils.showMessage(this, msg, this::finish);
+//            });
+//        }
+//    }
     /**
      * Handles the send button logic.
      * If editing a draft → calls sendDraft, otherwise creates a new mail.
@@ -107,12 +169,12 @@ public class ComposeActivity extends AppCompatActivity {
             return;
         }
 
-        // Common callback for success/error
+        // Unified callback: show error if exists, otherwise close activity
         Consumer<String> callback = msg -> {
-            if (msg == null || msg.isEmpty()) {
+            if (msg == null || msg.trim().isEmpty()) {
                 finish(); // Success
             } else {
-                UiUtils.showMessage(this, msg); // Show error, stay on screen
+                UiUtils.showMessage(this, msg, this::finish); // Show error, then close
             }
         };
 
@@ -133,11 +195,15 @@ public class ComposeActivity extends AppCompatActivity {
         String subject = subjectInput.getText().toString().trim();
         String body = bodyInput.getText().toString().trim();
 
+        // Exit without saving
         if (to.isEmpty() && subject.isEmpty() && body.isEmpty()) {
             if (mailId != null) {
                 viewModel.deleteMail(mailId, msg -> {
-                    UiUtils.showMessage(this, msg);
-                    finish();
+                    if (msg == null || msg.trim().isEmpty()) {
+                        finish();
+                    } else {
+                        UiUtils.showMessage(this, msg, this::finish);
+                    }
                 });
             } else {
                 finish(); // Nothing to save or delete
@@ -145,14 +211,20 @@ public class ComposeActivity extends AppCompatActivity {
             return;
         }
 
-        if (mailId != null) {
-            viewModel.updateMail(mailId, to, subject, body, msg -> {
-                UiUtils.showMessage(this, msg, this::finish); // Delay finish until Snackbar closes
-            });
-        } else {
-            viewModel.createMail(to, subject, body, true, msg -> {
+        // Save as draft (update or create)
+        Consumer<String> callback = msg -> {
+            if (msg == null || msg.trim().isEmpty()) {
+                finish();
+            } else {
                 UiUtils.showMessage(this, msg, this::finish);
-            });
+            }
+        };
+
+        if (mailId != null) {
+            viewModel.updateMail(mailId, to, subject, body, callback);
+        } else {
+            viewModel.createMail(to, subject, body, true, callback);
         }
     }
+
 }
