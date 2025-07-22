@@ -10,7 +10,7 @@ const { checkUrlsAgainstBlacklist } = require('../services/blackListService');
  *   - { validRecipients: number[], responseMeta: object }
  *   - null if no valid recipients and mail is not a draft
  */
-function processRecipients(to, isDraft, res, fromUserId) {
+async function processRecipients(to, isDraft, res, fromUserId) {
     const validRecipients = [];
     const invalidRecipients = [];
 
@@ -21,7 +21,7 @@ function processRecipients(to, isDraft, res, fromUserId) {
         }
 
         const userId = getUserIdFromEmail(email);
-        const user = getUserById(userId);
+        const user = await getUserById(userId);
 
         if (!user) {
             invalidRecipients.push(email);
