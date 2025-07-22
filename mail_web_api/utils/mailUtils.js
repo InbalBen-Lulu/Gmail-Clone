@@ -10,7 +10,7 @@ const { checkUrlsAgainstBlacklist } = require('../services/blackListService');
  *   - { validRecipients: number[], responseMeta: object }
  *   - null if no valid recipients and mail is not a draft
  */
-function processRecipients(to, isDraft, res, fromUserId) {
+async function processRecipients(to, isDraft, fromUserId) {
     const validRecipients = [];
     const invalidRecipients = [];
 
@@ -21,14 +21,9 @@ function processRecipients(to, isDraft, res, fromUserId) {
         }
 
         const userId = getUserIdFromEmail(email);
-        const user = getUserById(userId);
+        const user = await getUserById(userId);
 
-        if (!user) {
-            invalidRecipients.push(email);
-            continue;
-        }
-
-        if (userId === fromUserId) {
+        if (!user || userId === fromUserId) {
             invalidRecipients.push(email);
             continue;
         }
@@ -37,11 +32,11 @@ function processRecipients(to, isDraft, res, fromUserId) {
     }
 
     if (!isDraft && validRecipients.length === 0) {
-        res.status(400).json({
+        return {
             error: 'Mail was not sent. None of the recipients exist (or you tried to send to yourself).',
-            invalidEmails: invalidRecipients
-        });
-        return null;
+            invalidEmails: invalidRecipients,
+            status: 400
+        };
     }
 
     const responseMeta = {};
@@ -52,7 +47,6 @@ function processRecipients(to, isDraft, res, fromUserId) {
 
     return { validRecipients, responseMeta };
 }
-
 
 /**
  * Checks if any word in the subject or body is blacklisted.
