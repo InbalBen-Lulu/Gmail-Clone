@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Action menu for mail actions: delete, label, report spam -->
+    <item
+        android:id="@+id/action_delete"
+        android:icon="@drawable/outline_delete_24"
+        android:title="@string/action_delete"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_label"
+        android:icon="@drawable/outline_label_24"
+        android:title="@string/action_label"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_report"
+        android:icon="@drawable/outline_report_24"
+        android:title="@string/action_report"
+        app:showAsAction="ifRoom" />
+
+</menu>

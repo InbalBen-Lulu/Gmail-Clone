@@ -6,13 +6,14 @@ import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
+
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
+
 import com.example.mail_app.R;
 import com.example.mail_app.ui.search.SearchActivity;
 import com.example.mail_app.ui.user.ProfileDialogFragment;
@@ -20,15 +21,17 @@ import com.example.mail_app.ui.view.UserAvatarView;
 import com.example.mail_app.utils.AppConstants;
 import com.example.mail_app.viewmodel.LoggedInUserViewModel;
 import com.example.mail_app.viewmodel.MailViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 
 /**
- * Activity that displays the main mail page, including:
- * - A search bar that opens SearchActivity.
- * - A profile image button that opens the ProfileDialogFragment.
- * - A menu icon that opens the sidebar drawer.
+ * Activity that displays the main Gmail-style mail page.
  *
- * It observes user and mail data, handles category and label selection,
- * and manages sidebar width dynamically.
+ * Includes:
+ * - A top bar with search, menu icon, and profile button.
+ * - A sidebar drawer with categories and labels.
+ * - A floating compose button.
+ * - Dynamic loading of MailListFragment depending on selected category/label.
  */
 public class MailPageActivity extends AppCompatActivity {
 
@@ -38,38 +41,45 @@ public class MailPageActivity extends AppCompatActivity {
     private UserAvatarView avatarButton;
     private LoggedInUserViewModel userViewModel;
     private MailViewModel mailViewModel;
+    private FloatingActionButton composeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mail_page);
 
-        // Find DrawerLayout (renamed ID)
+        // Find DrawerLayout from XML
         drawerLayout = findViewById(R.id.app_drawer_layout);
 
         // Dynamically set sidebar width to ¾ of screen width
         FragmentContainerView sidebarFragment = findViewById(R.id.sidebar_fragment);
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int screenWidth = metrics.widthPixels;
-        int targetWidth = (int) (screenWidth * AppConstants.SIDEBAR_WIDTH_RATIO);// ¾ of screen
+        int targetWidth = (int) (screenWidth * AppConstants.SIDEBAR_WIDTH_RATIO);
         ViewGroup.LayoutParams params = sidebarFragment.getLayoutParams();
         params.width = targetWidth;
         sidebarFragment.setLayoutParams(params);
 
-        // Find menu icon and set click listener to open drawer
+        // Set up search input to launch SearchActivity
+        searchInput = findViewById(R.id.search_input);
+        searchInput.setOnClickListener(v -> startActivity(new Intent(this, SearchActivity.class)));
+
+        // Set up menu icon to open drawer
         menuIcon = findViewById(R.id.menu_icon);
         menuIcon.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
-        // Find search input
-        searchInput = findViewById(R.id.search_input);
-        searchInput.setOnClickListener(v ->  startActivity(new Intent(this, SearchActivity.class)));
+        // Set up compose mail FAB
+        composeButton = findViewById(R.id.composeButton);
+        composeButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ComposeActivity.class);
+            startActivity(intent);
+        });
 
-        // Find avatar button
+        // Setup profile avatar and click listener
         avatarButton = findViewById(R.id.avatar_button);
 
-        // Set up ViewModel to observe user data
+        // Observe logged-in user and load profile image
         userViewModel = new ViewModelProvider(this).get(LoggedInUserViewModel.class);
-
         userViewModel.getUser().observe(this, user -> {
             if (user == null) return;
             String imageUrl = user.getProfileImage();
@@ -80,13 +90,13 @@ public class MailPageActivity extends AppCompatActivity {
             }
         });
 
-        // Set click listener to open ProfileDialogFragment
+        // Open profile dialog on avatar click
         avatarButton.setOnClickListener(v -> {
             ProfileDialogFragment dialog = new ProfileDialogFragment();
             dialog.show(getSupportFragmentManager(), AppConstants.TAG_PROFILE_DIALOG);
         });
 
-        // Handle back button to close drawer first
+        // Intercept back button: close drawer before finishing activity
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -98,26 +108,16 @@ public class MailPageActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // Initialize mail ViewModel and load mails
         mailViewModel = new ViewModelProvider(this).get(MailViewModel.class);
+        mailViewModel.loadInitialMails();
 
-        loadCategoryMails(getString(R.string.sidebar_inbox));  // default
-
-        // [TEMPORARY FOR TESTING ONLY — REMOVE LATER]
-        TextView debugMailsTextView = findViewById(R.id.debug_mails_text);
-        mailViewModel.getMails().observe(this, mails -> {
-            if (mails == null || mails.isEmpty()) {
-                debugMailsTextView.setText("No mails found");
-                return;
-            }
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < Math.min(mails.size(), 10); i++) {
-                String subject = mails.get(i).getMail().getSubject();
-                builder.append("• ")
-                        .append(subject != null ? subject : "(no subject)")
-                        .append("\n");
-            }
-            debugMailsTextView.setText(builder.toString());
-        });
+        // Display MailListFragment (initially with inbox category)
+        MailListFragment fragment = MailListFragment.newInstance(getString(R.string.sidebar_inbox));
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_content, fragment)
+                .commit();
     }
 
     /**
@@ -126,26 +126,7 @@ public class MailPageActivity extends AppCompatActivity {
      * @param title The category title.
      */
     public void loadCategoryMails(String title) {
-        switch (title) {
-            case "Inbox":
-                mailViewModel.loadInboxMails();
-                break;
-            case "Starred":
-                mailViewModel.loadStarredMails();
-                break;
-            case "Sent":
-                mailViewModel.loadSentMails();
-                break;
-            case "Drafts":
-                mailViewModel.loadDraftMails();
-                break;
-            case "All Mail":
-                mailViewModel.loadAllMails();
-                break;
-            case "Spam":
-                mailViewModel.loadSpamMails();
-                break;
-        }
+        mailViewModel.setCategory(title);
     }
 
     /**
@@ -154,6 +135,6 @@ public class MailPageActivity extends AppCompatActivity {
      * @param labelId The unique ID of the label.
      */
     public void loadLabelMails(String labelId) {
-        mailViewModel.loadMailsByLabel(labelId, AppConstants.DEFAULT_PAGE_SIZE, AppConstants.DEFAULT_PAGE_OFFSET);
+        mailViewModel.setLabel(labelId);
     }
 }

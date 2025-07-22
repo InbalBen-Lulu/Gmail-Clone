@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:windowBackground"
-    android:padding="24dp">
+    android:fitsSystemWindows="true">
 
     <!-- Main vertical layout container -->
     <LinearLayout
@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:padding="24dp">
 
         <!-- App logo with title -->
         <LinearLayout
@@ -96,14 +97,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone">
-
-            <!-- Section header -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/enter_birthday_and_gender"
-                android:textColor="?attr/text_color" />
 
             <!-- Birthday input: month, day, year -->
             <LinearLayout
@@ -203,16 +196,6 @@
                     android:maxLines="1"
                     android:scrollHorizontally="true"/>
             </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Info about gender and birthday -->
-            <TextView
-                android:id="@+id/genderInfoText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/gender_info"
-                android:textSize="12sp"
-                android:textColor="@color/text_secondary"
-                android:layout_marginTop="12dp" />
         </LinearLayout>
 
         <!-- STEP 3: Username -->

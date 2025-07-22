@@ -1,0 +1,37 @@
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipeRefresh"
+    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Container for mail list and empty state -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Mail list shown using RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mailRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="64dp"
+            android:clipToPadding="false"
+            android:padding="8dp"
+            android:background="?attr/color_background" />
+
+        <!-- Message shown when no mails are available -->
+        <TextView
+            android:id="@+id/emptyTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/no_mails_message"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:background="@android:color/transparent"
+            android:textColor="?attr/text_color_hint"
+            android:visibility="gone" />
+    </FrameLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

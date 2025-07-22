@@ -40,12 +40,22 @@
             android:theme="@style/Theme.Mail_app" />
 
         <activity
+            android:name=".ui.mail.MailDetailsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Mail_app" />
+
+        <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.auth.RegisterActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.mail.ComposeActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 

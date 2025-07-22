@@ -13,6 +13,7 @@ import com.example.mail_app.data.entity.FullMail;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Repository for managing mail operations via MailAPI and local Room database.
@@ -36,7 +37,8 @@ public class MailRepository {
         @Override
         protected void onActive() {
             super.onActive();
-            new Thread(() -> postValue(dao.getAllMails())).start();
+//            new Thread(() -> postValue(dao.getAllMails())).start();
+            new Thread(() -> postValue(dao.getInboxMails())).start();
         }
     }
 
@@ -109,43 +111,51 @@ public class MailRepository {
     }
 
     /** Sends a draft mail (PATCH + fetch updated mail). */
-    public void sendDraft(String mailId, Map<String, Object> body) {
-        api.sendDraft(mailId, body);
+    public void sendDraft(String mailId, Map<String, Object> body, Consumer<String> onError) {
+        api.sendDraft(mailId, body, onError);
     }
 
     /** Creates a new mail. */
-    public void createMail(Map<String, Object> body) {
-        api.createMail(body);
+    public void createMail(Map<String, Object> body, Consumer<String> onError) {
+        api.createMail(body, onError);
     }
 
     /** Updates a specific mail by ID. */
-    public void updateMail(String mailId, Map<String, Object> body) {
-        api.updateMail(mailId, body);
+    public void updateMail(String mailId, Map<String, Object> body, Consumer<String> onError) {
+        api.updateMail(mailId, body, onError);
     }
 
     /** Deletes a specific mail by ID. */
-    public void deleteMail(String mailId) {
-        api.deleteMail(mailId);
+    public void deleteMail(String mailId, Consumer<String> onError) {
+        api.deleteMail(mailId, onError);
+    }
+
+    /** Refreshes a specific mail inside the current LiveData list. */
+    public void refreshSingleMail(String mailId) {
+        api.refreshSingleMail(mailId);
     }
 
     /** Toggles the star status of a mail. */
-    public void toggleStar(String mailId) {
-        api.toggleStar(mailId);
+    public void toggleStar(String mailId, Consumer<String> onError) {
+        api.toggleStar(mailId, onError);
     }
 
     /** Marks a mail as spam or not. */
-    public void setSpam(String mailId, Map<String, Boolean> body) {
-        api.setSpam(mailId, body);
+    public void setSpam(String mailId, Map<String, Boolean> body, Runnable onSuccess,
+                        Consumer<String> onError) {
+        api.setSpam(mailId, body, onSuccess, onError);
     }
 
     /** Adds a label to a mail. */
-    public void addLabelToMail(String mailId, Map<String, String> body) {
-        api.addLabelToMail(mailId, body);
+    public void addLabelToMail(String mailId, Map<String, String> body, Runnable onSuccess,
+                               Consumer<String> onError) {
+        api.addLabelToMail(mailId, body, onSuccess, onError);
     }
 
     /** Removes a label from a mail. */
-    public void removeLabelFromMail(String mailId, Map<String, String> body) {
-        api.removeLabelFromMail(mailId, body);
+    public void removeLabelFromMail(String mailId, Map<String, String> body, Runnable onSuccess,
+                                    Consumer<String> onError) {
+        api.removeLabelFromMail(mailId, body, onSuccess, onError);
     }
 
     /** Scroll-loads inbox mails from server (no Room update). */
@@ -186,5 +196,10 @@ public class MailRepository {
     /** Scroll-loads search result mails from server (no Room update). */
     public void scrollSearchMails(String query, int offset, int limit) {
         api.searchMails(query, offset, limit);
+    }
+
+    /** Returns observable LiveData for a single mail by ID. */
+    public LiveData<FullMail> getLiveMailById(String mailId) {
+        return  api.getLiveMailById(mailId);
     }
 }

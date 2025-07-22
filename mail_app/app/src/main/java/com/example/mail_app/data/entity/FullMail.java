@@ -3,6 +3,8 @@ package com.example.mail_app.data.entity;
 import androidx.room.Embedded;
 import androidx.room.Ignore;
 import androidx.room.Relation;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +12,7 @@ import java.util.List;
  * Represents a full mail entity including sender, recipients, and labels.
  * Combines multiple Room relationships into a single structure.
  */
-public class FullMail {
+public class FullMail implements Serializable {
 
     @Embedded
     private Mail mail;
