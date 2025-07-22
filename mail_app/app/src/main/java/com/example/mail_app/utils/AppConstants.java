@@ -26,6 +26,8 @@ public final class AppConstants {
 
     public static final int DEFAULT_PAGE_SIZE = 50;
 
+    public static final int DEFAULT_SEARCH_SIZE = 5;
+
     public static final int DEFAULT_PAGE_OFFSET = 0;
 
     public static final String TAG_PROFILE_DIALOG = "ProfileDialog";

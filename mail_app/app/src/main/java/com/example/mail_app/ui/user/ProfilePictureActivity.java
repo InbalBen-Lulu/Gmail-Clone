@@ -1,6 +1,8 @@
 package com.example.mail_app.ui.user;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,45 +11,43 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-
+import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.example.mail_app.R;
 import com.example.mail_app.ui.view.UserAvatarView;
 import com.example.mail_app.utils.AppConstants;
 import com.example.mail_app.utils.ImageUtils;
 import com.example.mail_app.viewmodel.LoggedInUserViewModel;
 import com.google.android.material.snackbar.Snackbar;
-
 import java.io.File;
 import java.io.IOException;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
  * Activity for updating the user's profile picture.
- * Allows picking an image from gallery or camera, removing the current image,
- * and uploading a processed Base64 image to the server.
+ * Supports selecting an image from the gallery or capturing a photo using the camera.
+ * Also allows removing the current profile picture and uploading a new one to the server.
  */
 public class ProfilePictureActivity extends AppCompatActivity {
+
+    private static final int CAMERA_PERMISSION_REQUEST_CODE = 1001;
 
     private UserAvatarView avatarView;
     private Button addButton, changeButton, removeButton;
     private LoggedInUserViewModel userViewModel;
-
-    /** Temporary URI used to store captured image from camera before upload. */
     private Uri tempCameraImageUri;
 
     /**
-     * Activity result launcher handling image picking result from gallery or camera,
-     * including image size check, Base64 conversion, and upload.
+     * Activity result launcher to handle the image selection result from gallery or camera.
      */
     private final ActivityResultLauncher<Intent> pickImageLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -59,7 +59,7 @@ public class ProfilePictureActivity extends AppCompatActivity {
                         return;
                     }
 
-                    avatarView.setLoading(true); // Show spinner
+                    avatarView.setLoading(true);
 
                     try (AssetFileDescriptor afd = getContentResolver().openAssetFileDescriptor(imageUri, "r")) {
                         if (afd == null) {
@@ -79,7 +79,6 @@ public class ProfilePictureActivity extends AppCompatActivity {
                         return;
                     }
 
-                    // Run Base64 conversion and upload on background thread
                     new Thread(() -> {
                         try {
                             String base64Image = ImageUtils.resizeAndConvertToBase64(this, imageUri);
@@ -114,8 +113,7 @@ public class ProfilePictureActivity extends AppCompatActivity {
             });
 
     /**
-     * Initializes the activity, binds views, sets up listeners,
-     * and observes user profile data.
+     * Initializes the UI, binds views, and observes user data to update profile picture buttons.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +128,6 @@ public class ProfilePictureActivity extends AppCompatActivity {
 
         userViewModel = new ViewModelProvider(this).get(LoggedInUserViewModel.class);
 
-        // Observe user to update UI state (avatar image and button visibility)
         userViewModel.getUser().observe(this, user -> {
             if (user == null) return;
             if (user.getProfileImage() != null)
@@ -143,8 +140,8 @@ public class ProfilePictureActivity extends AppCompatActivity {
         });
 
         backButton.setOnClickListener(v -> finish());
-        addButton.setOnClickListener(v -> pickImage());
-        changeButton.setOnClickListener(v -> pickImage());
+        addButton.setOnClickListener(v -> checkCameraPermissionAndPickImage());
+        changeButton.setOnClickListener(v -> checkCameraPermissionAndPickImage());
         removeButton.setOnClickListener(v -> {
             avatarView.setLoading(true);
             userViewModel.deleteProfileImage(new Callback<Void>() {
@@ -164,7 +161,40 @@ public class ProfilePictureActivity extends AppCompatActivity {
     }
 
     /**
-     * Opens an intent chooser to select a new profile photo from gallery or camera.
+     * Checks camera permission. If granted, proceeds to image picking;
+     * otherwise, requests the permission.
+     */
+    private void checkCameraPermissionAndPickImage() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    CAMERA_PERMISSION_REQUEST_CODE);
+        } else {
+            pickImage();
+        }
+    }
+
+    /**
+     * Handles camera permission result. Launches image picker if granted.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                pickImage();
+            } else {
+                Toast.makeText(this, "Camera permission is required to take a photo", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * Opens an intent chooser that allows the user to pick an image from the gallery
+     * or capture a photo with the camera.
      */
     private void pickImage() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK);
@@ -192,9 +222,9 @@ public class ProfilePictureActivity extends AppCompatActivity {
     }
 
     /**
-     * Creates a temporary file URI to store the camera image.
+     * Creates a temporary file URI for storing the captured image from the camera.
      *
-     * @return URI for the temporary image file.
+     * @return a URI to the temporary image file.
      */
     private Uri createTempImageUri() {
         try {
@@ -210,7 +240,7 @@ public class ProfilePictureActivity extends AppCompatActivity {
     /**
      * Displays a Snackbar message at the bottom of the screen.
      *
-     * @param message The message to display.
+     * @param message the message to display.
      */
     private void showMessage(String message) {
         Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show();

@@ -66,7 +66,8 @@ public interface MailDao {
             "body LIKE '%' || :query || '%' OR " +
             "\"from\" LIKE '%' || :query || '%' OR " +
             "from_user.name LIKE '%' || :query || '%' OR " +
-            "mail_recipient_cross_ref.userId LIKE '%' || :query || '%'")
+            "mail_recipient_cross_ref.userId LIKE '%' || :query || '%' " +
+            "ORDER BY mail.sentAt DESC")
     List<FullMail> searchMails(String query);
 
     // Retrieves mails associated with a specific label ID
