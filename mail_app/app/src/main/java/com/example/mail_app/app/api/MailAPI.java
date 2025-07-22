@@ -413,7 +413,6 @@ public class MailAPI {
                 if (response.isSuccessful() && response.body() != null) {
                     try {
                         String responseStr = response.body().string();
-                        Log.d("MailAPI", "Success body: " + responseStr);
 
                         JSONObject json = new JSONObject(responseStr);
                         if (json.has("id")) {
@@ -438,7 +437,6 @@ public class MailAPI {
                                 return;
                             }
                         }
-
                         postToMain(() -> onError.accept("Failed to create mail – unknown error"));
 
                     } catch (Exception e) {
@@ -449,7 +447,6 @@ public class MailAPI {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("MailAPI", "createMail failure: " + t.getMessage());
                 postToMain(() -> onError.accept("Failed to create mail – check your internet connection."));
             }
         });
