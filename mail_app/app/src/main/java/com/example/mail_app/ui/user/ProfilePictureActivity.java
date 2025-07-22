@@ -11,7 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -20,14 +20,18 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
+
 import com.example.mail_app.R;
+import com.example.mail_app.ui.mail.MailPageActivity;
 import com.example.mail_app.ui.view.UserAvatarView;
 import com.example.mail_app.utils.AppConstants;
 import com.example.mail_app.utils.ImageUtils;
 import com.example.mail_app.viewmodel.LoggedInUserViewModel;
 import com.google.android.material.snackbar.Snackbar;
+
 import java.io.File;
 import java.io.IOException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -139,7 +143,22 @@ public class ProfilePictureActivity extends AppCompatActivity {
             removeButton.setVisibility(hasImage ? View.VISIBLE : View.GONE);
         });
 
-        backButton.setOnClickListener(v -> finish());
+        backButton.setOnClickListener(v -> {
+            String origin = getIntent().getStringExtra(AppConstants.EXTRA_ORIGIN);
+
+            if (AppConstants.ORIGIN_PERSONAL_INFO.equals(origin)) {
+                Intent intent = new Intent(this, PersonalInfoActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+            } else if (AppConstants.ORIGIN_MAIL.equals(origin)) {
+                Intent intent = new Intent(this, MailPageActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+            } else {
+                finish(); // fallback
+            }
+        });
+
         addButton.setOnClickListener(v -> checkCameraPermissionAndPickImage());
         changeButton.setOnClickListener(v -> checkCameraPermissionAndPickImage());
         removeButton.setOnClickListener(v -> {
@@ -187,7 +206,7 @@ public class ProfilePictureActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 pickImage();
             } else {
-                Toast.makeText(this, "Camera permission is required to take a photo", Toast.LENGTH_SHORT).show();
+                showMessage(getString(R.string.camera_permission_required));
             }
         }
     }

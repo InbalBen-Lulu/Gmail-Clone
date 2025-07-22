@@ -1,19 +1,32 @@
 package com.example.mail_app.ui.auth;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.mail_app.R;
+import com.example.mail_app.data.dto.LoginResponse;
+import com.example.mail_app.data.entity.PublicUser;
+import com.example.mail_app.ui.user.ProfilePictureActivity;
+import com.example.mail_app.utils.AppConstants;
 import com.example.mail_app.utils.DateUtils;
 import com.example.mail_app.utils.UiUtils;
 import com.example.mail_app.viewmodel.LoggedInUserViewModel;
-import com.example.mail_app.data.dto.LoginResponse;
-import com.example.mail_app.data.entity.PublicUser;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import java.util.*;
+
+import java.util.Arrays;
+import java.util.Calendar;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -258,6 +271,11 @@ public class RegisterActivity extends AppCompatActivity {
                                 if (response.isSuccessful()) {
                                     UiUtils.showMessage(RegisterActivity.this,
                                             getString(R.string.registration_success));
+
+                                    Intent intent = new Intent(RegisterActivity.this, ProfilePictureActivity.class);
+                                    intent.putExtra(AppConstants.EXTRA_ORIGIN, AppConstants.ORIGIN_MAIL);
+                                    startActivity(intent);
+                                    finish();
                                 } else {
                                     UiUtils.showMessage(RegisterActivity.this,
                                             getString(R.string.registration_failed));

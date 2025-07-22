@@ -72,7 +72,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
         // Clicking the image opens the profile picture activity
         profileImageView.setOnClickListener(v -> {
             Intent intent = new Intent(this, ProfilePictureActivity.class);
-            startActivity(intent);
+            intent.putExtra(AppConstants.EXTRA_ORIGIN, AppConstants.ORIGIN_PERSONAL_INFO);            startActivity(intent);
         });
 
         // Swipe to refresh user data
