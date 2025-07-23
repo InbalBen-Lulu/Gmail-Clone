@@ -17,10 +17,12 @@ async function createMail(req, res) {
     }
 
     const userId = req.user.userId.toLowerCase();
-    const result = processRecipients(to, isDraft, res, userId);
+    const result = await processRecipients(to, isDraft, userId);
 
-    if (!result) {
-      return res.status(500).json({ error: 'Unexpected error occurred while creating mail' });
+    if (result.error) {
+        return res.status(result.status || 400).json({
+            error: `${result.error}${result.invalidEmails?.length ? `: ${result.invalidEmails.join(', ')}` : ''}`
+        });
     }
 
     if (result.error) {
