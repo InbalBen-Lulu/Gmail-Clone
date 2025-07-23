@@ -40,6 +40,23 @@ If no connection is available, the app will show an error message and prevent th
 
 ## Features (UI Screenshots Included)
 
+
+### Create Account
+
+Users can easily register through a clean, multi-step signup process.
+
+In step 5, to proceed, users should tap the arrow button at the top-left corner.
+
+<p align="center">
+  <img src="images/app/ui-signup-step1.png" alt="Step 1" width="150"/>
+  <img src="images/app/ui-signup-step2.png" alt="Step 2" width="150"/>
+  <img src="images/app/ui-signup-step3.png" alt="Step 3" width="150"/>
+  <img src="images/app/ui-signup-step4.png" alt="Step 4" width="150"/>
+  <img src="images/app/ui-signup-step5.png" alt="Step 5" width="150"/>
+</p>
+
+---
+
 ### Sign In
 
 Users can sign in using a simple and secure login screen.
@@ -49,17 +66,7 @@ This screen is intended for **existing accounts only**.
 New users should use the **Create Account** option instead.
 
 <p align="center">
-  <img src="images/ui-login.png" alt="Login Page" width="600"/>
-</p>
-
----
-
-### Create Account
-
-Users can easily register through a clean, multi-step signup process.
-
-<p align="center">
-  <img src="images/ui-signup.png" alt="Create Account" width="600"/>
+  <img src="images/app/ui-login.png" alt="Login Page" width="200"/>
 </p>
 
 ---
@@ -68,10 +75,16 @@ Users can easily register through a clean, multi-step signup process.
 
 The main interface includes access to Inbox, Sent, Drafts, Spam, and All Mail.
 
+Navigation is handled through the **sidebar**, located on the left side of the screen.
+It allows users to quickly switch between categories and user-defined labels, with the mail list updating dynamically based on the selected item.
+
 To compose a new mail, tap the **pencil icon** at the bottom right corner of the screen.
 
 <p align="center">
-  <img src="images/ui-main.png" alt="Inbox" width="600"/>
+  <img src="images/app/ui-sidebar.jpg" alt="Step 1" width="150"/>
+  <img src="images/app/ui-mailbox1.jpg" alt="Step 2" width="150"/>
+  <img src="images/app/ui-mailbox2.jpg" alt="Step 3" width="150"/>
+  <img src="images/app/ui-compose.jpg" alt="Step 4" width="150"/>
 </p>
 
 ---
@@ -85,8 +98,10 @@ Once selected, you can:
 - Delete the mail
 - Mark it as spam
 - Assign or remove labels
+
 <p align="center">
-  <img src="images/ui-label-rightclick.png" alt="Right-click Label Assignment" width="600"/>
+  <img src="images/app/ui-long-press.jpg" alt="Step 1" width="150"/>
+  <img src="images/app/ui-select-label.jpg" alt="Step 2" width="150"/>
 </p>
 
 ---
@@ -101,43 +116,46 @@ Each mail displays its assigned labels clearly in the list.
 
 
 <p align="center">
-  <img src="images/ui-mail-details.png" alt="Open & Read Emails" width="600"/>
+  <img src="images/app/ui-mail-details.jpg" alt="Open & Read Emails" width="200"/>
 </p>
 
 ---
 
 ### Drafts and Compose Flow
 
-Typing in the search bar shows up to 5 recent emails that match your query, based on subject, sender, or content.
-
-You can view all matching results by clicking "All search results" at the bottom of the dropdown.
+Emails that haven’t been sent are saved as drafts and can be resumed later.
 
 <p align="center">
-  <img src="images/ui-draft.png" alt="Draft Mail View" width="600"/>
+  <img src="images/app/ui-draft.jpg" alt="Draft Mail View" width="200"/>
 </p>
 
 ---
 
 ### Mail Search
 
-Emails that haven’t been sent are saved as drafts and can be resumed later.
+Typing in the search bar shows up to 5 recent emails that match your query, based on subject, sender, or content.
+
+You can view all matching results by clicking "All search results" at the bottom of the dropdown.
+
 
 <p align="center">
-  <img src="images/ui-search.png" alt="Search Mail View" width="600"/>
+  <img src="images/app/ui-search.jpg" alt="Search Mail View" width="200"/>
 </p>
 
 ---
 
 ### Profile Picture Management
 
-You can set or change your profile picture by clicking the user avatar in the top-right and editing your personal details.
+You can manage your profile picture by clicking the user avatar in the top-right corner.
+From there, you can access both the **Personal Info** screen and the **Change Picture** screen.
 
-If no picture is uploaded, a default avatar will be shown based on the **first letter of the user's email address**.
+If no picture is uploaded, a default avatar will be shown based on the first letter of your email address.
 
-Profile pictures are displayed across the app — including in the full mail view and hover cards.
+Profile pictures are displayed throughout the app — including the full mail view, personal details, and hover cards.
 
 <p align="center">
-  <img src="images/ui-profile-pic.png" alt="Profile Picture" width="600"/>
+  <img src="images/app/ui-personal-info.jpg" alt="Step 1" width="150"/>
+  <img src="images/app/ui-change-profile-img.jpg" alt="Step 2" width="150"/>
 </p>
 
 ---
