@@ -108,13 +108,10 @@ public class ComposeActivity extends AppCompatActivity {
         }
 
         // Unified callback: show error if exists, otherwise close activity
-        // Unified callback: show error if exists, otherwise close activity
         Consumer<String> callback = msg -> {
-            if (msg == null || msg.trim().isEmpty()) {
             if (msg == null || msg.trim().isEmpty()) {
                 finish(); // Success
             } else {
-                UiUtils.showMessage(this, msg, this::finish); // Show error, then close
                 UiUtils.showMessage(this, msg, this::finish); // Show error, then close
             }
         };
@@ -137,15 +134,9 @@ public class ComposeActivity extends AppCompatActivity {
         String body = bodyInput.getText().toString().trim();
 
         // Exit without saving
-        // Exit without saving
         if (to.isEmpty() && subject.isEmpty() && body.isEmpty()) {
             if (mailId != null) {
                 viewModel.deleteMail(mailId, msg -> {
-                    if (msg == null || msg.trim().isEmpty()) {
-                        finish();
-                    } else {
-                        UiUtils.showMessage(this, msg, this::finish);
-                    }
                     if (msg == null || msg.trim().isEmpty()) {
                         finish();
                     } else {
@@ -167,23 +158,11 @@ public class ComposeActivity extends AppCompatActivity {
             }
         };
 
-        // Save as draft (update or create)
-        Consumer<String> callback = msg -> {
-            if (msg == null || msg.trim().isEmpty()) {
-                finish();
-            } else {
-                UiUtils.showMessage(this, msg, this::finish);
-            }
-        };
-
         if (mailId != null) {
-            viewModel.updateMail(mailId, to, subject, body, callback);
             viewModel.updateMail(mailId, to, subject, body, callback);
         } else {
             viewModel.createMail(to, subject, body, true, callback);
-            viewModel.createMail(to, subject, body, true, callback);
         }
     }
-
 
 }
