@@ -3,7 +3,6 @@ package com.example.mail_app.ui.view;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -53,13 +52,6 @@ public class UserAvatarView extends FrameLayout {
     }
 
     /**
-     * Sets the profile image using a URI.
-     */
-    public void setImageUri(Uri uri) {
-        imageView.setImageURI(uri);
-    }
-
-    /**
      * Sets the profile image from a drawable resource.
      */
     public void setImageRes(int resId) {
@@ -99,12 +91,5 @@ public class UserAvatarView extends FrameLayout {
      */
     public void setLoading(boolean isLoading) {
         loadingSpinner.setVisibility(isLoading ? VISIBLE : GONE);
-    }
-
-    /**
-     * Returns the internal image view (useful for direct Glide usage if needed).
-     */
-    public ImageView getImageView() {
-        return imageView;
     }
 }

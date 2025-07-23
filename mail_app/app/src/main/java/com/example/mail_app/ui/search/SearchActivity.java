@@ -8,12 +8,10 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.example.mail_app.R;
 import com.example.mail_app.ui.mail.MailListFragment;
 import com.example.mail_app.utils.AppConstants;
@@ -72,7 +70,7 @@ public class SearchActivity extends AppCompatActivity {
 
                     searchRunnable = () -> {
                         viewModel.setCategory("Search");
-                        viewModel.searchMails(lastQuery, 50, 0);
+                        viewModel.searchMails(lastQuery, AppConstants.DEFAULT_PAGE_SIZE, AppConstants.DEFAULT_PAGE_OFFSET);
                         loadMailListFragment();
                     };
                     handler.postDelayed(searchRunnable, AppConstants.SEARCH_DEBOUNCE_DELAY_MS);

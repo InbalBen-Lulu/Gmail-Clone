@@ -3,7 +3,6 @@
     <!-- App-level constants -->
     <string name="app_name">MailMe</string>
     <string name="BaseUrl">http://10.0.2.2:4000/api/</string> <!-- Used for emulator access -->
-<!--    <string name="BaseUrl">http://192.168.222.122:4000/api/</string> &lt;!&ndash; Used for real device access &ndash;&gt;-->
     <string name="email_domain">@mailme.com</string> <!-- Used to auto-append domain to username -->
     <string name="BaseUrlEmulator">http://10.0.2.2:4000/api/</string>
 

@@ -55,7 +55,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
             swipeRefreshLayout.setRefreshing(false); // Stop spinner when data loads
             if (user != null) {
                 nameTextView.setText(user.getName());
-                String formattedDate = new SimpleDateFormat(AppConstants.DATE_FORMAT_DISPLAY, Locale.getDefault())
+                String formattedDate = new SimpleDateFormat(AppConstants.DATE_FORMAT_DISPLAY, Locale.ENGLISH)
                         .format(user.getBirthDate());
                 birthdayTextView.setText(formattedDate);
                 genderTextView.setText(user.getGender());

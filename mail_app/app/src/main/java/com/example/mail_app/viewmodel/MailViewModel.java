@@ -62,8 +62,6 @@ public class MailViewModel extends ViewModel {
         isLabelMode = false;
         currentOffset = 0;
 
-        Log.d("MailViewModel", "setCategory called with title: " + title);
-
         switch (title) {
             case "Inbox":
                 loadInboxMails();
@@ -145,7 +143,7 @@ public class MailViewModel extends ViewModel {
                     scrollLoadSpamMails(currentOffset, AppConstants.DEFAULT_PAGE_SIZE);
                     break;
                 case "Search":
-                    scrollSearchMails(lastQuery, currentOffset, AppConstants.DEFAULT_SEARCH_SIZE);
+                    scrollSearchMails(lastQuery, currentOffset, AppConstants.DEFAULT_PAGE_SIZE);
                     break;
             }
         }
