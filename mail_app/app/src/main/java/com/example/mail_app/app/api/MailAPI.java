@@ -413,7 +413,6 @@ public class MailAPI {
                 if (response.isSuccessful() && response.body() != null) {
                     try {
                         String responseStr = response.body().string();
-                        Log.d("MailAPI", "Success body: " + responseStr);
 
                         JSONObject json = new JSONObject(responseStr);
                         if (json.has("id")) {
@@ -702,7 +701,6 @@ public class MailAPI {
         try {
             if (response.errorBody() != null) {
                 String errorJson = response.errorBody().string();
-                Log.d("MailAPI", "Raw error JSON: " + errorJson);
 
                 if (!errorJson.isEmpty()) {
                     JSONObject json = new JSONObject(errorJson);

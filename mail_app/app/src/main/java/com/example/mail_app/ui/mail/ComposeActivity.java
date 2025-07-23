@@ -107,12 +107,12 @@ public class ComposeActivity extends AppCompatActivity {
             return;
         }
 
-        // Common callback for success/error
+        // Unified callback: show error if exists, otherwise close activity
         Consumer<String> callback = msg -> {
-            if (msg == null || msg.isEmpty()) {
+            if (msg == null || msg.trim().isEmpty()) {
                 finish(); // Success
             } else {
-                UiUtils.showMessage(this, msg); // Show error, stay on screen
+                UiUtils.showMessage(this, msg, this::finish); // Show error, then close
             }
         };
 
@@ -133,11 +133,15 @@ public class ComposeActivity extends AppCompatActivity {
         String subject = subjectInput.getText().toString().trim();
         String body = bodyInput.getText().toString().trim();
 
+        // Exit without saving
         if (to.isEmpty() && subject.isEmpty() && body.isEmpty()) {
             if (mailId != null) {
                 viewModel.deleteMail(mailId, msg -> {
-                    UiUtils.showMessage(this, msg);
-                    finish();
+                    if (msg == null || msg.trim().isEmpty()) {
+                        finish();
+                    } else {
+                        UiUtils.showMessage(this, msg, this::finish);
+                    }
                 });
             } else {
                 finish(); // Nothing to save or delete
@@ -145,14 +149,20 @@ public class ComposeActivity extends AppCompatActivity {
             return;
         }
 
-        if (mailId != null) {
-            viewModel.updateMail(mailId, to, subject, body, msg -> {
-                UiUtils.showMessage(this, msg, this::finish); // Delay finish until Snackbar closes
-            });
-        } else {
-            viewModel.createMail(to, subject, body, true, msg -> {
+        // Save as draft (update or create)
+        Consumer<String> callback = msg -> {
+            if (msg == null || msg.trim().isEmpty()) {
+                finish();
+            } else {
                 UiUtils.showMessage(this, msg, this::finish);
-            });
+            }
+        };
+
+        if (mailId != null) {
+            viewModel.updateMail(mailId, to, subject, body, callback);
+        } else {
+            viewModel.createMail(to, subject, body, true, callback);
         }
     }
+
 }

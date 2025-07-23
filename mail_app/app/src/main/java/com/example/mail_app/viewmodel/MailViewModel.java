@@ -62,8 +62,6 @@ public class MailViewModel extends ViewModel {
         isLabelMode = false;
         currentOffset = 0;
 
-        Log.d("MailViewModel", "setCategory called with title: " + title);
-
         switch (title) {
             case "Inbox":
                 loadInboxMails();
@@ -145,7 +143,7 @@ public class MailViewModel extends ViewModel {
                     scrollLoadSpamMails(currentOffset, AppConstants.DEFAULT_PAGE_SIZE);
                     break;
                 case "Search":
-                    scrollSearchMails(lastQuery, currentOffset, AppConstants.DEFAULT_SEARCH_SIZE);
+                    scrollSearchMails(lastQuery, currentOffset, AppConstants.DEFAULT_PAGE_SIZE);
                     break;
             }
         }
@@ -183,11 +181,6 @@ public class MailViewModel extends ViewModel {
                 .filter(s -> !s.isEmpty())
                 .collect(Collectors.toList());
 
-        if (recipients.isEmpty()) {
-            onError.accept("Please enter at least one recipient");
-            return;
-        }
-
         Map<String, Object> request = new HashMap<>();
         request.put("to", recipients);
         request.put("subject", subject);
@@ -204,11 +197,6 @@ public class MailViewModel extends ViewModel {
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .collect(Collectors.toList());
-
-        if (!isDraft && recipients.isEmpty()) {
-            onError.accept("Please enter at least one valid recipient");
-            return;
-        }
 
         Map<String, Object> mailData = new HashMap<>();
         mailData.put("to", recipients);
@@ -228,11 +216,6 @@ public class MailViewModel extends ViewModel {
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .collect(Collectors.toList());
-
-        if (recipients.isEmpty()) {
-            onError.accept("Please enter at least one valid recipient");
-            return;
-        }
 
         Map<String, Object> updates = new HashMap<>();
         updates.put("to", recipients);
