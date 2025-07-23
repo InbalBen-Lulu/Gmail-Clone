@@ -78,6 +78,7 @@ public class ProfileDialogFragment extends DialogFragment {
 
         avatarButton.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), ProfilePictureActivity.class);
+            intent.putExtra(AppConstants.EXTRA_ORIGIN, AppConstants.ORIGIN_MAIL);
             startActivity(intent);
             dismiss();
         });

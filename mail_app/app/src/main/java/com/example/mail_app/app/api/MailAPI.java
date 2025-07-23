@@ -699,7 +699,6 @@ public class MailAPI {
         try {
             if (response.errorBody() != null) {
                 String errorJson = response.errorBody().string();
-                Log.d("MailAPI", "Raw error JSON: " + errorJson);
 
                 if (!errorJson.isEmpty()) {
                     JSONObject json = new JSONObject(errorJson);

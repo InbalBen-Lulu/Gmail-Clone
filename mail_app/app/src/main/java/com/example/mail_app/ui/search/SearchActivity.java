@@ -8,130 +8,99 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.example.mail_app.R;
-import com.example.mail_app.data.entity.FullMail;
+import com.example.mail_app.ui.mail.MailListFragment;
 import com.example.mail_app.utils.AppConstants;
 import com.example.mail_app.viewmodel.MailViewModel;
 
-import java.util.List;
-
 /**
- * Activity for searching mails and displaying quick search results.
- * Shows results dynamically as the user types in the search bar.
+ * Activity for performing full-text search on mails.
+ * - Updates results in real-time as the user types.
+ * - Shows up to 50 matching mails sorted by most recent.
+ * - Replaces the fragment view with the search result list.
  */
 public class SearchActivity extends AppCompatActivity {
 
     private EditText searchInput;
-    private TextView quickResultsTitle, recentSearchText, debugMailsText;
-    private View recentSearchRow;
     private ImageButton clearButton;
     private MailViewModel viewModel;
     private Handler handler = new Handler(Looper.getMainLooper());
     private Runnable searchRunnable;
+    private String lastQuery = "";
 
+    /**
+     * Initializes the activity, sets up listeners, and loads the initial empty fragment.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        // Initialize UI components
         searchInput = findViewById(R.id.search_input);
-        quickResultsTitle = findViewById(R.id.quick_results_label);
-        recentSearchRow = findViewById(R.id.recent_search_row);
-        recentSearchText = findViewById(R.id.recent_search_text);
         clearButton = findViewById(R.id.clear_button);
         ImageButton backButton = findViewById(R.id.back_button);
 
-        // Back button to exit search screen
         backButton.setOnClickListener(v -> finish());
 
-        // Hide all UI elements initially
-        quickResultsTitle.setVisibility(View.GONE);
-        recentSearchRow.setVisibility(View.GONE);
-        clearButton.setVisibility(View.GONE);
-
-        // [TEMPORARY DEBUG DISPLAY — REMOVE BEFORE PRODUCTION]
-        debugMailsText = findViewById(R.id.debug_mails_text);
-        debugMailsText.setVisibility(View.GONE);
-
-        // Get ViewModel instance
         viewModel = new ViewModelProvider(this).get(MailViewModel.class);
 
-        // Observe mail search results
-        viewModel.getMails().observe(this, this::handleSearchResults);
-
-        // Listen to text changes in search input
         searchInput.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void afterTextChanged(Editable s) {}
+
+            /**
+             * Called when the search text changes.
+             * - Runs a delayed search after debounce time.
+             * - Updates the mail list with 50 results.
+             */
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String query = s.toString().trim();
-
-                // Cancel any previous search task
+                lastQuery = s.toString().trim();
                 handler.removeCallbacks(searchRunnable);
 
-                if (query.isEmpty()) {
-                    // Hide UI when search is empty
+                if (lastQuery.isEmpty()) {
                     clearButton.setVisibility(View.GONE);
-                    quickResultsTitle.setVisibility(View.GONE);
-                    recentSearchRow.setVisibility(View.GONE);
-                    debugMailsText.setVisibility(View.GONE);
+                    loadEmptyFragment();
                 } else {
-                    // Show clear button and recent search row
                     clearButton.setVisibility(View.VISIBLE);
-                    recentSearchRow.setVisibility(View.VISIBLE);
-                    recentSearchText.setText(query);
 
-                    // Run search after 300ms (debounce)
-                    searchRunnable = () -> viewModel.searchMails(query, 5, 0);
+                    searchRunnable = () -> {
+                        viewModel.setCategory("Search");
+                        viewModel.searchMails(lastQuery, AppConstants.DEFAULT_PAGE_SIZE, AppConstants.DEFAULT_PAGE_OFFSET);
+                        loadMailListFragment();
+                    };
                     handler.postDelayed(searchRunnable, AppConstants.SEARCH_DEBOUNCE_DELAY_MS);
                 }
             }
-
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void afterTextChanged(Editable s) {}
         });
 
-        // Clear search input when clear button is clicked
         clearButton.setOnClickListener(v -> searchInput.setText(""));
+
+        // Load empty state initially
+        loadEmptyFragment();
     }
 
     /**
-     * Handles search result updates and updates the UI.
-     *
-     * @param mails List of FullMail objects returned from search.
+     * Loads the MailListFragment to show search results.
      */
-    private void handleSearchResults(List<FullMail> mails) {
-        String query = searchInput.getText().toString().trim();
+    private void loadMailListFragment() {
+        Fragment fragment = MailListFragment.newInstance("Search");
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.search_fragment_container, fragment);
+        transaction.commit();
+    }
 
-        if (query.isEmpty()) {
-            quickResultsTitle.setVisibility(View.GONE);
-            debugMailsText.setVisibility(View.GONE);
-            return;
-        }
-
-        if (mails != null && !mails.isEmpty()) {
-            quickResultsTitle.setVisibility(View.VISIBLE);
-            debugMailsText.setVisibility(View.VISIBLE);
-
-            StringBuilder builder = new StringBuilder();
-            int maxResultsToShow = Math.min(mails.size(), 10);
-            for (int i = 0; i < maxResultsToShow; i++) {
-                FullMail mail = mails.get(i);
-                String subject = mail.getMail().getSubject() != null ? mail.getMail().getSubject() : getString(R.string.no_subject);
-                String from = mail.getFromUser() != null ? mail.getFromUser().getName() : getString(R.string.unknown_sender);
-                builder.append("• ").append(subject).append(" — ").append(from).append("\n");
-            }
-            debugMailsText.setText(builder.toString());
-
-        } else {
-            quickResultsTitle.setVisibility(View.GONE);
-            debugMailsText.setVisibility(View.VISIBLE);
-            debugMailsText.setText(getString(R.string.no_results_found));
-        }
+    /**
+     * Loads a blank fragment (used when search input is empty).
+     */
+    private void loadEmptyFragment() {
+        Fragment emptyFragment = new Fragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.search_fragment_container, emptyFragment);
+        transaction.commit();
     }
 }

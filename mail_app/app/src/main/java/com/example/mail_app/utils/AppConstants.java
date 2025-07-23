@@ -26,8 +26,13 @@ public final class AppConstants {
 
     public static final int DEFAULT_PAGE_SIZE = 50;
 
+    public static final String EXTRA_ORIGIN = "origin";
+
+    public static final String ORIGIN_MAIL = "mail";
+
+    public static final String ORIGIN_PERSONAL_INFO = "personal_info";
+
     public static final int DEFAULT_PAGE_OFFSET = 0;
 
     public static final String TAG_PROFILE_DIALOG = "ProfileDialog";
-
 }

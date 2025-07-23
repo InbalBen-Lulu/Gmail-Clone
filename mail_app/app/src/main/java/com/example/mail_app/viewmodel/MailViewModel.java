@@ -33,6 +33,8 @@ public class MailViewModel extends ViewModel {
     private String currentLabelId = null;
     private boolean isLabelMode = false;
     private int currentOffset = 0;
+    private String lastQuery = "";
+
 
     public MailViewModel() {
         repository = new MailRepository();
@@ -60,8 +62,6 @@ public class MailViewModel extends ViewModel {
         isLabelMode = false;
         currentOffset = 0;
 
-        Log.d("MailViewModel", "setCategory called with title: " + title);
-
         switch (title) {
             case "Inbox":
                 loadInboxMails();
@@ -80,6 +80,9 @@ public class MailViewModel extends ViewModel {
                 break;
             case "Spam":
                 loadSpamMails();
+                break;
+            case "Search":
+                // don't auto-load; rely on searchMails() calls
                 break;
             default:
                 Log.w("MailViewModel", "Unknown category title: " + title);
@@ -138,6 +141,9 @@ public class MailViewModel extends ViewModel {
                     break;
                 case "Spam":
                     scrollLoadSpamMails(currentOffset, AppConstants.DEFAULT_PAGE_SIZE);
+                    break;
+                case "Search":
+                    scrollSearchMails(lastQuery, currentOffset, AppConstants.DEFAULT_PAGE_SIZE);
                     break;
             }
         }
@@ -310,6 +316,7 @@ public class MailViewModel extends ViewModel {
      * Starts a search by query (first page).
      */
     public void searchMails(String query, int limit, int offset) {
+        lastQuery = query;
         repository.searchMails(query, limit, offset);
     }
 

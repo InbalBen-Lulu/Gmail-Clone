@@ -3,7 +3,6 @@
     <!-- App-level constants -->
     <string name="app_name">MailMe</string>
     <string name="BaseUrl">http://10.0.2.2:4000/api/</string> <!-- Used for emulator access -->
-<!--    <string name="BaseUrl">http://192.168.222.122:4000/api/</string> &lt;!&ndash; Used for real device access &ndash;&gt;-->
     <string name="email_domain">@mailme.com</string> <!-- Used to auto-append domain to username -->
     <string name="BaseUrlEmulator">http://10.0.2.2:4000/api/</string>
 
@@ -43,6 +42,7 @@
     <string name="camera_not_available">Camera not available on this device</string>
     <string name="failed_to_create_temp_file">Failed to create temp file</string>
     <string name="failed_to_check_image_size">Failed to check image size</string>
+    <string name="camera_permission_required">Camera permission is required to take a photo.</string>
 
     <!-- ───────────── SIGN-IN / LOGIN SCREEN ───────────── -->
     <string name="email">Email</string>

@@ -1,7 +1,8 @@
 package com.example.mail_app.ui.view;
 
 import android.content.Context;
-import android.net.Uri;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -42,10 +43,12 @@ public class UserAvatarView extends FrameLayout {
     }
 
     /**
-     * Sets the profile image using a URI.
+     * Checks if there is an active internet connection.
      */
-    public void setImageUri(Uri uri) {
-        imageView.setImageURI(uri);
+    private boolean hasInternetConnection() {
+        ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnected();
     }
 
     /**
@@ -61,6 +64,7 @@ public class UserAvatarView extends FrameLayout {
      */
     public void setImageUrl(String imagePath) {
         if (imagePath == null || imagePath.isEmpty()) {
+            imageView.setImageResource(R.drawable.default_avatar);
             return;
         }
 
@@ -72,10 +76,12 @@ public class UserAvatarView extends FrameLayout {
             fullUrl = imagePath;
         }
 
+        boolean isConnected = hasInternetConnection();
+
         Glide.with(getContext())
                 .load(fullUrl)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .skipMemoryCache(isConnected)
                 .error(R.drawable.default_avatar)
                 .into(imageView);
     }
@@ -85,12 +91,5 @@ public class UserAvatarView extends FrameLayout {
      */
     public void setLoading(boolean isLoading) {
         loadingSpinner.setVisibility(isLoading ? VISIBLE : GONE);
-    }
-
-    /**
-     * Returns the internal image view (useful for direct Glide usage if needed).
-     */
-    public ImageView getImageView() {
-        return imageView;
     }
 }
