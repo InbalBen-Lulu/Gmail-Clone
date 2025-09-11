@@ -8,14 +8,16 @@ It supports account management, sending/receiving emails, labels, categories, dr
 ## 🎥 Live Demos
 
 
-| Web Client 🌐 | Android App 📱 |
-|:-------------:|:--------------:|
-| <img src="wiki/images/web/web_demo.gif" alt="Web Demo" width="420"/> | <img src="wiki/images/app/ui-mailbox1.jpg" alt="Mailbox" width="100"/> <img src="wiki/images/app/ui-mail-details.jpg" alt="Mail Details" width="100"/> <img src="wiki/images/app/ui-sidebar.jpg" alt="Sidebar" width="100"/> |
 
-<p align="center">
-  ▶️ <a href="wiki/images/web/web_demo.gif">Watch full Web demo</a> • 
-  ▶️ <a href="wiki/images/app/app_demo.gif">Watch full Android demo</a>
-</p>
+| Web Client 🌐 |
+|:-------------:|
+| <img src="wiki/images/web/web_demo.gif" alt="Web Demo" width="600"/> |
+| [▶️ Watch full Web demo](wiki/images/web/web_demo.gif) |
+
+| Android App 📱 |
+|:--------------:|
+| <img src="wiki/images/app/ui-mailbox1.jpg" alt="Mailbox" width="150"/> <img src="wiki/images/app/ui-mail-details.jpg" alt="Mail Details" width="150"/> <img src="wiki/images/app/ui-sidebar.jpg" alt="Sidebar" width="150"/> |
+| [▶️ Watch full Android demo](wiki/images/app/app_demo.gif) |
 
 ---
 
