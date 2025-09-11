@@ -8,7 +8,7 @@ It supports account management, sending/receiving emails, labels, categories, an
 ## 🎥 Demos
 
 ### Web Client
-![Web Demo](wiki/videos/web_demo.gif)
+![Web Demo](wiki/images/web/web_video.gif)
 
 ### Android App
-![Android Demo](wiki/videos/android_demo.gif)
+![Android Demo](wiki/images/app/android_video.gif)
