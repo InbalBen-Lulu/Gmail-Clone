@@ -1,19 +1,16 @@
 # MailMe 📬
 
-**MailMe** is a full-stack Gmail-style email platform, featuring:  
-- **React Web Client** 🌐  
-- **Android App** 📱  
-
-The system supports account management, sending/receiving emails, labels, categories, drafts, and real-time updates — designed to work seamlessly on both desktop and mobile.
+**MailMe** is a full-stack Gmail-style email platform with a **React Web Client** 🌐, **Android App** 📱.  
+It supports account management, sending/receiving emails, labels, categories, drafts, and real-time updates — designed to work seamlessly on both desktop and mobile.
 
 ---
 
 ## 🎥 Live Demos
 
-<p align="center">
-  <img src="wiki/videos/web_demo.gif" alt="Web Demo" width="45%" style="margin-right:10px"/>
-  <img src="wiki/videos/android_demo.gif" alt="Android Demo" width="45%"/>
-</p>
+
+| Web Client 🌐 | Android App 📱 |
+|:-------------:|:--------------:|
+| <img src="wiki/images/web/web_demo.gif" alt="Web Demo" width="400"/> | <img src="wiki/images/app/ui-mailbox1.jpg" alt="Mailbox" width="130"/> <img src="wiki/images/app/ui-mail-details.jpg" alt="Mail Details" width="130"/> <img src="wiki/images/app/ui-sidebar.jpg" alt="Sidebar" width="130"/> |
 
 <p align="center">
   ▶️ <a href="wiki/videos/web_demo.mp4">Watch full Web demo</a> • 
